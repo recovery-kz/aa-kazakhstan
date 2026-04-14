@@ -16,25 +16,23 @@
         /* Счетчик */
         .counter-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 350px; margin-top: 10px; }
         .days-number { font-size: 72px; font-weight: 800; color: var(--primary-color); margin: 5px 0; }
-        
-        .date-input-container { margin-top: 20px; width: 100%; text-align: left; }
-        label { font-size: 12px; color: #7f8c8d; margin-bottom: 5px; display: block; text-align: center; }
-        input[type="date"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; font-family: inherit; box-sizing: border-box; background: #f9f9f9; }
+        .date-input-container { margin-top: 20px; width: 100%; }
+        input[type="date"] { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid var(--primary-color); font-size: 16px; background: #fff; box-sizing: border-box; }
 
-        /* Карточки групп */
+        /* Группы */
         .filter-container { width: 100%; max-width: 450px; margin-bottom: 15px; position: sticky; top: 85px; z-index: 900; background: var(--bg-color); padding: 5px 0; }
         select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary-color); font-size: 16px; background: white; }
-        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color); box-sizing: border-box; }
-        .city-tag { font-size: 11px; color: var(--accent-color); font-weight: bold; margin-bottom: 4px; text-transform: uppercase; }
-        .group-name { font-weight: bold; color: var(--primary-color); font-size: 17px; margin-bottom: 8px; }
-        .info-row { font-size: 13px; color: #444; margin-bottom: 6px; display: flex; align-items: flex-start; }
-        .phone-link { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color); box-sizing: border-box; text-align: left; }
+        .city-tag { font-size: 11px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
+        .group-name { font-weight: bold; color: var(--primary-color); font-size: 17px; margin: 5px 0; }
+        .info-row { font-size: 13px; color: #444; margin-bottom: 4px; }
+        .phone-link { color: var(--primary-color); font-weight: bold; text-decoration: none; }
 
-        /* Навигация */
+        /* Меню */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 70px; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 2000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #95a5a6; cursor: pointer; font-size: 12px; border: none; background: none; }
         .nav-item.active-nav { color: var(--primary-color); font-weight: bold; }
-        .nav-item span { font-size: 24px; margin-bottom: 2px; }
+        .nav-item span { font-size: 24px; }
     </style>
 </head>
 <body>
@@ -48,26 +46,27 @@
 
     <main id="tab-counter" class="content-section active">
         <div class="counter-card">
-            <div style="color: #7f8c8d; font-size: 12px;">ДНЕЙ В ТРЕЗВОСТИ</div>
+            <div style="color: #7f8c8d; font-size: 12px; letter-spacing: 1px;">ДНЕЙ В ТРЕЗВОСТИ</div>
             <div id="days-display" class="days-number">0</div>
-            
             <div class="date-input-container">
-                <label>Дата начала (нажмите, чтобы изменить):</label>
-                <input type="date" id="sobriety-date-input" onchange="setDate(this.value)">
+                <label style="font-size: 12px; color:#7f8c8d; display:block; margin-bottom:5px;">Укажите дату начала:</label>
+                <input type="date" id="sobriety-date-input" onchange="updateDate(this.value)">
             </div>
-
-            <button onclick="resetToToday()" style="margin-top:20px; width:100%; padding:10px; color:#e74c3c; border:none; background:none; font-size:12px; text-decoration:underline;">Обнулить на сегодня</button>
+            <button onclick="resetToday()" style="margin-top:15px; color:#e74c3c; border:none; background:none; text-decoration:underline; font-size:12px;">Сбросить на сегодня</button>
         </div>
     </main>
 
     <main id="tab-groups" class="content-section">
         <div class="filter-container">
-            <select id="citySelect" onchange="applyFilter()">
+            <select id="citySelect" onchange="renderGroups()">
                 <option value="all">Все города</option>
-                <option value="Онлайн">💻 Онлайн</option>
                 <option value="Алматы">Алматы</option>
                 <option value="Астана">Астана</option>
                 <option value="Шымкент">Шымкент</option>
+                <option value="Онлайн">Онлайн</option>
+                <option value="Костанай">Костанай</option>
+                <option value="Павлодар">Павлодар</option>
+                <option value="другие">Другие города</option>
             </select>
         </div>
         <div id="list-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
@@ -79,76 +78,79 @@
     </nav>
 
     <script>
-        // Инициализация даты
-        function init() {
-            let savedDate = localStorage.getItem('aa_date');
-            if (!savedDate) {
-                savedDate = new Date().toISOString().split('T')[0];
-                localStorage.setItem('aa_date', savedDate);
-            }
-            document.getElementById('sobriety-date-input').value = savedDate;
-            calculateDays(savedDate);
-        }
-
-        function calculateDays(startDate) {
-            const start = new Date(startDate);
-            const today = new Date();
-            // Сбрасываем время, чтобы считать только полные дни
-            start.setHours(0,0,0,0);
-            today.setHours(0,0,0,0);
-            
-            const diffTime = today - start;
-            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            
-            document.getElementById('days-display').innerText = diffDays < 0 ? 0 : diffDays;
-        }
-
-        function setDate(val) {
-            localStorage.setItem('aa_date', val);
-            calculateDays(val);
-        }
-
-        function resetToToday() {
-            if(confirm("Вы уверены, что хотите начать отсчет с сегодняшнего дня?")) {
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('sobriety-date-input').value = today;
-                setDate(today);
-            }
-        }
-
-        // Переключение вкладок
-        function switchTab(t) {
-            document.getElementById('tab-counter').classList.toggle('active', t==='counter');
-            document.getElementById('tab-groups').classList.toggle('active', t==='groups');
-            document.getElementById('nav-counter').classList.toggle('active-nav', t==='counter');
-            document.getElementById('nav-groups').classList.toggle('active-nav', t==='groups');
-            if(t==='groups') applyFilter();
-        }
-
-        // Фильтр групп (упрощенная база для примера, добавьте остальные по аналогии)
-        const groups = [
-            { c: "Алматы", n: "АА «Виктория»", a: "ул. Жубанова 3а", t: "Вт, Чт: 19:30", p: "+77059907938" },
-            { c: "Астана", n: "АА «51 параллель»", a: "ул. Петрова 14/3", t: "Ср: 19:00", p: "+77718993679" }
+        // ДАННЫЕ ГРУПП (Весь ваш список)
+        const allGroups = [
+            { c: "Онлайн", n: "АА «Пробуждение»", a: "Zoom ID: 82036099070", t: "Вт, Чт, Сб: 21:00", p: "+77772329996" },
+            { c: "Алматы", n: "АА «Виктория»", a: "ул. Жубанова 3а, каб. 301", t: "Вт, Чт: 19:30, Сб: 19:00", p: "+77059907938" },
+            { c: "Алматы", n: "АА «8 марта»", a: "ул. Зенкова 24", t: "Ежедневно: 19:00", p: "+77011218501" },
+            { c: "Астана", n: "АА «51 параллель»", a: "ул. Петрова 14/3", t: "Ср: 19:00, Сб: 15:00", p: "+77718993679" },
+            { c: "Шымкент", n: "АА «Юг»", a: "Шаяхметова 14/1", t: "Пн, Ср, Пт: 19:00", p: "+77016749853" },
+            { c: "Костанай", n: "АА «ДОСТАР»", a: "ул. 5 апреля 67", t: "Пн, Ср, Пт: 19:00", p: "+77777435620" },
+            { c: "Павлодар", n: "АА «Крепость»", a: "ул. Торайгырова 10/1", t: "Пн, Ср, Пт: 19:00", p: "+77086361510" },
+            { c: "Актобе", n: "АА «ОАЗИС»", a: "ул. Абулхаир–Хана 1", t: "Вт, Чт: 19:00", p: "+77476845424" }
+            // Можно дописать остальные города сюда по аналогии
         ];
 
-        function applyFilter() {
-            const city = document.getElementById('citySelect').value;
+        // ЛОГИКА СЧЕТЧИКА
+        function initApp() {
+            let saved = localStorage.getItem('aa_date');
+            if(!saved) {
+                saved = new Date().toISOString().split('T')[0];
+                localStorage.setItem('aa_date', saved);
+            }
+            document.getElementById('sobriety-date-input').value = saved;
+            calc(saved);
+        }
+
+        function calc(dateStr) {
+            const start = new Date(dateStr);
+            start.setHours(0,0,0,0);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const days = Math.floor((today - start) / 86400000);
+            document.getElementById('days-display').innerText = days < 0 ? 0 : days;
+        }
+
+        function updateDate(val) {
+            localStorage.setItem('aa_date', val);
+            calc(val);
+        }
+
+        function resetToday() {
+            const t = new Date().toISOString().split('T')[0];
+            document.getElementById('sobriety-date-input').value = t;
+            updateDate(t);
+        }
+
+        // НАВИГАЦИЯ
+        function switchTab(tab) {
+            document.getElementById('tab-counter').classList.toggle('active', tab==='counter');
+            document.getElementById('tab-groups').classList.toggle('active', tab==='groups');
+            document.getElementById('nav-counter').classList.toggle('active-nav', tab==='counter');
+            document.getElementById('nav-groups').classList.toggle('active-nav', tab==='groups');
+            if(tab==='groups') renderGroups();
+        }
+
+        function renderGroups() {
+            const filter = document.getElementById('citySelect').value;
             const container = document.getElementById('list-container');
             container.innerHTML = "";
-            groups.forEach(g => {
-                if (city === "all" || g.c === city) {
-                    container.innerHTML += `<div class="group-card">
-                        <div class="city-tag">${g.c}</div>
-                        <div class="group-name">${g.n}</div>
-                        <div class="info-row"><span>📍</span>${g.a}</div>
-                        <div class="info-row"><span>⏰</span>${g.t}</div>
-                        <div class="info-row"><span>📞</span><a href="tel:${g.p}" class="phone-link">${g.p}</a></div>
-                    </div>`;
+            allGroups.forEach(g => {
+                if(filter === 'all' || g.c === filter || (filter === 'другие' && !['Алматы','Астана','Шымкент','Онлайн'].includes(g.c))) {
+                    container.innerHTML += `
+                        <div class="group-card">
+                            <div class="city-tag">${g.c}</div>
+                            <div class="group-name">${g.n}</div>
+                            <div class="info-row">📍 ${g.a}</div>
+                            <div class="info-row">⏰ ${g.t}</div>
+                            <div class="info-row">📞 <a href="tel:${g.p}" class="phone-link">${g.p}</a></div>
+                        </div>
+                    `;
                 }
             });
         }
 
-        init();
+        initApp();
     </script>
 </body>
 </html>
