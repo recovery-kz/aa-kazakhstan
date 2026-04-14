@@ -5,65 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>АА Казахстана</title>
     <style>
-        :root { --primary-color: #2B4F60; --accent-color: #F39C12; --bg-color: #F5F5F5; }
-        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg-color); padding-bottom: 80px; }
-        header { background: var(--primary-color); color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
-        
+        :root { --primary: #2B4F60; --accent: #F39C12; --bg: #F5F5F5; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); padding-bottom: 90px; }
+        header { background: var(--primary); color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
         .content-section { display: none; padding: 15px; flex-direction: column; align-items: center; }
         .active { display: flex !important; }
 
         /* Счетчик */
-        .counter-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 350px; margin-top: 10px; border: 1px solid #ddd; }
-        .days-number { font-size: 72px; font-weight: 800; color: var(--primary-color); margin: 5px 0; }
-        .date-picker-box { margin-top: 20px; padding: 15px; border: 2px dashed var(--accent-color); border-radius: 15px; background: #fffdf5; width: 100%; box-sizing: border-box; }
-        input[type="date"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 16px; margin-top: 5px; }
+        .counter-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; width: 100%; max-width: 350px; margin-top: 20px; box-sizing: border-box; }
+        .days-number { font-size: 80px; font-weight: 800; color: var(--primary); margin: 0; line-height: 1; }
+        .days-label { font-size: 18px; color: var(--primary); font-weight: 600; margin-bottom: 25px; }
+        .date-settings { border-top: 1px solid #eee; pt: 20px; width: 100%; margin-top: 20px; padding-top: 20px; }
+        .date-settings label { font-size: 12px; color: #888; display: block; margin-bottom: 8px; }
+        input[type="date"] { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #ddd; font-size: 16px; font-family: inherit; color: var(--primary); outline: none; }
 
-        /* Группы */
-        .filter-container { width: 100%; max-width: 450px; margin-bottom: 15px; }
-        select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary-color); font-size: 16px; background: white; }
-        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color); box-sizing: border-box; text-align: left; }
-        .city-tag { font-size: 10px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
-        .group-name { font-weight: bold; color: var(--primary-color); font-size: 17px; margin: 4px 0; }
-        .info-row { font-size: 13px; color: #444; margin-bottom: 3px; }
-        .phone-link { color: var(--primary-color); font-weight: bold; text-decoration: none; }
+        /* Список групп */
+        .filter-box { width: 100%; max-width: 450px; margin-bottom: 20px; }
+        select { width: 100%; padding: 14px; border-radius: 15px; border: 2px solid var(--primary); font-size: 16px; background: white; outline: none; }
+        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 18px; border-radius: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-left: 6px solid var(--primary); box-sizing: border-box; text-align: left; }
+        .city-tag { font-size: 11px; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+        .group-name { font-weight: 700; color: var(--primary); font-size: 18px; margin-bottom: 8px; }
+        .info-row { font-size: 14px; color: #555; margin-bottom: 5px; display: flex; align-items: flex-start; }
+        .phone-link { color: var(--primary); font-weight: 700; text-decoration: none; border-bottom: 1px dotted var(--primary); }
 
         /* Навигация */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 70px; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 2000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #95a5a6; cursor: pointer; font-size: 12px; border: none; background: none; }
-        .nav-item.active-nav { color: var(--primary-color); font-weight: bold; }
-        .nav-item span { font-size: 24px; margin-bottom: 2px; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 75px; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 2000; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; cursor: pointer; font-size: 12px; border: none; background: none; transition: 0.3s; }
+        .nav-item.active-nav { color: var(--primary); }
+        .nav-item span { font-size: 26px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div style="font-weight: bold; letter-spacing: 1px;">АА КАЗАХСТАНА</div>
+        <div style="font-weight: 800; letter-spacing: 1.5px; font-size: 16px;">АА КАЗАХСТАНА</div>
     </header>
 
     <main id="tab-counter" class="content-section active">
         <div class="counter-card">
-            <div style="color: #7f8c8d; font-size: 12px;">ВЫ ТРЕЗВЫ</div>
+            <div style="color: #95a5a6; font-size: 13px; font-weight: 600; letter-spacing: 1px;">МОЯ ТРЕЗВОСТЬ</div>
             <div id="days-display" class="days-number">0</div>
-            <div style="font-size: 20px; color: var(--primary-color); margin-bottom: 10px;">ДНЕЙ</div>
+            <div class="days-label">ДНЕЙ</div>
             
-            <div class="date-picker-box">
-                <label style="font-size: 11px; color: #666;">ИЗМЕНИТЬ ДАТУ НАЧАЛА:</label>
+            <div class="date-settings">
+                <label>ДАТА НАЧАЛА:</label>
                 <input type="date" id="sobriety-date-input" onchange="updateDate(this.value)">
             </div>
         </div>
     </main>
 
     <main id="tab-groups" class="content-section">
-        <div class="filter-container">
+        <div class="filter-box">
             <select id="citySelect" onchange="renderGroups()">
                 <option value="all">Все города</option>
                 <option value="Онлайн">💻 Онлайн</option>
                 <option value="Алматы">Алматы</option>
                 <option value="Астана">Астана</option>
                 <option value="Шымкент">Шымкент</option>
+                <option value="Караганда">Караганда</option>
                 <option value="Костанай">Костанай</option>
-                <option value="Актобе">Актобе</option>
                 <option value="Павлодар">Павлодар</option>
+                <option value="Актобе">Актобе</option>
+                <option value="Тараз">Тараз</option>
             </select>
         </div>
         <div id="list-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
@@ -75,38 +78,39 @@
     </nav>
 
     <script>
-        // БАЗА ГРУПП
-        const groups = [
-            { c: "Онлайн", n: "АА «Пробуждение»", a: "Zoom: 82036099070", t: "Вт, Чт, Сб: 21:00", p: "+77772329996" },
+        const allGroups = [
+            { c: "Онлайн", n: "АА «Пробуждение»", a: "Zoom ID: 82036099070", t: "Вт, Чт, Сб: 21:00", p: "+77772329996" },
             { c: "Алматы", n: "АА «Виктория»", a: "ул. Жубанова 3а, каб. 301", t: "Вт, Чт: 19:30, Сб: 19:00", p: "+77059907938" },
             { c: "Алматы", n: "АА «8 марта»", a: "ул. Зенкова 24", t: "Ежедневно: 19:00", p: "+77011218501" },
             { c: "Астана", n: "АА «51 параллель»", a: "ул. Петрова 14/3", t: "Ср: 19:00, Сб: 15:00", p: "+77718993679" },
             { c: "Шымкент", n: "АА «Юг»", a: "Шаяхметова 14/1", t: "Пн, Ср, Пт: 19:00", p: "+77016749853" },
-            { c: "Костанай", n: "АА «ДОСТАР»", a: "ул. 5 апреля 67", t: "Пн, Ср, Пт: 19:00", p: "+77777435620" },
-            { c: "Актобе", n: "АА «ОАЗИС»", a: "ул. Абулхаир–Хана 1", t: "Вт, Чт: 19:00", p: "+77476845424" },
-            { c: "Павлодар", n: "АА «Крепость»", a: "ул. Торайгырова 10/1", t: "Пн, Ср, Пт: 19:00", p: "+77086361510" }
+            { c: "Караганда", n: "АА «Центр»", a: "ул. Чкалова 7", t: "Вт, Пт: 18:30", p: "+77015124536" },
+            { c: "Костанай", n: "АА «Достар»", a: "ул. 5 апреля 67", t: "Пн, Ср, Пт: 19:00", p: "+77777435620" },
+            { c: "Павлодар", n: "АА «Крепость»", a: "ул. Торайгырова 10/1", t: "Пн, Ср, Пт: 19:00", p: "+77086361510" },
+            { c: "Актобе", n: "АА «Оазис»", a: "ул. Абулхаир-Хана 1", t: "Вт, Чт: 19:00", p: "+77476845424" },
+            { c: "Тараз", n: "АА «Надежда»", a: "ул. Пушкина 42", t: "Сб: 17:00", p: "+77071234567" }
         ];
 
-        // ЛОГИКА
         function init() {
-            let saved = localStorage.getItem('aa_date_final');
+            let saved = localStorage.getItem('aa_sobriety_date_v3');
             if(!saved) saved = new Date().toISOString().split('T')[0];
             document.getElementById('sobriety-date-input').value = saved;
             calc(saved);
+            renderGroups();
         }
 
-        function calc(d) {
-            const start = new Date(d);
+        function calc(dateStr) {
+            const start = new Date(dateStr);
             start.setHours(0,0,0,0);
-            const now = new Date();
-            now.setHours(0,0,0,0);
-            const diff = Math.floor((now - start) / 86400000);
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const diff = Math.floor((today - start) / 86400000);
             document.getElementById('days-display').innerText = diff < 0 ? 0 : diff;
         }
 
-        function updateDate(v) {
-            localStorage.setItem('aa_date_final', v);
-            calc(v);
+        function updateDate(val) {
+            localStorage.setItem('aa_sobriety_date_v3', val);
+            calc(val);
         }
 
         function switchTab(t) {
@@ -114,14 +118,13 @@
             document.getElementById('tab-groups').classList.toggle('active', t==='groups');
             document.getElementById('nav-counter').classList.toggle('active-nav', t==='counter');
             document.getElementById('nav-groups').classList.toggle('active-nav', t==='groups');
-            if(t==='groups') renderGroups();
         }
 
         function renderGroups() {
             const filter = document.getElementById('citySelect').value;
             const container = document.getElementById('list-container');
             container.innerHTML = "";
-            groups.forEach(g => {
+            allGroups.forEach(g => {
                 if(filter === 'all' || g.c === filter) {
                     container.innerHTML += `
                         <div class="group-card">
