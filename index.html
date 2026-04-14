@@ -7,92 +7,97 @@
     <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <style>
         :root { --primary: #2B4F60; --accent: #F39C12; --bg: #F5F5F5; }
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); min-height: 100vh; padding-bottom: 90px; }
-        header { background: var(--primary); color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); padding-bottom: 90px; }
+        header { background: var(--primary); color: white; padding: 15px 0; text-align: center; position: sticky; top: 0; z-index: 1000; }
         .content-section { display: none; padding: 15px; flex-direction: column; align-items: center; width: 100%; box-sizing: border-box; }
         .active { display: flex !important; }
-
-        /* Счетчик */
-        .counter-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; width: 100%; max-width: 350px; margin-top: 10px; }
+        .counter-card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; width: 100%; max-width: 350px; }
         .days-number { font-size: 80px; font-weight: 800; color: var(--primary); margin: 0; }
-        .days-label { font-size: 18px; color: var(--primary); font-weight: 600; margin-bottom: 20px; }
-        input[type="date"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; color: var(--primary); }
-
-        /* Группы */
-        .filter-box { width: 100%; max-width: 450px; margin-bottom: 15px; position: sticky; top: 80px; z-index: 900; background: var(--bg); padding: 5px 0; }
+        .filter-box { width: 100%; max-width: 450px; margin-bottom: 15px; position: sticky; top: 75px; z-index: 900; background: var(--bg); padding: 10px 0; }
         select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); font-size: 16px; background: white; }
-        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 15px; border-radius: 15px; border-left: 6px solid var(--primary); box-sizing: border-box; text-align: left; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 15px; border-radius: 15px; border-left: 6px solid var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: left; }
         .city-tag { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
         .group-name { font-weight: 700; color: var(--primary); font-size: 17px; margin: 4px 0; }
         .info-row { font-size: 13px; color: #444; margin-bottom: 4px; }
         .phone-link { color: var(--primary); font-weight: bold; text-decoration: none; }
-
-        /* Навигация */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.08); z-index: 2000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; cursor: pointer; font-size: 12px; border: none; background: none; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; cursor: pointer; border: none; background: none; }
         .nav-item.active-nav { color: var(--primary); font-weight: 700; }
-        .nav-item span { font-size: 26px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<header>
-    <div style="font-weight: 800;">АА КАЗАХСТАНА</div>
-</header>
+<header><div style="font-weight: 800;">АА КАЗАХСТАНА</div></header>
 
 <div id="tab-counter" class="content-section active">
     <div class="counter-card">
         <div style="color: #95a5a6; font-size: 12px; font-weight: 600;">МОЯ ТРЕЗВОСТЬ</div>
         <div id="days-display" class="days-number">0</div>
-        <div class="days-label">ДНЕЙ</div>
-        <div style="border-top: 1px solid #eee; padding-top: 15px;">
-            <label style="font-size: 11px; color: #999; display: block; margin-bottom: 5px;">ДАТА НАЧАЛА:</label>
-            <input type="date" id="date-input" onchange="updateDate(this.value)">
-        </div>
+        <div style="font-weight: 600; color: var(--primary); margin-bottom: 20px;">ДНЕЙ</div>
+        <input type="date" id="date-input" onchange="updateDate(this.value)" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
     </div>
 </div>
 
 <div id="tab-groups" class="content-section">
     <div class="filter-box">
-        <select id="citySelect" onchange="render()">
-            <option value="all">Все города</option>
-            <option value="Онлайн">💻 Онлайн</option>
-            <option value="Алматы">Алматы</option>
-            <option value="Астана">Астана</option>
-            <option value="Шымкент">Шымкент</option>
-            <option value="Актау">Актау</option>
-            <option value="Актобе">Актобе</option>
-            <option value="Атырау">Атырау</option>
-            <option value="Караганда">Караганда</option>
-            <option value="Костанай">Костанай</option>
-            <option value="Павлодар">Павлодар</option>
-        </select>
+        <select id="citySelect" onchange="render()"></select>
     </div>
     <div id="list-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
 </div>
 
 <nav class="bottom-nav">
-    <button class="nav-item active-nav" id="btn-c" onclick="goTo('counter')"><span>⏱</span>Счетчик</button>
-    <button class="nav-item" id="btn-g" onclick="goTo('groups')"><span>📍</span>Группы</button>
+    <button class="nav-item active-nav" id="btn-c" onclick="goTo('counter')">⏱<br>Счетчик</button>
+    <button class="nav-item" id="btn-g" onclick="goTo('groups')">📍<br>Группы</button>
 </nav>
 
 <script>
     const data = [
         { c: "Онлайн", n: "АА «Пробуждение»", a: "Zoom: 82036099070", t: "Вт, Чт, Сб: 21:00", p: "+77772329996" },
         { c: "Онлайн", n: "АА «Бірлік» (каз)", a: "Zoom: 5204364841", t: "Ср: 21:00", p: "+77074337408" },
+        { c: "Онлайн", n: "АА «Шаг за шагом»", a: "Telegram", t: "Вт: 19:00", p: "" },
         { c: "Алматы", n: "АА «Виктория»", a: "ул. Жубанова 3а", t: "Вт, Чт: 19:30, Сб: 19:00", p: "+77059907938" },
         { c: "Алматы", n: "АА «8 марта»", a: "ул. Зенкова 24", t: "Ежедневно: 19:00", p: "+77011218501" },
-        { c: "Алматы", n: "АА «Турксиб»", a: "уточнять по номеру", t: "Вт, Чт: 19:00", p: "+77478601105" },
-        { c: "Алматы", n: "АА женская «АлмА»", a: "ул. Зенкова 24", t: "Суббота: 12:00", p: "+77755006846" },
+        { c: "Алматы", n: "АА «Турксиб»", a: "См. 2GIS", t: "Вт, Чт: 19:00", p: "+77478601105" },
+        { c: "Алматы", n: "АА женская «АлмА»", a: "ул. Зенкова 24", t: "Сб: 12:00", p: "+77755006846" },
+        { c: "Алматы", n: "АА «Шапагат» (каз)", a: "ул. Жубанова 3а", t: "Пн, Ср: 19:00", p: "+77471652435" },
+        { c: "Алматы", n: "АА «Друзья Билла»", a: "ул. Жибек Жолы 64/47", t: "Вт, Чт: 12:00", p: "+77475637587" },
+        { c: "Алматы", n: "АА для новичков «Чайхана»", a: "ул. Жубанова 3а", t: "Вс: 11:00", p: "+77059907938" },
+        { c: "Алматы", n: "АА «Аксай»", a: "пр. Райымбека 493", t: "Вс: 13:00", p: "+77764533418" },
+        { c: "Алматы", n: "АА «Наурыз»", a: "ул. Тимирязева 42", t: "Вт, Чт, Пт, Сб: 19:00", p: "+77083171769" },
+        { c: "Алматы", n: "АА «Женский клуб»", a: "ул. Жубанова 3а / Zoom", t: "Вс: 13:00", p: "+77055730900" },
+        { c: "Алматы", n: "АА «Новые очки»", a: "ул. Жибек Жолы 64/47", t: "Пн, Ср, Пт: 19:00", p: "+77073084757" },
+        { c: "Алматы", n: "АА «Боралдай»", a: "ул. Курчатова 13а", t: "Сб: 17:00", p: "+77772819098" },
+        { c: "Алматы", n: "Мужская группа «ААА»", a: "ул. Зенкова 24", t: "Сб: 17:00", p: "+77713709966" },
         { c: "Астана", n: "АА «51 параллель»", a: "ул. Петрова 14/3", t: "Ср: 19:00, Сб: 15:00", p: "+77718993679" },
         { c: "Астана", n: "АА «Свобода»", a: "ул. Петрова 14/3", t: "Пн, Чт, Пт: 19:00", p: "+77071234699" },
-        { c: "Шымкент", n: "АА «Юг»", a: "Шаяхметова 14/1", t: "Пн, Ср, Пт: 19:00", p: "+77016749853" },
-        { c: "Караганда", n: "АА «Решение есть»", a: "ул. Ерубаева 34", t: "Суббота: 15:45", p: "+77007656935" },
-        { c: "Костанай", n: "АА «ДОСТАР»", a: "ул. 5 апреля 67", t: "Пн, Ср, Пт: 19:00", p: "+77777435620" },
-        { c: "Актобе", n: "АА «ОАЗИС»", a: "ул. Абулхаир–Хана 1", t: "Вт, Чт: 19:00", p: "+77476845424" },
-        { c: "Атырау", n: "АА «НАЧАЛО»", a: "мкр. Авангард-3", t: "Вт, Чт: 19:00", p: "+77054492468" },
+        { c: "Астана", n: "АА «Есиль» (каз)", a: "ул. Петрова 14/3", t: "Вс: 17:00", p: "+77753601528" },
+        { c: "Астана", n: "АА «Большая перемена»", a: "ул. Дукенулы 26", t: "Пн, Пт: 19:00", p: "+77071234699" },
+        { c: "Астана", n: "АА «Сана»", a: "пр. Кабанбай Батыра 58А", t: "Вт, Чт: 20:00", p: "+77718993679" },
+        { c: "Астана", n: "АА «Путь»", a: "ул. Ташенова 26", t: "Вт, Ср, Чт: 19:00", p: "+77718993679" },
+        { c: "Астана", n: "АА «Возрождение»", a: "ул. Куйши Дина 27", t: "Вт: 19:00", p: "+77075650586" },
+        { c: "Астана", n: "АА «Гармония»", a: "ул. Арасан 2/2", t: "Пн, Пт: 19:15", p: "+77753601528" },
+        { c: "Астана", n: "АА «Үміт» (каз)", a: "ул. Кудайбердиулы 94", t: "Ср: 19:00", p: "+77074337408" },
+        { c: "Актау", n: "АА «Парус»", a: "29-й мкр, дом 218", t: "Пн, Пт: 19:15", p: "+77770655797" },
+        { c: "Актобе", n: "АА «Оазис»", a: "ул. Абулхаир-Хана 1", t: "Вт, Чт: 19:00", p: "+77476845424" },
+        { c: "Атырау", n: "АА «Начало»", a: "мкр. Авангард-3", t: "Вт, Чт: 19:00", p: "+77054492468" },
+        { c: "Караганда", n: "АА «Решение есть»", a: "ул. Ерубаева 34", t: "Сб: 15:45", p: "+77007656935" },
+        { c: "Кокшетау", n: "АА «Синегорье»", a: "ул. Ауельбекова 127", t: "Вт, Пт: 19:30", p: "+77713630302" },
+        { c: "Конаев", n: "АА «Надежда»", a: "18 мкр, ул. Курылысшы 8а", t: "Ср: 19:00", p: "+77781661081" },
+        { c: "Костанай", n: "АА «Достар»", a: "ул. 5 апреля 67", t: "Пн, Ср, Пт: 19:00", p: "+77777435620" },
+        { c: "Костанай", n: "АА «12 Шаг»", a: "ул. Арыстанбекова 23", t: "Вт, Чт, Вс: 19:00", p: "+77777435620" },
         { c: "Павлодар", n: "АА «Крепость»", a: "ул. Торайгырова 10/1", t: "Пн, Ср, Пт: 19:00", p: "+77086361510" },
-        { c: "Актау", n: "АА «Парус»", a: "29-й мкр, дом 218", t: "Пн, Пт: 19:15", p: "+77770655797" }
+        { c: "Петропавловск", n: "АА «Последняя капля»", a: "ул. Букетова 4", t: "Сб: 20:00", p: "+77758272514" },
+        { c: "Рудный", n: "АА «Новая свобода»", a: "ул. Парковая 55", t: "Ср, Вс: 19:30", p: "+77754947917" },
+        { c: "Семей", n: "АА «Семёрочка»", a: "Уточняйте по тел.", t: "По запросу", p: "+77076400913" },
+        { c: "Талдыкурган", n: "АА «Жетысу»", a: "ул. Шевченко 100", t: "Пн, Ср, Пт: 19:00", p: "+77079928240" },
+        { c: "Усть-Каменогорск", n: "АА «Устье»", a: "ул. Казахстан 99", t: "Пн, Ср: 18:00", p: "+77777495088" },
+        { c: "Кызылорда", n: "АА «Сырдарья»", a: "ул. Муратбаева 8б", t: "Вт, Чт: 19:00, Вс: 11:00", p: "+77074337408" },
+        { c: "Шымкент", n: "АА «Юг»", a: "Шаяхметова 14/1", t: "Пн, Ср, Пт: 19:00", p: "+77016749853" },
+        { c: "Шымкент", n: "АА «Шым»", a: "ул. Мангельдина 33", t: "Вт, Чт: 19:00, Сб: 12:00", p: "+77026372329" },
+        { c: "Шымкент", n: "АА «Свобода»", a: "ул. Московская 9а", t: "Вс: 13:00", p: "+77059906737" },
+        { c: "Шымкент", n: "АА «Пана» (каз)", a: "Шаяхметова 14/1", t: "Вс: 13:00", p: "+77026372329" },
+        { c: "Экибастуз", n: "АА «Чистое Небо»", a: "Уточняйте по тел.", t: "По запросу", p: "+77753500562" },
+        { c: "Жетысай", n: "АА «Куат»", a: "ул. Ауэзова, каб 12", t: "Пн, Ср, Пт: 19:00", p: "+77073183839" }
     ];
 
     function goTo(tab) {
@@ -104,7 +109,7 @@
     }
 
     function updateDate(val) {
-        localStorage.setItem('aa_date_v7', val);
+        localStorage.setItem('sobriety_date_v10', val);
         const diff = Math.floor((new Date() - new Date(val)) / 86400000);
         document.getElementById('days-display').innerText = diff < 0 ? 0 : diff;
     }
@@ -126,9 +131,16 @@
         });
     }
 
-    // Старт
-    let s = localStorage.getItem('aa_date_v7') || new Date().toISOString().split('T')[0];
-    localStorage.setItem('aa_date_v7', s);
+    const select = document.getElementById('citySelect');
+    const cities = ["all", ...new Set(data.map(g => g.c))];
+    cities.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.innerText = c === "all" ? "Все города и Онлайн" : c;
+        select.appendChild(opt);
+    });
+
+    let s = localStorage.getItem('sobriety_date_v10') || new Date().toISOString().split('T')[0];
     document.getElementById('date-input').value = s;
     updateDate(s);
 </script>
