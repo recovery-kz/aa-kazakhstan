@@ -17,47 +17,25 @@
     <style>
         :root { --primary: #2B4F60; --accent: #F39C12; --bg: #F5F5F5; --sos: #e74c3c; --kaspi: #f14635; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: -apple-system, system-ui, sans-serif; 
-            margin: 0; background: var(--bg); min-height: 100vh; 
-            display: flex; flex-direction: column; overflow-x: hidden;
-        }
-
-        header { 
-            background: var(--primary); color: white; padding: 20px 0 15px 0; 
-            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-            position: sticky; top: 0; z-index: 1000; width: 100%;
-            padding-top: env(safe-area-inset-top);
-        }
-
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        header { background: var(--primary); color: white; padding: 20px 0 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; width: 100%; padding-top: env(safe-area-inset-top); }
         .header-logo { width: 45px; height: 45px; margin-bottom: 5px; object-fit: contain; }
         .header-title { font-weight: 800; letter-spacing: 1px; font-size: 14px; text-transform: uppercase; }
-
         .main-container { flex: 1; padding: 15px 15px 100px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        
         .content-section { display: none; width: 100%; max-width: 500px; flex-direction: column; align-items: center; }
         .active { display: flex !important; animation: fadeIn 0.2s ease; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Новости */
-        .news-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); margin-bottom: 15px; width: 100%; }
-        .news-title { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 10px; line-height: 1.2; }
-        .news-text { font-size: 14px; color: #444; line-height: 1.6; }
-
-        /* Счетчик */
         .motivation-card { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); margin-bottom: 15px; width: 100%; }
         .mot-label { color: var(--accent); font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
         .mot-text { color: #333; font-size: 14px; line-height: 1.4; font-weight: 600; font-style: italic; }
-
         .counter-card { background: white; padding: 25px 20px; border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; width: 100%; margin-bottom: 15px; }
         .time-block { margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
         .time-block:last-child { border-bottom: none; }
         .time-value { font-size: 42px; font-weight: 800; color: var(--primary); display: block; line-height: 1; }
         .time-label { font-size: 14px; color: var(--primary); font-weight: 600; text-transform: uppercase; }
-
-        /* Литература */
+        .news-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); margin-bottom: 15px; width: 100%; text-align: left; }
+        .news-title { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 12px; }
+        .news-text { font-size: 14px; color: #444; line-height: 1.6; }
         .lit-header { background: #fff; padding: 20px; border-radius: 20px; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; text-align: center; }
         .lit-btn { display: inline-block; background: var(--primary); color: white; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 10px; font-size: 14px; }
         .book-item { background: white; width: 100%; padding: 12px 15px; border-radius: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
@@ -65,18 +43,16 @@
         .lang-tag { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 800; text-transform: uppercase; min-width: 35px; text-align: center; }
         .lang-ru { background: #e3f2fd; color: #1976d2; }
         .lang-kz { background: #fbe9e7; color: #d84315; }
-
-        /* Навигация */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.08); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #bdc3c7; cursor: pointer; border: none; background: none; font-size: 8.5px; }
         .nav-item.active-nav { color: var(--primary); font-weight: 700; }
         .nav-item span { font-size: 18px; margin-bottom: 2px; }
-
-        /* Группы */
         .group-card { background: white; width: 100%; margin-bottom: 10px; padding: 15px; border-radius: 18px; border-left: 6px solid var(--primary); text-align: left; }
         .city-tag { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
         .group-name { font-weight: 700; color: var(--primary); font-size: 16px; margin: 4px 0; }
-        .info-row { font-size: 13px; margin: 3px 0; color: #555; }
+        .info-row { font-size: 13px; margin: 5px 0; color: #555; display: flex; align-items: flex-start; }
+        .info-row span { margin-right: 8px; font-size: 16px; }
+        .link-active { color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary); }
     </style>
 </head>
 <body>
@@ -88,10 +64,7 @@
 
 <main class="main-container">
     <div id="tab-counter" class="content-section active">
-        <div class="motivation-card">
-            <div class="mot-label">Мотивация на сегодня</div>
-            <div id="mot-text" class="mot-text">Загрузка...</div>
-        </div>
+        <div class="motivation-card"><div class="mot-label">Мотивация на сегодня</div><div id="mot-text" class="mot-text">Загрузка...</div></div>
         <div class="counter-card">
             <div id="display-years" class="time-block" style="display:none;"><span class="time-value" id="val-years">0</span><span class="time-label" id="lbl-years">Лет</span></div>
             <div id="display-months" class="time-block" style="display:none;"><span class="time-value" id="val-months">0</span><span class="time-label" id="lbl-months">Месяцев</span></div>
@@ -114,8 +87,8 @@
             <div class="news-title">🎉 Анонс: 13-летие группы «Виктория»!</div>
             <div class="news-text">
                 Друзья, единомышленники и гости! С радостью приглашаем вас разделить с нами особенный праздник. 
-                <br><br><b>9 мая</b> мы отмечаем знаковое событие — День рождения первой группы Анонимных Алкоголиков в Казахстане! 
-                <br><br>Нашей любимой группе «Виктория» исполняется 13 лет. Это годы надежды, единства и бесценного опыта выздоровления, которыми мы хотим поделиться с каждым из вас.
+                <br><br><b>9 мая</b> мы отмечаем знаковое событие — День рождения первой группы Анонимных Алкоголиков в Казахстане! Нашей любимой группе «Виктория» исполняется 13 лет. 
+                <br><br>Это годы надежды, единства и бесценного опыта выздоровления, которыми мы хотим поделиться с каждым из вас. Ждем всех!
             </div>
         </div>
     </div>
@@ -154,68 +127,109 @@
 
 <script>
     const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Мы не старые люди, пытающиеся стать молодыми.", "Ищи сходства, а не различия.", "Доверься Богу, чисти кухню.", "Принятие — ключ ко всем моим проблемам.", "Ничего не меняется, если я ничего не меняю.", "Трезвость — это дар.", "Помогая другому, ты помогаешь себе.", "Один день за один раз.", "Просто начни с начала.", "Будь честен с самим собой.", "Твоя Высшая Сила любит тебя.", "Принципы выше личностей.", "Сначала надень маску на себя.", "Не анализируй — действуй.", "Держись поближе к победителям."];
-
+    
+    // ПРОВЕРЕННЫЙ СПИСОК: 28 КНИГ
     const books = [
-        {n:"Анонимные Алкоголики (с историями) твердый", l:"рус"}, {n:"Анонимные Алкоголики (стандарт)", l:"рус"},
-        {n:"Анонимные Алкоголики (стандарт)", l:"каз"}, {n:"Анонимные Алкоголики (стандарт) карманный", l:"рус"},
-        {n:"Двенадцать шагов и двенадцать традиций", l:"рус"}, {n:"Ежедневные размышления", l:"каз"},
-        {n:"Ежедневные размышления", l:"рус"}, {n:"Рук-во по обслуживанию АА + 12 Принципов", l:"рус"},
-        {n:"Жить трезвыми", l:"рус"}, {n:"Жить трезвыми", l:"каз"}, {n:"Сбросить камень", l:"рус"},
-        {n:"Сбросить камень", l:"каз"}, {n:"Рабочая тетрадь по изучению 12 традиций", l:"рус"},
-        {n:"Рабочая тетрадь по изучению Принципов обслуживания", l:"рус"}, {n:"Доктор Боб и славные ветераны", l:"рус"},
-        {n:"Новые очки (Чак Ч)", l:"рус"}, {n:"Новые очки (Чак Ч)", l:"каз"}, {n:"АА Взрослеет", l:"рус"},
-        {n:"Пришли к убеждению", l:"рус"}, {n:"Двенадцать шагов и двенадцать традиций", l:"каз"},
-        {n:"Вопросник по 12 традициям", l:"рус"}, {n:"12 традиций в иллюстрациях", l:"рус"},
-        {n:"Думаешь ты особенный?", l:"рус"}, {n:"Молодежь и АА", l:"рус"}, {n:"Женщины в АА", l:"рус"},
-        {n:"Группа АА там где все начинается", l:"рус"}, {n:"Пособие по работе АА в ЛУ", l:"рус"}
+        {n:"Анонимные Алкоголики (с историями) твердый",l:"рус"}, {n:"Анонимные Алкоголики (стандарт)",l:"рус"}, {n:"Анонимные Алкоголики (стандарт)",l:"каз"}, {n:"Анонимные Алкоголики (стандарт) карманный",l:"рус"},
+        {n:"Двенадцать шагов и двенадцать традиций",l:"рус"}, {n:"Двенадцать шагов и двенадцать традиций",l:"каз"}, {n:"Ежедневные размышления",l:"рус"}, {n:"Ежедневные размышления",l:"каз"},
+        {n:"Жить трезвыми",l:"рус"}, {n:"Жить трезвыми",l:"каз"}, {n:"Сбросить камень",l:"рус"}, {n:"Сбросить камень",l:"каз"},
+        {n:"Новые очки (Чак Ч)",l:"рус"}, {n:"Новые очки (Чак Ч)",l:"каз"}, {n:"Доктор Боб и славные ветераны",l:"рус"}, {n:"АА Взрослеет",l:"рус"},
+        {n:"Пришли к убеждению",l:"рус"}, {n:"Рук-во по обслуживанию АА + 12 Принципов",l:"рус"}, {n:"Рабочая тетрадь по изучению 12 традиций",l:"рус"}, {n:"Рабочая тетрадь по изучению Принципов обслуживания",l:"рус"},
+        {n:"Вопросник по 12 традициям",l:"рус"}, {n:"12 традиций в иллюстрациях",l:"рус"}, {n:"Думаешь ты особенный?",l:"рус"}, {n:"Молодежь и АА",l:"рус"},
+        {n:"Женщины в АА",l:"рус"}, {n:"Группа АА там где все начинается",l:"рус"}, {n:"Пособие по работе АА в ЛУ",l:"рус"}, {n:"Марк Х. (Спикерские)",l:"рус"}
     ];
 
-    const data = [{c:"Онлайн",n:"АА «Пробуждение»",a:"Zoom ID: 82036099070",t:"Вт, Чт, Сб: 21:00",p:"+77772329996"},{c:"Онлайн",n:"АА «Бірлік» (каз)",a:"Zoom ID: 5204364841",t:"Ср: 21:00",p:"+77074337408"},{c:"Онлайн",n:"АА «ШАГ ЗА ШАГОМ»",a:"Telegram чат",t:"Вт: 19:00",p:""},{c:"Алматы",n:"АА «Виктория»",a:"ул. Жубанова 3а, каб. 301",t:"Вт, Чт: 19:30, Сб: 19:00",p:"+77059907938"},{c:"Алматы",n:"АА «8 марта»",a:"ул. Зенкова 24",t:"Ежедневно: 19:00",p:"+77011218501"},{c:"Алматы",n:"АА «Турксиб»",a:"уточнять по номеру",t:"Вт, Чт: 19:00",p:"+77478601105"},{c:"Алматы",n:"АА женская «АлмА»",a:"ул. Зенкова 24",t:"Суббота: 12:00",p:"+77755006846"},{c:"Алматы",n:"АА «Шапагат» (каз)",a:"ул. Жубанова 3а",t:"Пн, Ср: 19:00",p:"+77471652435"},{c:"Алматы",n:"АА «Друзья Билла»",a:"ул. Жибек Жолы 64/47",t:"Вт, Чт: 12:00",p:"+77475637587"},{c:"Алматы",n:"АА «Чайхана» (новички)",a:"ул. Жубанова 3а",t:"Вс: 11:00",p:"+77059907938"},{c:"Алматы",n:"АА «Аксай»",a:"пр. Райымбека 493",t:"Вс: 13:00",p:"+77764533418"},{c:"Алматы",n:"АА «Наурыз»",a:"ул. Тимирязева 42",t:"Вт, Чт, Пт, Сб: 19:00",p:"+77083171769"},{c:"Алматы",n:"АА «Женский клуб»",a:"ул. Жубанова 3а / Zoom",t:"Вс: 13:00",p:"+77055730900"},{c:"Алматы",n:"АА «Новые очки»",a:"ул. Жибек Жолы 64/47",t:"Пн, Ср, Пт: 19:00",p:"+77073084757"},{c:"Алматы",n:"АА «Боралдай»",a:"ул. Курчатова 13а",t:"Сб: 17:00",p:"+77772819098"},{c:"Алматы",n:"Мужская группа «ААА»",a:"ул. Зенкова 24",t:"Сб: 17:00",p:"+77713709966"},{c:"Астана",n:"АА «51 параллель»",a:"ул. Петрова 14/3",t:"Ср: 19:00, Сб: 15:00",p:"+77718993679"},{c:"Астана",n:"АА «Свобода»",a:"ул. Петрова 14/3",t:"Пн, Чт, Пт: 19:00",p:"+77071234699"},{c:"Астана",n:"АА «Есиль» (каз)",a:"ул. Петрова 14/3",t:"Вс: 17:00",p:"+77753601528"},{c:"Астана",n:"АА «Большая перемена»",a:"ул. Дукенулы 26",t:"Пн, Пт: 19:00",p:"+77071234699"},{c:"Астана",n:"АА «Сана»",a:"пр. Кабанбай Батыра 58А",t:"Вт, Чт: 20:00",p:"+77718993679"},{c:"Астана",n:"АА «Путь»",a:"ул. Ташенова 26",t:"Вт, Ср, Чт: 19:00",p:"+77718993679"},{c:"Астана",n:"АА «Возрождение»",a:"ул. Куйши Дина 27",t:"Вт: 19:00",p:"+77075650586"},{c:"Астана",n:"АА «Гармония»",a:"ул. Арасан 2/2",t:"Пн, Пт: 19:15",p:"+77753601528"},{c:"Астана",n:"АА «Үміт» (каз)",a:"ул. Кудайбердиулы 94",t:"Ср: 19:00",p:"+77074337408"},{c:"Актау",n:"АА «Парус»",a:"29-й мкр, дом 218",t:"Пн, Пт: 19:15",p:"+77770655797"},{c:"Актобе",n:"АА «ОАЗИС»",a:"ул. Абулхаир–Хана 1",t:"Вт, Чт: 19:00",p:"+7476845424"},{c:"Атырау",n:"АА «НАЧАЛО»",a:"мкр. Авангард-3",t:"Вт, Чт: 19:00",p:"+77054492468"},{c:"Караганда",n:"АА «Решение есть»",a:"ул. Ерубаева 34",t:"Сб: 15:45",p:"+77007656935"},{c:"Кокшетау",n:"АА «Синегорье»",a:"ул. Ауельбекова 127",t:"Вт, Пт: 19:30",p:"+77713630302"},{c:"Конаев",n:"АА «Надежда»",a:"18 мкр, ул. Курылысшы 8а",t:"Ср: 19:00",p:"+77781661081"},{c:"Костанай",n:"АА «ДОСТАР»",a:"ул. 5 апреля 67",t:"Пн, Ср, Пт: 19:00",p:"+77777435620"},{c:"Костанай",n:"АА «12 Шаг»",a:"ул. Арыстанбекова 23",t:"Вт, Чт, Вс: 19:00",p:"+77777435620"},{c:"Павлодар",n:"АА «Крепость»",a:"ул. Торайгырова 10/1",t:"Пн, Ср, Пт: 19:00",p:"+77086361510"},{c:"Петропавловск",n:"АА «Последняя капля»",a:"ул. Букетова 4",t:"Сб: 20:00",p:"+77758272514"},{c:"Рудный",n:"АА «Новая свобода»",a:"ул. Парковая 55",t:"Ср, Вс: 19:30",p:"+77754947917"},{c:"Семей",n:"АА «СЕМЁРОЧКА»",a:"инфо по тел.",t:"По запросу",p:"+77076400913"},{c:"Талдыкурган",n:"АА «жетысу»",a:"ул. Шевченко 100",t:"Пн, Ср, Пт: 19:00",p:"+77079928240"},{c:"Усть-Каменогорск",n:"АА «УСТЬЕ»",a:"ул. Казахстан 99",t:"Пн, Ср: 18:00",p:"+77777495088"},{c:"Кызылорда",n:"АА «сырдарья»",a:"ул. Муратбаева 8б",t:"Вт, Чт: 19:00",p:"+77074337408"},{c:"Шымкент",n:"АА «Юг»",a:"Шаяхметова 14/1",t:"Пн, Ср, Пт: 19:00",p:"+77016749853"},{c:"Шымкент",n:"АА «Шым»",a:"ул. Мангельдина 33",t:"Вт, Чт: 19:00",p:"+77026372329"},{c:"Шымкент",n:"АА «СВОБОДА»",a:"ул. Московская 9а",t:"Вс: 13:00",p:"+77059906737"},{c:"Шымкент",n:"АА «ПАНА» (каз)",a:"Шаяхметова 14/1",t:"Вс: 13:00",p:"+77026372329"},{c:"Экибастуз",n:"АА «Чистое Небо»",a:"инфо по тел.",t:"По запросу",p:"+77753500562"},{c:"Жетысай",n:"АА «куат»",a:"ул. Ауэзова, каб 12",t:"Пн, Ср, Пт: 19:00",p:"+77073183839"}];
+    const data = [
+        {c:"Онлайн",n:"АА «Пробуждение»",a:"https://us06web.zoom.us/j/82036099070",t:"Вт, Чт, Сб: 21:00-22:30",p:"+77772329996",online:true},
+        {c:"Онлайн",n:"АА «Бірлік» (каз)",a:"https://us02web.zoom.us/j/5204364841",t:"Ср: 21:00-22:30",p:"+77074337408",online:true},
+        {c:"Онлайн",n:"АА «ШАГ ЗА ШАГОМ»",a:"https://t.me/+JqgMpZCz_fY1OTVi",t:"Вт: 19:00-20:30 (открытая)",p:"",online:true},
+        {c:"Алматы",n:"АА «Виктория»",a:"ул. Жубанова 3а, 301 каб., 3 эт.",t:"Вт (откр), Чт: 19:30-21:00; Сб: 19:00-20:30",p:"+77059907938",z:"https://zoom.us/j/5290200881"},
+        {c:"Алматы",n:"АА «8 марта»",a:"ул. Зенкова 24, дом Офицеров",t:"Ежедневно: 19:00-20:30; Вт, Чт: 12:00",p:"+77011218501"},
+        {c:"Алматы",n:"АА «Турксиб»",a:"уточнять по номеру (+77478601105)",t:"Вт, Чт: 19:00-20:30; Вс (откр): 17:00-18:30",p:"+77478601105"},
+        {c:"Алматы",n:"АА «АлмА» (женская)",a:"ул. Зенкова 24, дом Офицеров",t:"Сб: 12:00-13:30",p:"+77755006846"},
+        {c:"Алматы",n:"АА «Шапагат» (каз)",a:"ул. Жубанова 3а, 301 каб.",t:"Пн, Ср: 19:00-20:30; Сб (откр): 17:00-18:30",p:"+77471652435"},
+        {c:"Алматы",n:"АА «Друзья Билла»",a:"ул. Жибек Жолы 64/47, оф. 215",t:"Вт, Чт (откр): 12:00-13:30",p:"+77475637587"},
+        {c:"Алматы",n:"АА «Чайхана» (новички)",a:"ул. Жубанова 3а, 301 каб.",t:"Вс (откр): 11:00-12:30",p:"+77059907938",z:"https://zoom.us/j/5290200881"},
+        {c:"Алматы",n:"АА «Аксай»",a:"пр. Райымбека 493",t:"Вс: 13:00-14:15",p:"+77764533418"},
+        {c:"Алматы",n:"АА «Наурыз»",a:"ул. Тимирязева 42, каб. 102",t:"Вт, Чт, Пт, Сб (откр): 19:00-20:30",p:"+77083171769"},
+        {c:"Алматы",n:"АА «Женский клуб»",a:"ул. Жубанова 3а, 301 каб.",t:"Вс (откр для женщин): 13:00-14:30",p:"+77055730900",z:"https://zoom.us/j/5290200881"},
+        {c:"Алматы",n:"АА «Новые очки»",a:"ул. Жибек Жолы 64/47, оф. 215",t:"Пн, Ср, Пт (откр): 19:00-20:15; Сб: 14:00",p:"+77073084757"},
+        {c:"Алматы",n:"АА «Боралдай»",a:"ул. Курчатова 13а",t:"Сб: 17:00",p:"+77772819098"},
+        {c:"Алматы",n:"Мужская группа «ААА»",a:"ул. Зенкова 24, дом Офицеров",t:"Сб: 17:00-18:15",p:"+77713709966"},
+        {c:"Астана",n:"АА «51 параллель»",a:"ул. Петрова 14/3, вход Hada",t:"Ср: 19:00-20:15; Сб: 15:00-16:15",p:"+77718993679"},
+        {c:"Астана",n:"АА «Свобода»",a:"ул. Петрова 14/3, вход Hada",t:"Пн, Чт, Пт: 19:00-20:00",p:"+77071234699"},
+        {c:"Астана",n:"АА «Есиль» (каз)",a:"ул. Петрова 14/3, вход Hada",t:"Вс: 17:00-18:30",p:"+77753601528"},
+        {c:"Астана",n:"АА «Большая перемена»",a:"ул. Дукенулы 26",t:"Пн, Пт: 19:00-20:00",p:"+77071234699"},
+        {c:"Астана",n:"АА «Сана»",a:"пр. Кабанбай Батыра 58А",t:"Вт, Чт: 20:00-21:15",p:"+77718993679"},
+        {c:"Астана",n:"АА «Путь»",a:"ул. Ташенова 26",t:"Вт, Ср, Чт: 19:00-20:15",p:"+77718993679"},
+        {c:"Астана",n:"АА «Возрождение»",a:"ул. Куйши Дина 27",t:"Вт: 19:00-20:15",p:"+77075650586"},
+        {c:"Астана",n:"АА «Гармония»",a:"ул. Арасан 2/2",t:"Пн, Пт: 19:15",p:"+77753601528"},
+        {c:"Астана",n:"АА «Үміт» (каз)",a:"ул. Ш. Кудайбердиулы 94",t:"Ср: 19:00-20:15",p:"+77074337408"},
+        {c:"Актау",n:"АА «Парус»",a:"29-й мкр, дом 218",t:"Пн, Пт: 19:15-20:30",p:"+77770655797"},
+        {c:"Актобе",n:"АА «ОАЗИС»",a:"ул. Абулхаир–Хана 1, оф. 228",t:"Вт, Чт: 19:00-20:15; Сб: 14:00-15:15",p:"+77476845424"},
+        {c:"Атырау",n:"АА «НАЧАЛО»",a:"мкр. Авангард-3, 34а",t:"Вт, Чт: 19:00-20:30; Сб: 12:00-13:30",p:"+77054492468"},
+        {c:"Караганда",n:"АА «Решение есть»",a:"ул. Ерубаева 34",t:"Суббота: 15:45",p:"+77007656935"},
+        {c:"Кокшетау",n:"АА «Синегорье»",a:"ул. Ауельбекова 127",t:"Вт, Пт: 19:30-20:30",p:"+77713630302"},
+        {c:"Конаев",n:"АА «Надежда»",a:"18 мкр, ул. Курылысшы 8а",t:"Ср: 19:00-20:00",p:"+77781661081"},
+        {c:"Костанай",n:"АА «ДОСТАР»",a:"ул. 5 апреля 67, 2 эт.",t:"Пн, Ср, Пт: 19:00-20:30",p:"+77777435620"},
+        {c:"Костанай",n:"АА «12 Шаг»",a:"ул. Г. Арыстанбекова 23",t:"Вт, Чт: 19:00-20:30; Вс: 19:00",p:"+77714290869"},
+        {c:"Павлодар",n:"АА «Крепость»",a:"ул. Торайгырова 10/1, оф. 4",t:"Пн, Ср, Пт: 19:00-20:00",p:"+77086361510"},
+        {c:"Петропавловск",n:"АА «Последняя капля»",a:"ул. Букетова 4",t:"Сб: 20:00",p:"+77758272514"},
+        {c:"Рудный",n:"АА «Новая свобода»",a:"ул. Парковая 55",t:"Ср, Вс: 19:30-20:45",p:"+77754947917"},
+        {c:"Семей",n:"АА «СЕМЁРОЧКА»",a:"инфо по тел.",t:"По запросу",p:"+77076400913"},
+        {c:"Талдыкурган",n:"АА «жетысу»",a:"ул. Шевченко 100",t:"Пн, Ср, Пт: 19:00",p:"+77079928240"},
+        {c:"Усть-Каменогорск",n:"АА «УСТЬЕ»",a:"ул. Казахстан 99",t:"Пн, Ср: 18:00-19:30",p:"+77777495088"},
+        {c:"Кызылорда",n:"АА «сырдарья»",a:"ул. Муратбаева 8б, каб. 2",t:"Вт, Чт: 19:00; Вс: 11:00",p:"+77074337408"},
+        {c:"Шымкент",n:"АА «Юг»",a:"Шаяхметова 14/1, каб. 12а",t:"Пн, Ср, Пт: 19:00-20:30",p:"+77016749853"},
+        {c:"Шымкент",n:"АА «Шым»",a:"ул. Мангельдина 33",t:"Вт, Чт: 19:00-20:00; Сб: 12:00-13:00",p:"+77026372329"},
+        {c:"Шымкент",n:"АА «СВОБОДА»",a:"ул. Московская 9а",t:"Вс: 13:00-14:30",p:"+77059906737"},
+        {c:"Шымкент",n:"АА «ПАНА» (каз)",a:"ул. Шаяхметова 14/1",t:"Вс: 13:00-14:00",p:"+77026372329"},
+        {c:"Экибастуз",n:"АА «Чистое Небо»",a:"инфо по тел.",t:"По запросу",p:"+77753500562"},
+        {c:"Жетысай",n:"АА «куат»",a:"ул. Ауэзова, каб. 12",t:"Пн, Ср, Пт: 19:00",p:"+77073183839"}
+    ];
 
-    function plural(n, titles) { return titles[(n % 10 === 1 && n % 100 !== 11) ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2]; }
-
-    function updateDate(val) {
-        if(!val) return; localStorage.setItem('aa_sober_v3', val);
-        const start = new Date(val), now = new Date();
-        let y = now.getFullYear() - start.getFullYear(), m = now.getMonth() - start.getMonth(), d = now.getDate() - start.getDate();
-        if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-        if (m < 0) { y--; m += 12; }
-        const tD = Math.floor((now - start) / 86400000);
-        document.getElementById('val-days').innerText = tD < 0 ? 0 : tD;
-        document.getElementById('lbl-days').innerText = plural(tD, ['День', 'Дня', 'Дней']);
+    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
+    function updateDate(v) {
+        if(!v) return; localStorage.setItem('aa_sober_v3', v);
+        const s = new Date(v), n = new Date();
+        let y = n.getFullYear()-s.getFullYear(), m = n.getMonth()-s.getMonth(), d = n.getDate()-s.getDate();
+        if(d<0){ m--; d+=new Date(n.getFullYear(), n.getMonth(), 0).getDate(); }
+        if(m<0){ y--; m+=12; }
+        const tD = Math.floor((n-s)/86400000);
+        document.getElementById('val-days').innerText = tD<0?0:tD;
+        document.getElementById('lbl-days').innerText = plural(tD, ['День','Дня','Дней']);
         const dy = document.getElementById('display-years'), dm = document.getElementById('display-months');
-        if (y > 0) { dy.style.display = 'block'; document.getElementById('val-years').innerText = y; document.getElementById('lbl-years').innerText = plural(y, ['Год', 'Года', 'Лет']); } else dy.style.display = 'none';
-        if (m > 0) { dm.style.display = 'block'; document.getElementById('val-months').innerText = m; document.getElementById('lbl-months').innerText = plural(m, ['Месяц', 'Месяца', 'Месяцев']); } else dm.style.display = 'none';
+        if(y>0){ dy.style.display='block'; document.getElementById('val-years').innerText=y; document.getElementById('lbl-years').innerText=plural(y,['Год','Года','Лет']); } else dy.style.display='none';
+        if(m>0){ dm.style.display='block'; document.getElementById('val-months').innerText=m; document.getElementById('lbl-months').innerText=plural(m,['Месяц','Месяца','Месяцев']); } else dm.style.display='none';
     }
-
     function goTo(t) {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active-nav'));
         document.getElementById(`tab-${t}`).classList.add('active');
         document.getElementById(`btn-${t[0]}`).classList.add('active-nav');
-        if(t === 'lit') renderLit(); if(t === 'groups') render(); window.scrollTo(0,0);
+        if(t==='lit') renderLit(); if(t==='groups') render(); window.scrollTo(0,0);
     }
-
     function renderLit() {
-        const cont = document.getElementById('book-list'); cont.innerHTML = "";
-        books.forEach(b => {
-            cont.innerHTML += `<div class="book-item"><div class="book-title">${b.n}</div><span class="lang-tag lang-${b.l === 'рус' ? 'ru' : 'kz'}">${b.l}</span></div>`;
+        const c = document.getElementById('book-list'); c.innerHTML = "";
+        books.forEach(b => { c.innerHTML += `<div class="book-item"><div class="book-title">${b.n}</div><span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${b.l}</span></div>`; });
+    }
+    function render() {
+        const f = document.getElementById('citySelect').value, c = document.getElementById('list-container'); c.innerHTML = "";
+        data.forEach(g => {
+            if(f==='all'||g.c===f) {
+                let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">Перейти в Zoom/Чат</a>` : `<a href="https://maps.google.com/?q=${encodeURIComponent(g.c+', '+g.a)}" target="_blank" class="link-active">${g.a}</a>`;
+                let zH = g.z ? `<div class="info-row"><span>📱</span><a href="${g.z}" target="_blank" class="link-active">Zoom собрания</a></div>` : "";
+                c.innerHTML += `<div class="group-card"><div class="city-tag">${g.c}</div><div class="group-name">${g.n}</div><div class="info-row"><span>📍</span>${aH}</div>${zH}<div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`;
+            }
         });
     }
-
-    function render() {
-        const f = document.getElementById('citySelect').value, cont = document.getElementById('list-container'); cont.innerHTML = "";
-        data.forEach(g => { if(f === 'all' || g.c === f) cont.innerHTML += `<div class="group-card"><div class="city-tag">${g.c}</div><div class="group-name">${g.n}</div><div class="info-row"><span>📍</span>${g.a}</div><div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`; });
-    }
-
-    function confirmReset() { if (confirm("Сбросить отсчет?")) { const t = new Date().toISOString().split('T')[0]; document.getElementById('date-input').value = t; updateDate(t); } }
-
+    function confirmReset() { if(confirm("Сбросить отсчет?")){ const t=new Date().toISOString().split('T')[0]; document.getElementById('date-input').value=t; updateDate(t); } }
     window.onload = () => {
-        const sel = document.getElementById('citySelect'), cities = ["all", ...new Set(data.map(x => x.c))].sort();
-        cities.forEach(c => { const opt = document.createElement('option'); opt.value = c; opt.innerText = c === "all" ? "Все города и Онлайн" : c; sel.appendChild(opt); });
-        let s = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
-        document.getElementById('date-input').value = s; updateDate(s);
-        document.getElementById('mot-text').innerText = phrases[Math.floor(((new Date()) - (new Date((new Date()).getFullYear(), 0, 0))) / 86400000) % phrases.length];
+        const s = document.getElementById('citySelect'), ct = ["all", ...new Set(data.map(x => x.c))].sort();
+        ct.forEach(c => { const o = document.createElement('option'); o.value=c; o.innerText=c==="all"?"Все города и Онлайн":c; s.appendChild(o); });
+        let st = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
+        document.getElementById('date-input').value = st; updateDate(st);
+        document.getElementById('mot-text').innerText = phrases[Math.floor(((new Date())-(new Date((new Date()).getFullYear(),0,0)))/86400000)%phrases.length];
     };
 </script>
 </body>
