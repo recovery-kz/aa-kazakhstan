@@ -4,34 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>АА Казахстана</title>
-    <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <style>
         :root { --primary-color: #2B4F60; --accent-color: #F39C12; --bg-color: #F5F5F5; }
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg-color); min-height: 100vh; padding-bottom: 90px; }
-        header { background: var(--primary-color); color: white; padding: 10px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
-        .logo-container { background: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px; border: 2px solid var(--accent-color); overflow: hidden; }
-        .content-section { display: none; padding: 15px; flex-direction: column; align-items: center; width: 100%; box-sizing: border-box; }
+        body { font-family: -apple-system, sans-serif; margin: 0; background: var(--bg-color); padding-bottom: 80px; }
+        header { background: var(--primary-color); color: white; padding: 15px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
+        
+        .content-section { display: none; padding: 15px; flex-direction: column; align-items: center; }
         .active { display: flex !important; }
 
         /* Счетчик */
-        .counter-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 350px; margin-top: 10px; }
+        .counter-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 100%; max-width: 350px; margin-top: 10px; border: 1px solid #ddd; }
         .days-number { font-size: 72px; font-weight: 800; color: var(--primary-color); margin: 5px 0; }
-        
-        /* ПОЛЕ ВЫБОРА ДАТЫ */
-        .date-input-group { margin-top: 20px; padding: 15px; border-top: 1px solid #eee; width: 100%; box-sizing: border-box; }
-        .date-label { font-size: 13px; color: #7f8c8d; margin-bottom: 8px; display: block; }
-        input[type="date"] { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid var(--primary-color); 
-            border-radius: 10px; 
-            font-size: 16px; 
-            color: var(--primary-color);
-            background: white;
-            font-family: inherit;
-        }
+        .date-picker-box { margin-top: 20px; padding: 15px; border: 2px dashed var(--accent-color); border-radius: 15px; background: #fffdf5; width: 100%; box-sizing: border-box; }
+        input[type="date"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ccc; font-size: 16px; margin-top: 5px; }
 
-        .btn-reset { margin-top: 15px; background: none; border: none; color: #e74c3c; text-decoration: underline; font-size: 13px; cursor: pointer; }
+        /* Группы */
+        .filter-container { width: 100%; max-width: 450px; margin-bottom: 15px; }
+        select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary-color); font-size: 16px; background: white; }
+        .group-card { background: white; width: 100%; max-width: 450px; margin-bottom: 12px; padding: 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color); box-sizing: border-box; text-align: left; }
+        .city-tag { font-size: 10px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
+        .group-name { font-weight: bold; color: var(--primary-color); font-size: 17px; margin: 4px 0; }
+        .info-row { font-size: 13px; color: #444; margin-bottom: 3px; }
+        .phone-link { color: var(--primary-color); font-weight: bold; text-decoration: none; }
 
         /* Навигация */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; height: 70px; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 2000; }
@@ -43,83 +37,105 @@
 <body>
 
     <header>
-        <div class="logo-container">
-            <img src="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png" alt="Лого" style="width: 100%;">
-        </div>
-        <div style="font-size: 14px; font-weight: bold;">АА КАЗАХСТАНА</div>
+        <div style="font-weight: bold; letter-spacing: 1px;">АА КАЗАХСТАНА</div>
     </header>
 
     <main id="tab-counter" class="content-section active">
         <div class="counter-card">
-            <div style="color: #7f8c8d; font-size: 12px; letter-spacing: 1px;">ВЫ ТРЕЗВЫ</div>
+            <div style="color: #7f8c8d; font-size: 12px;">ВЫ ТРЕЗВЫ</div>
             <div id="days-display" class="days-number">0</div>
-            <div style="font-size: 18px; color: var(--primary-color); font-weight: 500;">ДНЕЙ</div>
+            <div style="font-size: 20px; color: var(--primary-color); margin-bottom: 10px;">ДНЕЙ</div>
             
-            <div class="date-input-group">
-                <label class="date-label">Установить дату начала трезвости:</label>
-                <input type="date" id="sobriety-date-input" onchange="changeDate(this.value)">
-                <button class="btn-reset" onclick="setToday()">Сбросить на сегодня</button>
+            <div class="date-picker-box">
+                <label style="font-size: 11px; color: #666;">ИЗМЕНИТЬ ДАТУ НАЧАЛА:</label>
+                <input type="date" id="sobriety-date-input" onchange="updateDate(this.value)">
             </div>
         </div>
     </main>
 
     <main id="tab-groups" class="content-section">
-        <div style="width: 100%; max-width: 450px; text-align: center;">
-            <p style="color: #7f8c8d;">Список групп загружается из базы данных...</p>
+        <div class="filter-container">
+            <select id="citySelect" onchange="renderGroups()">
+                <option value="all">Все города</option>
+                <option value="Онлайн">💻 Онлайн</option>
+                <option value="Алматы">Алматы</option>
+                <option value="Астана">Астана</option>
+                <option value="Шымкент">Шымкент</option>
+                <option value="Костанай">Костанай</option>
+                <option value="Актобе">Актобе</option>
+                <option value="Павлодар">Павлодар</option>
+            </select>
         </div>
-        <div id="list-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-            </div>
+        <div id="list-container" style="width: 100%; display: flex; flex-direction: column; align-items: center;"></div>
     </main>
 
     <nav class="bottom-nav">
-        <button class="nav-item active-nav" id="nav-counter" onclick="switchTab('counter')">
-            <span>⏱</span>Счетчик
-        </button>
-        <button class="nav-item" id="nav-groups" onclick="switchTab('groups')">
-            <span>📍</span>Группы
-        </button>
+        <button class="nav-item active-nav" id="nav-counter" onclick="switchTab('counter')"><span>⏱</span>Счетчик</button>
+        <button class="nav-item" id="nav-groups" onclick="switchTab('groups')"><span>📍</span>Группы</button>
     </nav>
 
     <script>
-        function initCounter() {
-            let savedDate = localStorage.getItem('aa_sobriety_date');
-            // Если даты нет, ставим сегодня
-            if (!savedDate) {
-                savedDate = new Date().toISOString().split('T')[0];
-                localStorage.setItem('aa_sobriety_date', savedDate);
-            }
-            document.getElementById('sobriety-date-input').value = savedDate;
-            updateDisplay(savedDate);
+        // БАЗА ГРУПП
+        const groups = [
+            { c: "Онлайн", n: "АА «Пробуждение»", a: "Zoom: 82036099070", t: "Вт, Чт, Сб: 21:00", p: "+77772329996" },
+            { c: "Алматы", n: "АА «Виктория»", a: "ул. Жубанова 3а, каб. 301", t: "Вт, Чт: 19:30, Сб: 19:00", p: "+77059907938" },
+            { c: "Алматы", n: "АА «8 марта»", a: "ул. Зенкова 24", t: "Ежедневно: 19:00", p: "+77011218501" },
+            { c: "Астана", n: "АА «51 параллель»", a: "ул. Петрова 14/3", t: "Ср: 19:00, Сб: 15:00", p: "+77718993679" },
+            { c: "Шымкент", n: "АА «Юг»", a: "Шаяхметова 14/1", t: "Пн, Ср, Пт: 19:00", p: "+77016749853" },
+            { c: "Костанай", n: "АА «ДОСТАР»", a: "ул. 5 апреля 67", t: "Пн, Ср, Пт: 19:00", p: "+77777435620" },
+            { c: "Актобе", n: "АА «ОАЗИС»", a: "ул. Абулхаир–Хана 1", t: "Вт, Чт: 19:00", p: "+77476845424" },
+            { c: "Павлодар", n: "АА «Крепость»", a: "ул. Торайгырова 10/1", t: "Пн, Ср, Пт: 19:00", p: "+77086361510" }
+        ];
+
+        // ЛОГИКА
+        function init() {
+            let saved = localStorage.getItem('aa_date_final');
+            if(!saved) saved = new Date().toISOString().split('T')[0];
+            document.getElementById('sobriety-date-input').value = saved;
+            calc(saved);
         }
 
-        function updateDisplay(dateString) {
-            const start = new Date(dateString);
+        function calc(d) {
+            const start = new Date(d);
+            start.setHours(0,0,0,0);
             const now = new Date();
-            // Считаем разницу в днях
-            const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+            now.setHours(0,0,0,0);
+            const diff = Math.floor((now - start) / 86400000);
             document.getElementById('days-display').innerText = diff < 0 ? 0 : diff;
         }
 
-        function changeDate(newDate) {
-            localStorage.setItem('aa_sobriety_date', newDate);
-            updateDisplay(newDate);
+        function updateDate(v) {
+            localStorage.setItem('aa_date_final', v);
+            calc(v);
         }
 
-        function setToday() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('sobriety-date-input').value = today;
-            changeDate(today);
+        function switchTab(t) {
+            document.getElementById('tab-counter').classList.toggle('active', t==='counter');
+            document.getElementById('tab-groups').classList.toggle('active', t==='groups');
+            document.getElementById('nav-counter').classList.toggle('active-nav', t==='counter');
+            document.getElementById('nav-groups').classList.toggle('active-nav', t==='groups');
+            if(t==='groups') renderGroups();
         }
 
-        function switchTab(tab) {
-            document.getElementById('tab-counter').classList.toggle('active', tab === 'counter');
-            document.getElementById('tab-groups').classList.toggle('active', tab === 'groups');
-            document.getElementById('nav-counter').classList.toggle('active-nav', tab === 'counter');
-            document.getElementById('nav-groups').classList.toggle('active-nav', tab === 'groups');
+        function renderGroups() {
+            const filter = document.getElementById('citySelect').value;
+            const container = document.getElementById('list-container');
+            container.innerHTML = "";
+            groups.forEach(g => {
+                if(filter === 'all' || g.c === filter) {
+                    container.innerHTML += `
+                        <div class="group-card">
+                            <div class="city-tag">${g.c}</div>
+                            <div class="group-name">${g.n}</div>
+                            <div class="info-row">📍 ${g.a}</div>
+                            <div class="info-row">⏰ ${g.t}</div>
+                            <div class="info-row">📞 <a href="tel:${g.p}" class="phone-link">${g.p}</a></div>
+                        </div>`;
+                }
+            });
         }
 
-        // Запуск при загрузке
-        initCounter();
+        init();
     </script>
 </body>
 </html>
