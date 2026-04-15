@@ -73,19 +73,24 @@
         .time-value { font-size: 42px; font-weight: 800; color: var(--primary); display: block; line-height: 1; }
         .time-label { font-size: 14px; color: var(--primary); font-weight: 600; text-transform: uppercase; }
 
-        input[type="date"] { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 10px; font-size: 16px; text-align: center; }
+        input[type="date"], .profile-input { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 10px; font-size: 16px; text-align: center; }
+        .profile-input { text-align: left; font-size: 14px; padding: 10px; }
 
-        .sos-container { width: 100%; margin-top: 5px; }
-        .sos-btn-dual { display: flex; align-items: center; justify-content: center; background: var(--sos); color: white; text-decoration: none; padding: 14px; border-radius: 15px; margin-bottom: 8px; font-weight: 800; font-size: 14px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2); }
-        .sos-btn-dual span { font-size: 10px; margin-left: 8px; opacity: 0.9; background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 4px; }
+        .sos-wrapper { width: 100%; margin-top: 5px; position: relative; }
+        .sos-main-btn { background: var(--sos); color: white; padding: 14px; border-radius: 15px; text-align: center; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2); }
+        .sos-options { display: none; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .sos-opt-link { background: #34495e; color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+
+        /* ПРОФИЛЬ / ДОВЕРЕННЫЕ ЛИЦА */
+        .trust-item { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+        .trust-item:last-child { border-bottom: none; }
+        .trust-fields { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .call-btn { background: var(--primary); color: white; text-decoration: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
         .book-item { background: var(--card-bg); width: 100%; padding: 15px; border-radius: 15px; margin-bottom: 8px; display: flex; flex-direction: column; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 1px solid var(--border); cursor: pointer; }
         .book-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .book-title { font-size: 14px; font-weight: 700; color: var(--text-main); flex: 1; padding-right: 15px; line-height: 1.3; }
         .book-desc { font-size: 12px; color: var(--text-sub); line-height: 1.4; margin-top: 10px; display: none; padding-top: 10px; border-top: 1px dashed var(--border); }
-        .lang-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; min-width: 40px; text-align: center; }
-        .lang-ru { background: #e3f2fd; color: #1976d2; }
-        .lang-kz { background: #fbe9e7; color: #d84315; }
         
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); cursor: pointer; border: none; background: none; padding: 2px; min-width: 0; }
@@ -137,9 +142,13 @@
             <div class="time-block"><span class="time-value" id="val-days">0</span><span class="time-label" id="lbl-days">Дней</span></div>
             <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
                 <input type="date" id="date-input" onchange="updateDate(this.value)">
-                <div class="sos-container">
-                    <a href="tel:+77072080553" class="sos-btn-dual" id="s-ru">🚨 НУЖНА ПОМОЩЬ? <span>РУС</span></a>
-                    <a href="tel:+77074337408" class="sos-btn-dual" id="s-kz" style="background:#34495e;">🚨 КӨМЕК КЕРЕК ПЕ? <span>ҚАЗ</span></a>
+                
+                <div class="sos-wrapper">
+                    <div class="sos-main-btn" id="btn-sos-main" onclick="toggleSos()">🚨 НУЖНА ПОМОЩЬ? / КӨМЕК КЕРЕК ПЕ?</div>
+                    <div class="sos-options" id="sos-box">
+                        <a href="tel:+77072080553" class="sos-opt-link"><span>РУССКИЙ ЯЗЫК</span> <span>📞</span></a>
+                        <a href="tel:+77074337408" class="sos-opt-link" style="background:#2c3e50;"><span>ҚАЗАҚ ТІЛІ</span> <span>📞</span></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,6 +158,49 @@
                 <span style="background:var(--kaspi); color:white; padding:5px 12px; border-radius:8px; font-weight:800; font-size:12px;">KASPI</span>
             </div>
         </a>
+    </div>
+
+    <div id="tab-profile" class="content-section">
+        <div class="card" style="padding: 20px;">
+            <div style="font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 15px; text-align: center;" id="t-trust-head">ДОВЕРЕННЫЕ ЛИЦА</div>
+            <div id="trust-list">
+                <div class="trust-item">
+                    <div class="trust-fields">
+                        <input type="text" placeholder="Имя" class="profile-input" id="tr-n-0" oninput="saveTrust(0)">
+                        <input type="tel" placeholder="Номер телефона" class="profile-input" id="tr-p-0" oninput="saveTrust(0)">
+                    </div>
+                    <a href="#" id="call-0" class="call-btn">📞</a>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-fields">
+                        <input type="text" placeholder="Имя" class="profile-input" id="tr-n-1" oninput="saveTrust(1)">
+                        <input type="tel" placeholder="Номер телефона" class="profile-input" id="tr-p-1" oninput="saveTrust(1)">
+                    </div>
+                    <a href="#" id="call-1" class="call-btn">📞</a>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-fields">
+                        <input type="text" placeholder="Имя" class="profile-input" id="tr-n-2" oninput="saveTrust(2)">
+                        <input type="tel" placeholder="Номер телефона" class="profile-input" id="tr-p-2" oninput="saveTrust(2)">
+                    </div>
+                    <a href="#" id="call-2" class="call-btn">📞</a>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-fields">
+                        <input type="text" placeholder="Имя" class="profile-input" id="tr-n-3" oninput="saveTrust(3)">
+                        <input type="tel" placeholder="Номер телефона" class="profile-input" id="tr-p-3" oninput="saveTrust(3)">
+                    </div>
+                    <a href="#" id="call-3" class="call-btn">📞</a>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-fields">
+                        <input type="text" placeholder="Имя" class="profile-input" id="tr-n-4" oninput="saveTrust(4)">
+                        <input type="tel" placeholder="Номер телефона" class="profile-input" id="tr-p-4" oninput="saveTrust(4)">
+                    </div>
+                    <a href="#" id="call-4" class="call-btn">📞</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="tab-news" class="content-section">
@@ -188,17 +240,23 @@
     <button class="nav-item" id="btn-n" onclick="goTo('news')"><span>📰</span><span class="nav-txt">Новости</span></button>
     <button class="nav-item" id="btn-l" onclick="goTo('lit')"><span>📚</span><span class="nav-txt">Книги</span></button>
     <button class="nav-item" id="btn-g" onclick="goTo('groups')"><span>📍</span><span class="nav-txt">Группы</span></button>
+    <button class="nav-item" id="btn-p" onclick="goTo('profile')"><span>👤</span><span class="nav-txt" id="n-prof">Профиль</span></button>
 </nav>
 
 <script>
     const i18n = {
-        ru: { head: "АА КАЗАХСТАНА", motLab: "Мотивация на сегодня", kaspi: "❤️ Седьмая Традиция", litCom: "ЛИТЕРАТУРНЫЙ КОМИТЕТ", litPrice: "Наличие и цены:", nav: ["Счетчик", "Новости", "Книги", "Группы"], units: [["Год","Года","Лет"],["Месяц","Месяца","Месяцев"],["День","Дня","Дней"]], allCities: "Все города", sOpen: "ОТКРЫТО. ДО КОНЦА", sSoon: "ОТКРОЕТСЯ ЧЕРЕЗ", sClosed: "ЗАКРЫТО", todayBtn: "📅 Сегодня" },
-        kz: { head: "ҚАЗАҚСТАН АА", motLab: "Бүгінгі мотивация", kaspi: "❤️ Жетінші Дәстүр", litCom: "ӘДЕБИЕТ КОМИТЕТІ", litPrice: "Бағасы мен қолжетімділігі:", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар"], units: [["Жыл","Жыл","Жыл"],["Ай","Ай","Ай"],["Күн","Күн","Күн"]], allCities: "Барлық қалалар", sOpen: "АШЫҚ. АЯҚТАЛУЫНА", sSoon: "АШЫЛАДЫ", sClosed: "ЖАБЫҚ", todayBtn: "📅 Бүгін" }
+        ru: { head: "АА КАЗАХСТАНА", motLab: "Мотивация на сегодня", kaspi: "❤️ Седьмая Традиция", litCom: "ЛИТЕРАТУРНЫЙ КОМИТЕТ", litPrice: "Наличие и цены:", nav: ["Счетчик", "Новости", "Книги", "Группы"], units: [["Год","Года","Лет"],["Месяц","Месяца","Месяцев"],["День","Дня","Дней"]], allCities: "Все города", sOpen: "ОТКРЫТО. ДО КОНЦА", sSoon: "ОТКРОЕТСЯ ЧЕРЕЗ", sClosed: "ЗАКРЫТО", todayBtn: "📅 Сегодня", sosMain: "🚨 НУЖНА ПОМОЩЬ?", nProf: "Профиль", trustHead: "ДОВЕРЕННЫЕ ЛИЦА" },
+        kz: { head: "ҚАЗАҚСТАН АА", motLab: "Бүгінгі мотивация", kaspi: "❤️ Жетінші Дәстүр", litCom: "ӘДЕБИЕТ КОМИТЕТІ", litPrice: "Бағасы мен қолжетімділігі:", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар"], units: [["Жыл","Жыл","Жыл"],["Ай","Ай","Ай"],["Күн","Күн","Күн"]], allCities: "Барлық қалалар", sOpen: "АШЫҚ. АЯҚТАЛУЫНА", sSoon: "АШЫЛАДЫ", sClosed: "ЖАБЫҚ", todayBtn: "📅 Бүгін", sosMain: "🚨 КӨМЕК КЕРЕК ПЕ?", nProf: "Жол", trustHead: "СЕНІМДІ ТҰЛҒАЛАР" }
     };
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
     let onlyToday = false;
     
+    function toggleSos() {
+        const box = document.getElementById('sos-box');
+        box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
+    }
+
     function toggleTheme() {
         const isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('aa_theme', isDark ? 'dark' : 'light');
@@ -222,6 +280,9 @@
         document.getElementById('t-lit-com').innerText = d.litCom;
         document.getElementById('t-lit-price').innerText = d.litPrice;
         document.getElementById('todayFilter').innerText = d.todayBtn;
+        document.getElementById('btn-sos-main').innerText = d.sosMain + " / КӨМЕК КЕРЕК ПЕ?";
+        document.getElementById('n-prof').innerText = d.nProf;
+        document.getElementById('t-trust-head').innerText = d.trustHead;
         const navs = document.querySelectorAll('.nav-txt'); d.nav.forEach((t, i) => navs[i].innerText = t);
         const s = document.getElementById('citySelect'); if(s.options[0]) s.options[0].innerText = d.allCities;
         updateDate(document.getElementById('date-input').value);
@@ -229,7 +290,26 @@
         if(document.getElementById('tab-groups').classList.contains('active')) render();
     }
 
-    const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Мы не старые люди, пытающиеся стать молодыми.", "Ищи сходства, а не различия.", "Доверься Богу, чисти кухню.", "Принятие — ключ ко всем моим проблемам.", "Ничего не меняется, если я ничего не меняю.", "Трезвость — это дар.", "Помогая другому, ты помогаешь себе.", "Один день за один раз.", "Просто начни с начала.", "Будь честен с самим собой.", "Твоя Высшая Сила любит тебя.", "Принципы выше личностей.", "Сначала надень маску на себя.", "Не анализируй — действуй.", "Держись поближе к победителям."];
+    // ЛОГИКА ДОВЕРЕННЫХ ЛИЦ
+    function saveTrust(id) {
+        const n = document.getElementById(`tr-n-${id}`).value;
+        const p = document.getElementById(`tr-p-${id}`).value;
+        localStorage.setItem(`aa_trust_n_${id}`, n);
+        localStorage.setItem(`aa_trust_p_${id}`, p);
+        document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, '');
+    }
+
+    function loadTrust() {
+        for (let i = 0; i < 5; i++) {
+            const n = localStorage.getItem(`aa_trust_n_${i}`) || "";
+            const p = localStorage.getItem(`aa_trust_p_${i}`) || "";
+            document.getElementById(`tr-n-${i}`).value = n;
+            document.getElementById(`tr-p-${i}`).value = p;
+            document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, '');
+        }
+    }
+
+    const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Ищи сходства, а не различия.", "Доверься Богу, чисти кухню.", "Принятие — ключ ко всем моим проблемам.", "Ничего не меняется, если я ничего не меняю.", "Трезвость — это дар.", "Помогая другому, ты помогаешь себе.", "Один день за один раз.", "Просто начни с начала.", "Будь честен с самим собой.", "Твоя Высшая Сила любит тебя.", "Принципы выше личностей.", "Сначала надень маску на себя.", "Не анализируй — действуй.", "Держись поближе к победителям."];
     
     const books = [
         {n:"Анонимные Алкоголики (с историями) твердый", l:"рус", d:"Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма."},
@@ -304,7 +384,7 @@
         {c:"Кызылорда",n:"АА «сырдарья»",a:"ул. Муратбаева 8б",t:"Вт, Чт: 19:00; Вс: 11:00",p:"+77074337408", sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1100,e:1230}]},
         {c:"Шымкент",n:"АА «Юг»",a:"Шаяхметова 14/1",t:"Пн, Ср, Пт: 19:00-20:30",p:"+77016749853", map:"https://2gis.kz/shymkent/geo/70000001035048187", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
         {c:"Шымкент",n:"АА «Шым»",a:"ул. Мангельдина 33",t:"Вт, Чт: 19:00-20:00; Сб: 12:00-13:00",p:"+77026372329", sc:[{d:2,s:1900,e:2000},{d:4,s:1900,e:2000},{d:6,s:1200,e:1300}]},
-        {c:"Шымкент",n:"АА «СВОБОДА»",a:"ул. Московская 9а",t:"Вс: 13:00-14:30",p:"+77059906737", sc:[{d:0,s:1300,e:1430}]},
+        {c:"Шымкент",n:"АА «СВОБОДА»",a:"Вс: 13:00-14:30",p:"+77059906737", sc:[{d:0,s:1300,e:1430}]},
         {c:"Шымкент",n:"АА «ПАНА» (каз)",a:"ул. Шаяхметова 14/1",t:"Вс: 13:00-14:00",p:"+77026372329", k:true, sc:[{d:0,s:1300,e:1400}]},
         {c:"Экибастуз",n:"АА «Чистое Небо»",a:"инфо по тел.",t:"По запросу",p:"+77753500562", sc:[]},
         {c:"Жетысай",n:"АА «куат»",a:"ул. Ауэзова",t:"Пн, Ср, Пт: 19:00",p:"+77073183839", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
@@ -320,6 +400,7 @@
         ct.forEach(c => { const o = document.createElement('option'); o.value=c; o.innerText=c==="all" ? i18n[curLang].allCities : c; s.appendChild(o); });
         let st = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
         document.getElementById('date-input').value = st;
+        loadTrust();
         setLang(curLang);
         document.getElementById('mot-text').innerText = phrases[Math.floor(((new Date())-(new Date((new Date()).getFullYear(),0,0)))/86400000)%phrases.length];
     };
@@ -346,6 +427,31 @@
         if(t==='lit') renderLit(); if(t==='groups') render(); window.scrollTo(0,0);
     }
     
+    function toggleSos() {
+        const box = document.getElementById('sos-box');
+        box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function saveTrust(id) {
+        const n = document.getElementById(`tr-n-${id}`).value;
+        const p = document.getElementById(`tr-p-${id}`).value;
+        localStorage.setItem(`aa_trust_n_${id}`, n);
+        localStorage.setItem(`aa_trust_p_${id}`, p);
+        document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, '');
+    }
+
+    function loadTrust() {
+        for (let i = 0; i < 5; i++) {
+            const n = localStorage.getItem(`aa_trust_n_${i}`) || "";
+            const p = localStorage.getItem(`aa_trust_p_${i}`) || "";
+            if(document.getElementById(`tr-n-${i}`)) {
+                document.getElementById(`tr-n-${i}`).value = n;
+                document.getElementById(`tr-p-${i}`).value = p;
+                document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, '');
+            }
+        }
+    }
+
     function toggleBook(id) {
         const desc = document.getElementById(`desc-${id}`);
         const current = desc.style.display;
@@ -356,14 +462,7 @@
     function renderLit() {
         const c = document.getElementById('book-list'); c.innerHTML = "";
         books.forEach((b, index) => { 
-            c.innerHTML += `
-                <div class="book-item" onclick="toggleBook(${index})">
-                    <div class="book-header">
-                        <div class="book-title">${b.n}</div>
-                        <span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${b.l}</span>
-                    </div>
-                    <div class="book-desc" id="desc-${index}">${b.d}</div>
-                </div>`; 
+            c.innerHTML += `<div class="book-item" onclick="toggleBook(${index})"><div class="book-header"><div class="book-title">${b.n}</div><span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${b.l}</span></div><div class="book-desc" id="desc-${index}">${b.d}</div></div>`; 
         });
     }
 
@@ -373,13 +472,10 @@
         const d = now.getDay();
         const curM = now.getHours() * 60 + now.getMinutes();
         const todaySlots = g.sc.filter(s => s.d === d).sort((a,b) => a.s - b.s);
-        
         for (let slot of todaySlots) {
             const startM = Math.floor(slot.s / 100) * 60 + (slot.s % 100);
             const endM = Math.floor(slot.e / 100) * 60 + (slot.e % 100);
-            if (curM >= startM && curM < endM) {
-                return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${endM - curM} МИН</div>`;
-            }
+            if (curM >= startM && curM < endM) return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${endM - curM} МИН</div>`;
             if (curM < startM) {
                 const diff = startM - curM;
                 const h = Math.floor(diff / 60);
@@ -391,32 +487,15 @@
     }
 
     function render() {
-        const f = document.getElementById('citySelect').value;
-        const c = document.getElementById('list-container');
-        const now = new Date();
-        const currentDay = now.getDay();
-        
+        const f = document.getElementById('citySelect').value, c = document.getElementById('list-container');
+        const now = new Date(), currentDay = now.getDay();
         c.innerHTML = "";
         data.forEach(g => {
-            const hasMeetingToday = g.sc.some(s => s.d === currentDay);
-            const cityMatch = (f === 'all' || g.c === f);
-            const todayMatch = (!onlyToday || hasMeetingToday);
-
-            if(cityMatch && todayMatch) {
+            if((f === 'all' || g.c === f) && (!onlyToday || g.sc.some(s => s.d === currentDay))) {
                 let icons = `${g.o ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`;
                 let mapUrl = g.map ? g.map : `https://2gis.kz/search/${encodeURIComponent(g.c + ', ' + g.a)}`;
                 let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">${curLang==='ru'?'Перейти в Zoom/Чат':'Zoom-ға өту'}</a>` : `<a href="${mapUrl}" target="_blank" class="link-active">${g.a}</a>`;
-                let zH = g.z ? `<div class="info-row"><span>📱</span><a href="${g.z}" target="_blank" class="link-active">Zoom</a></div>` : "";
-                
-                c.innerHTML += `<div class="card group-card">
-                    ${getGroupStatus(g)}
-                    <div class="city-tag">${g.c}</div>
-                    <div class="group-name">${g.n} <span style="float:right; font-size:14px;">${icons}</span></div>
-                    <div class="info-row"><span>📍</span>${aH}</div>
-                    ${zH}
-                    <div class="info-row"><span>⏰</span>${g.t}</div>
-                    ${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p.replace(/\s/g, '')}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}
-                </div>`;
+                c.innerHTML += `<div class="card group-card">${getGroupStatus(g)}<div class="city-tag">${g.c}</div><div class="group-name">${g.n} <span style="float:right; font-size:14px;">${icons}</span></div><div class="info-row"><span>📍</span>${aH}</div><div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p.replace(/\s/g, '')}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`;
             }
         });
     }
