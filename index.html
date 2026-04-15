@@ -25,6 +25,9 @@
         .content-section { display: none; width: 100%; max-width: 500px; flex-direction: column; align-items: center; }
         .active { display: flex !important; animation: fadeIn 0.2s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .news-card { background: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; width: 100%; overflow: hidden; }
+        .news-img { width: 100%; height: auto; display: block; }
         .motivation-card { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); margin-bottom: 15px; width: 100%; }
         .mot-label { color: var(--accent); font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
         .mot-text { color: #333; font-size: 14px; line-height: 1.4; font-weight: 600; font-style: italic; }
@@ -33,9 +36,6 @@
         .time-block:last-child { border-bottom: none; }
         .time-value { font-size: 42px; font-weight: 800; color: var(--primary); display: block; line-height: 1; }
         .time-label { font-size: 14px; color: var(--primary); font-weight: 600; text-transform: uppercase; }
-        .news-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); margin-bottom: 15px; width: 100%; text-align: left; }
-        .news-title { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 12px; }
-        .news-text { font-size: 14px; color: #444; line-height: 1.6; }
         .lit-header { background: #fff; padding: 20px; border-radius: 20px; width: 100%; margin-bottom: 15px; border: 1px solid #ddd; text-align: center; }
         .lit-btn { display: inline-block; background: var(--primary); color: white; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 700; margin-top: 10px; font-size: 14px; }
         .book-item { background: white; width: 100%; padding: 12px 15px; border-radius: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
@@ -84,11 +84,14 @@
 
     <div id="tab-news" class="content-section">
         <div class="news-card">
-            <div class="news-title">🎉 Анонс: 13-летие группы «Виктория»!</div>
-            <div class="news-text">
-                Друзья, единомышленники и гости! С радостью приглашаем вас разделить с нами особенный праздник. 
-                <br><br><b>9 мая</b> мы отмечаем знаковое событие — День рождения первой группы Анонимных Алкоголиков в Казахстане! Нашей любимой группе «Виктория» исполняется 13 лет. 
-                <br><br>Это годы надежды, единства и бесценного опыта выздоровления, которыми мы хотим поделиться с каждым из вас. Ждем всех!
+            <img src="https://github.com/recovery-kz/aa-kazakhstan/blob/main/WhatsApp%20Image%202026-03-20%20at%2014.49.01.jpeg?raw=true" 
+                 class="news-img" 
+                 alt="5-й Юбилейный Форум АА Казахстана">
+        </div>
+        <div class="news-card" style="padding: 20px; text-align: left; border-top: 5px solid var(--accent);">
+            <div style="font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 12px;">🎉 13-летие группы «Виктория»!</div>
+            <div style="font-size: 14px; color: #444; line-height: 1.6;">
+                Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет! Это годы единства и бесценного опыта выздоровления. Ждем всех!
             </div>
         </div>
     </div>
@@ -128,7 +131,6 @@
 <script>
     const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Мы не старые люди, пытающиеся стать молодыми.", "Ищи сходства, а не различия.", "Доверься Богу, чисти кухню.", "Принятие — ключ ко всем моим проблемам.", "Ничего не меняется, если я ничего не меняю.", "Трезвость — это дар.", "Помогая другому, ты помогаешь себе.", "Один день за один раз.", "Просто начни с начала.", "Будь честен с самим собой.", "Твоя Высшая Сила любит тебя.", "Принципы выше личностей.", "Сначала надень маску на себя.", "Не анализируй — действуй.", "Держись поближе к победителям."];
     
-    // ПРОВЕРЕННЫЙ СПИСОК: 28 КНИГ
     const books = [
         {n:"Анонимные Алкоголики (с историями) твердый",l:"рус"}, {n:"Анонимные Алкоголики (стандарт)",l:"рус"}, {n:"Анонимные Алкоголики (стандарт)",l:"каз"}, {n:"Анонимные Алкоголики (стандарт) карманный",l:"рус"},
         {n:"Двенадцать шагов и двенадцать традиций",l:"рус"}, {n:"Двенадцать шагов и двенадцать традиций",l:"каз"}, {n:"Ежедневные размышления",l:"рус"}, {n:"Ежедневные размышления",l:"каз"},
@@ -217,7 +219,7 @@
         const f = document.getElementById('citySelect').value, c = document.getElementById('list-container'); c.innerHTML = "";
         data.forEach(g => {
             if(f==='all'||g.c===f) {
-                let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">Перейти в Zoom/Чат</a>` : `<a href="https://maps.google.com/?q=${encodeURIComponent(g.c+', '+g.a)}" target="_blank" class="link-active">${g.a}</a>`;
+                let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">Перейти в Zoom/Чат</a>` : `<a href="http://googleusercontent.com/maps.google.com/6{encodeURIComponent(g.c+', '+g.a)}" target="_blank" class="link-active">${g.a}</a>`;
                 let zH = g.z ? `<div class="info-row"><span>📱</span><a href="${g.z}" target="_blank" class="link-active">Zoom собрания</a></div>` : "";
                 c.innerHTML += `<div class="group-card"><div class="city-tag">${g.c}</div><div class="group-name">${g.n}</div><div class="info-row"><span>📍</span>${aH}</div>${zH}<div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`;
             }
