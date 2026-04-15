@@ -70,13 +70,18 @@
 
         .counter-card { padding: 20px; text-align: center; }
         .complex-sober-row { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
-        .total-days-row { font-size: 14px; font-weight: 600; color: var(--text-sub); border-top: 1px dashed var(--border); padding-top: 8px; }
+        .total-days-row { font-size: 14px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; }
+
+        .medal-progress-box { margin: 10px 0; padding: 0 10px; }
+        .medal-bar-bg { background: var(--border); height: 10px; border-radius: 5px; overflow: hidden; position: relative; }
+        .medal-bar-fill { background: linear-gradient(90deg, #f1c40f, #f39c12); height: 100%; width: 0%; transition: width 1s ease-out; }
+        .medal-info-text { font-size: 11px; font-weight: 700; color: var(--accent); margin-top: 6px; text-transform: uppercase; }
 
         input[type="date"], .profile-input { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 10px; font-size: 16px; text-align: center; }
         .profile-input { text-align: left; font-size: 14px; padding: 10px; }
 
-        .sos-wrapper { width: 100%; margin-top: 5px; position: relative; }
-        .sos-main-btn { background: var(--sos); color: white; padding: 14px; border-radius: 15px; text-align: center; font-weight: 800; font-size: 14px; cursor: pointer; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2); }
+        .sos-wrapper { width: 100%; margin-top: 15px; position: relative; }
+        .sos-main-btn { background: var(--sos); color: white; padding: 14px; border-radius: 15px; text-align: center; font-weight: 800; font-size: 14px; cursor: pointer; }
         .sos-options { display: none; flex-direction: column; gap: 8px; margin-top: 8px; }
         .sos-opt-link { background: #34495e; color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
 
@@ -85,8 +90,10 @@
         .acc-btn.open:after { transform: rotate(180deg); }
         .acc-content { display: none; padding: 15px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
 
+        .notes-area { width: 100%; min-height: 120px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text-main); font-family: inherit; font-size: 14px; resize: none; outline: none; margin-top: 5px; }
+        .prayer-text { font-style: italic; font-size: 15px; line-height: 1.6; color: var(--primary); text-align: center; padding: 10px 0; white-space: pre-line; }
+
         .trust-item { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-        .trust-item:last-child { border-bottom: none; }
         .trust-fields { flex: 1; display: flex; flex-direction: column; gap: 5px; }
         .call-btn { background: var(--primary); color: white; text-decoration: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
@@ -101,24 +108,20 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); cursor: pointer; border: none; background: none; padding: 2px; min-width: 0; }
         .nav-item.active-nav { color: var(--primary); font-weight: 800; }
-        .nav-item span:first-child { font-size: 18px; margin-bottom: 2px; }
         .nav-txt { font-size: 8px; text-transform: uppercase; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
 
-        .group-filters { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; }
-        .filter-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--primary); font-weight: 800; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        /* ФИКС СЪЕЗЖАЮЩИХ ВКЛАДОК ПРИ ФИЛЬТРЕ */
+        .group-filters { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; height: 50px; align-items: stretch; }
+        .filter-btn { flex: 1; padding: 0 12px; height: 100%; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--primary); font-weight: 800; font-size: 13px; cursor: pointer; }
         .filter-btn.active { background: var(--primary); color: white; }
-
-        .status-badge { font-size: 10px; font-weight: 800; margin-bottom: 5px; display: flex; align-items: center; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-        .s-open { color: var(--open); } .s-open .status-dot { background: var(--open); box-shadow: 0 0 5px var(--open); }
-        .s-soon { color: var(--soon); } .s-soon .status-dot { background: var(--soon); }
-        .s-closed { color: var(--closed); } .s-closed .status-dot { background: var(--closed); }
+        #citySelect { flex: 2; height: 100%; padding: 0 14px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); font-weight: 800; }
 
         .group-card { border-left: 6px solid var(--primary); padding: 15px; text-align: left; }
-        .city-tag { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
-        .group-name { font-weight: 700; color: var(--primary); font-size: 16px; margin: 4px 0; }
-        .info-row { font-size: 13px; margin: 5px 0; color: var(--text-sub); display: flex; align-items: flex-start; }
-        .info-row span { margin-right: 8px; font-size: 16px; }
+        .status-badge { font-size: 10px; font-weight: 800; margin-bottom: 5px; display: flex; align-items: center; }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        .s-open { color: var(--open); } .s-open .status-dot { background: var(--open); }
+        .s-soon { color: var(--soon); } .s-soon .status-dot { background: var(--soon); }
+        .s-closed { color: var(--closed); } .s-closed .status-dot { background: var(--closed); }
         .link-active { color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary); }
     </style>
 </head>
@@ -145,6 +148,14 @@
         <div class="card counter-card">
             <div class="complex-sober-row" id="complex-sober-display">0 лет 0 мес. 0 дней</div>
             <div class="total-days-row" id="total-days-display">Всего: 0 дней</div>
+            
+            <div class="medal-progress-box">
+                <div class="medal-bar-bg">
+                    <div class="medal-bar-fill" id="medal-fill-main"></div>
+                </div>
+                <div class="medal-info-text" id="medal-info-text">До следующей медали: ...</div>
+            </div>
+
             <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
                 <input type="date" id="date-input" onchange="updateDate(this.value)">
                 <div class="sos-wrapper">
@@ -174,6 +185,12 @@
                 <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-3" oninput="saveTrust(3)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-3" oninput="saveTrust(3)"></div><a href="#" id="call-3" class="call-btn">📞</a></div>
                 <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-4" oninput="saveTrust(4)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-4" oninput="saveTrust(4)"></div><a href="#" id="call-4" class="call-btn">📞</a></div>
             </div>
+
+            <button class="acc-btn" onclick="toggleAcc('acc-prayer', this)" id="btn-pr-head">МОЛИТВА</button>
+            <div class="acc-content" id="acc-prayer"><div class="prayer-text" id="prayer-content">Загрузка...</div></div>
+
+            <button class="acc-btn" onclick="toggleAcc('acc-notes', this)" id="btn-nt-head">ЗАМЕТКИ ПО ДНЮ</button>
+            <div class="acc-content" id="acc-notes"><textarea class="notes-area" id="user-notes" placeholder="..." oninput="saveNotes(this.value)"></textarea></div>
         </div>
     </div>
 
@@ -197,7 +214,7 @@
 
     <div id="tab-groups" class="content-section">
         <div class="group-filters">
-            <select id="citySelect" onchange="render()" style="flex: 2; padding:14px; border-radius:15px; border:2px solid var(--primary); background:var(--card-bg); color:var(--text-main); font-size:14px; font-weight: 800;"></select>
+            <select id="citySelect" onchange="render()"></select>
             <button id="todayFilter" onclick="toggleToday()" class="filter-btn">📅 Сегодня</button>
         </div>
         <div id="list-container" style="width:100%;"></div>
@@ -214,8 +231,8 @@
 
 <script>
     const i18n = {
-        ru: { head: "АА КАЗАХСТАНА", total: "Всего:", units: [["год","года","лет"],["мес.","мес.","мес."],["день","дня","дней"]], motLab: "Мотивация на сегодня", kaspi: "❤️ Седьмая Традиция", nav: ["Счетчик", "Новости", "Книги", "Группы"], allCities: "Все города", sOpen: "ОТКРЫТО. ЕЩЕ", sSoon: "ЧЕРЕЗ", sClosed: "ЗАКРЫТО", todayBtn: "📅 Сегодня", sosMain: "🚨 НУЖНА ПОМОЩЬ?", nProf: "Мой путь", trustHead: "ДОВЕРЕННЫЕ ЛИЦА" },
-        kz: { head: "ҚАЗАҚСТАН АА", total: "Барлығы:", units: [["жыл","жыл","жыл"],["ай","ай","ай"],["күн","күн","күн"]], motLab: "Бүгінгі мотивация", kaspi: "❤️ Жетінші Дәстүр", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар"], allCities: "Барлық қалалар", sOpen: "АШЫҚ. ТАҒЫ", sSoon: "БАСТАЛАДЫ", sClosed: "ЖАБЫҚ", todayBtn: "📅 Бүгін", sosMain: "🚨 КӨМЕК КЕРЕК ПЕ?", nProf: "Менің жолым", trustHead: "СЕНІМДІ ТҰЛҒАЛАР" }
+        ru: { head: "АА КАЗАХСТАНА", total: "Всего:", units: [["год","года","лет"],["мес.","мес.","мес."],["день","дня","дней"]], motLab: "Мотивация на сегодня", kaspi: "❤️ Седьмая Традиция", nav: ["Счетчик", "Новости", "Книги", "Группы"], allCities: "Все города", sOpen: "ОТКРЫТО. ЕЩЕ", sSoon: "ЧЕРЕЗ", sClosed: "ЗАКРЫТО", todayBtn: "📅 Сегодня", sosMain: "🚨 НУЖНА ПОМОЩЬ?", nProf: "Мой путь", trustHead: "ДОВЕРЕННЫЕ ЛИЦА", prayerHead: "МОЛИТВА", notesHead: "ЗАМЕТКИ ПО ДНЮ", nextMedal: "До медали", left: "Осталось", prayer: "Боже, дай мне разум и душевный покой принять то, что я не в силах изменить,\nмужество изменить то, что могу,\nи мудрость отличить одно от другого.", placeholder: "Ваши мысли, благодарности или инсайты...", newsTitle: "🎉 13-летие группы «Виктория»!", newsText: "Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет! Это годы единства и бесценного опыта выздоровления. Ждем всех!", litCom: "ЛИТЕРАТУРНЫЙ КОМИТЕТ", litPrice: "Наличие и цены:" },
+        kz: { head: "ҚАЗАҚСТАН АА", total: "Барлығы:", units: [["жыл","жыл","жыл"],["ай","ай","ай"],["күн","күн","күн"]], motLab: "Бүгінгі мотивация", kaspi: "❤️ Жетінші Дәстүр", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар"], allCities: "Барлық қалалар", sOpen: "АШЫҚ. ТАҒЫ", sSoon: "БАСТАЛАДЫ", sClosed: "ЖАБЫҚ", todayBtn: "📅 Бүгін", sosMain: "🚨 КӨМЕК КЕРЕК ПЕ?", nProf: "Менің жолым", trustHead: "СЕНІМДІ ТҰЛҒАЛАР", prayerHead: "ДҰҒА", notesHead: "КҮНДЕЛІКТІ ЖАЗБАЛАР", nextMedal: "Медальға дейін", left: "Қалды", prayer: "Уа, Тәңірім, мен өзгерте алмайтын нәрселерді қабылдауға жан тыныштығын,\nөзгерте алатын нәрселерді өзгертуге батылдық,\nжәне олардың айырмашылығын білетін даналық бере гөр.", placeholder: "Ойларыңыз, ризашылықтарыңыз немесе инсайттарыңыз...", newsTitle: "🎉 «Виктория» тобының 13 жылдығы!", newsText: "Достар! <b>9 мамырда</b> Қазақстандағы алғашқы АА тобының туған күнін атап өтеміз. Сүйікті «Викториямызға» 13 жыл! Бұл бірлік пен баға жетпес сауығу тәжірибесінің жылдары. Барлығыңызды күтеміз!", litCom: "ӘДЕБИЕТ КОМИТЕТІ", litPrice: "Қолжетімділігі мен бағасы:" }
     };
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
@@ -225,6 +242,53 @@
     function toggleTheme() { const isDark = document.body.classList.toggle('dark-mode'); localStorage.setItem('aa_theme', isDark ? 'dark' : 'light'); document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙'; }
     function toggleAcc(id, btn) { const el = document.getElementById(id); const isOpen = el.style.display === 'block'; document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open')); if(!isOpen) { el.style.display = 'block'; btn.classList.add('open'); } }
     function toggleToday() { onlyToday = !onlyToday; document.getElementById('todayFilter').classList.toggle('active', onlyToday); render(); }
+    function saveTrust(id) { const n = document.getElementById(`tr-n-${id}`).value, p = document.getElementById(`tr-p-${id}`).value; localStorage.setItem(`aa_trust_n_${id}`, n); localStorage.setItem(`aa_trust_p_${id}`, p); document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, ''); }
+    function saveNotes(val) { localStorage.setItem('aa_user_notes', val); }
+
+    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
+
+    function updateMedalProgress(tD, startDateVal) {
+        const start = new Date(startDateVal);
+        const now = new Date();
+        let targetDate = new Date(start);
+        let lastMilestoneDate = new Date(start);
+
+        if (tD < 365) {
+            let mCount = 0;
+            while (targetDate <= now) {
+                lastMilestoneDate = new Date(targetDate);
+                mCount++;
+                targetDate = new Date(start.getFullYear(), start.getMonth() + mCount, start.getDate());
+            }
+        } else {
+            let yCount = 0;
+            while (targetDate <= now) {
+                lastMilestoneDate = new Date(targetDate);
+                yCount++;
+                targetDate = new Date(start.getFullYear() + yCount, start.getMonth(), start.getDate());
+            }
+        }
+
+        const totalInterval = targetDate - lastMilestoneDate;
+        const timePassed = now - lastMilestoneDate;
+        let progress = (timePassed / totalInterval) * 100;
+        
+        document.getElementById('medal-fill-main').style.width = Math.min(100, Math.max(0, progress)) + '%';
+        const daysLeft = Math.ceil((targetDate - now) / 86400000);
+        document.getElementById('medal-info-text').innerText = `${i18n[curLang].nextMedal}: ${i18n[curLang].left} ${daysLeft} ${plural(daysLeft, i18n[curLang].units[2])}`;
+    }
+
+    function updateDate(v) {
+        if(!v) return; localStorage.setItem('aa_sober_v3', v);
+        const s = new Date(v), n = new Date();
+        let y = n.getFullYear()-s.getFullYear(), m = n.getMonth()-s.getMonth(), d = n.getDate()-s.getDate();
+        if(d<0){ m--; d+=new Date(n.getFullYear(), n.getMonth(), 0).getDate(); }
+        if(m<0){ y--; m+=12; }
+        const tD = Math.floor((n-s)/86400000);
+        document.getElementById('complex-sober-display').innerText = `${y} ${plural(y,i18n[curLang].units[0])} ${m} ${plural(m,i18n[curLang].units[1])} ${d} ${plural(d,i18n[curLang].units[2])}`;
+        document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD,i18n[curLang].units[2])}`;
+        updateMedalProgress(tD, v);
+    }
 
     function setLang(lang) {
         curLang = lang; localStorage.setItem('aa_lang', lang);
@@ -234,30 +298,24 @@
         document.getElementById('t-head').innerText = d.head; 
         document.getElementById('t-mot-lab').innerText = d.motLab;
         document.getElementById('t-kaspi').innerText = d.kaspi;
-        document.getElementById('todayFilter').innerText = d.todayBtn; document.getElementById('btn-sos-main').innerText = d.sosMain + " / КӨМЕК КЕРЕК ПЕ?";
-        document.getElementById('n-prof').innerText = d.nProf; document.getElementById('btn-tr-head').innerText = d.trustHead;
+        document.getElementById('todayFilter').innerText = d.todayBtn; 
+        document.getElementById('btn-sos-main').innerText = d.sosMain + " / КӨМЕК КЕРЕК ПЕ?";
+        document.getElementById('n-prof').innerText = d.nProf; 
+        document.getElementById('btn-tr-head').innerText = d.trustHead;
+        document.getElementById('btn-pr-head').innerText = d.prayerHead;
+        document.getElementById('btn-nt-head').innerText = d.notesHead;
+        document.getElementById('prayer-content').innerText = d.prayer;
+        document.getElementById('user-notes').placeholder = d.placeholder;
+        document.getElementById('n-v-title').innerText = d.newsTitle;
+        document.getElementById('n-v-text').innerHTML = d.newsText;
+        document.getElementById('t-lit-com').innerText = d.litCom;
+        document.getElementById('t-lit-price').innerText = d.litPrice;
         const navs = document.querySelectorAll('.nav-txt'); d.nav.forEach((t, i) => navs[i].innerText = t);
-        const s = document.getElementById('citySelect'); if(s.options[0]) s.options[0].innerText = d.allCities;
+        const s = document.getElementById('citySelect'); if(s && s.options[0]) s.options[0].innerText = d.allCities;
         updateDate(document.getElementById('date-input').value);
         if(document.getElementById('tab-lit').classList.contains('active')) renderLit();
         if(document.getElementById('tab-groups').classList.contains('active')) render();
     }
-
-    function saveTrust(id) { const n = document.getElementById(`tr-n-${id}`).value, p = document.getElementById(`tr-p-${id}`).value; localStorage.setItem(`aa_trust_n_${id}`, n); localStorage.setItem(`aa_trust_p_${id}`, p); document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, ''); }
-    function loadTrust() { for (let i = 0; i < 5; i++) { const n = localStorage.getItem(`aa_trust_n_${i}`) || "", p = localStorage.getItem(`aa_trust_p_${i}`) || ""; if(document.getElementById(`tr-n-${i}`)) { document.getElementById(`tr-n-${i}`).value = n; document.getElementById(`tr-p-${i}`).value = p; document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, ''); } } }
-
-    function updateDate(v) {
-        if(!v) return; localStorage.setItem('aa_sober_v3', v);
-        const s = new Date(v), n = new Date();
-        let y = n.getFullYear()-s.getFullYear(), m = n.getMonth()-s.getMonth(), d = n.getDate()-s.getDate();
-        if(d<0){ m--; d+=new Date(n.getFullYear(), n.getMonth(), 0).getDate(); }
-        if(m<0){ y--; m+=12; }
-        const tD = Math.floor((n-s)/86400000);
-        const unit = i18n[curLang].units;
-        document.getElementById('complex-sober-display').innerText = `${y} ${plural(y,unit[0])} ${m} ${plural(m,unit[1])} ${d} ${plural(d,unit[2])}`;
-        document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD,unit[2])}`;
-    }
-    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
 
     function goTo(t) {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
@@ -267,10 +325,57 @@
         if(t==='lit') renderLit(); if(t==='groups') render(); window.scrollTo(0,0);
     }
 
+    function loadTrust() { 
+        for (let i = 0; i < 5; i++) { 
+            const n = localStorage.getItem(`aa_trust_n_${i}`) || "", p = localStorage.getItem(`aa_trust_p_${i}`) || ""; 
+            if(document.getElementById(`tr-n-${i}`)) { document.getElementById(`tr-n-${i}`).value = n; document.getElementById(`tr-p-${i}`).value = p; document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, ''); } 
+        }
+        document.getElementById('user-notes').value = localStorage.getItem('aa_user_notes') || "";
+    }
+
     function toggleBook(id) { const desc = document.getElementById(`desc-${id}`); const current = desc.style.display; document.querySelectorAll('.book-desc').forEach(d => d.style.display = 'none'); desc.style.display = (current === 'block') ? 'none' : 'block'; }
+    function renderLit() { const c = document.getElementById('book-list'); c.innerHTML = ""; books.forEach((b, index) => { c.innerHTML += `<div class="book-item" onclick="toggleBook(${index})"><div class="book-header"><div class="book-title">${b.n}</div><span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${b.l}</span></div><div class="book-desc" id="desc-${index}">${b.d}</div></div>`; }); }
+
+    function getGroupStatus(g) {
+        if (!g.sc || g.sc.length === 0) return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
+        const now = new Date(); const d = now.getDay(); const curM = now.getHours() * 60 + now.getMinutes();
+        const todaySlots = g.sc.filter(s => s.d === d).sort((a,b) => a.s - b.s);
+        for (let slot of todaySlots) {
+            const startM = Math.floor(slot.s / 100) * 60 + (slot.s % 100), endM = Math.floor(slot.e / 100) * 60 + (slot.e % 100);
+            if (curM >= startM && curM < endM) return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${endM - curM} МИН</div>`;
+            if (curM < startM) return `<div class="status-badge s-soon"><div class="status-dot"></div>${i18n[curLang].sSoon} ${Math.floor((startM - curM) / 60) > 0 ? Math.floor((startM - curM) / 60) + ' Ч ' : ''}${(startM - curM) % 60} МИН</div>`;
+        }
+        return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
+    }
+
+    function render() {
+        const f = document.getElementById('citySelect').value, c = document.getElementById('list-container');
+        const now = new Date(), currentDay = now.getDay(); c.innerHTML = "";
+        data.forEach(g => {
+            if((f === 'all' || g.c === f) && (!onlyToday || g.sc.some(s => s.d === currentDay))) {
+                let icons = `${g.o ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`;
+                let mapUrl = g.map ? g.map : `https://2gis.kz/search/${encodeURIComponent(g.c + ', ' + g.a)}`;
+                let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">${curLang==='ru'?'Перейти в Zoom/Чат':'Zoom-ға өту'}</a>` : `<a href="${mapUrl}" target="_blank" class="link-active">${g.a}</a>`;
+                c.innerHTML += `<div class="card group-card">${getGroupStatus(g)}<div class="city-tag">${g.c}</div><div class="group-name">${g.n} <span style="float:right; font-size:14px;">${icons}</span></div><div class="info-row"><span>📍</span>${aH}</div><div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p.replace(/\s/g, '')}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`;
+            }
+        });
+    }
+
+    window.onload = () => {
+        const savedTheme = localStorage.getItem('aa_theme');
+        if(savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode'); document.getElementById('theme-icon').innerText = '☀️';
+        }
+        const s = document.getElementById('citySelect'), ct = ["all", ...new Set(data.map(x => x.c))].sort();
+        ct.forEach(c => { const o = document.createElement('option'); o.value=c; o.innerText=c==="all" ? i18n[curLang].allCities : c; s.appendChild(o); });
+        let st = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
+        document.getElementById('date-input').value = st;
+        loadTrust(); setLang(curLang);
+        document.getElementById('mot-text').innerText = phrases[Math.floor(((new Date())-(new Date((new Date()).getFullYear(),0,0)))/86400000)%phrases.length];
+    };
 
     const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Трезвость — это дар."];
-    
+
     const books = [
         {n:"Анонимные Алкоголики (с историями) твердый", l:"рус", d:"Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма. Книга помогает понять природу болезни и предлагает четкий план действий для обретения свободы. Это фундамент, на котором строится жизнь миллионов людей по всему миру."},
         {n:"Анонимные Алкоголики (стандарт)", l:"рус", d:"Классическое издание Большой Книги без сокращений. Фундаментальный текст, по которому выздоравливают миллионы людей во всем мире. Содержит изложение принципов, которые помогли первым участникам остаться трезвыми. Идеально подходит для глубокого изучения программы и работы со спонсором."},
@@ -285,7 +390,7 @@
         {n:"Сбросить камень", l:"рус", d:"Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту. Она помогает распознать скрытые препятствия, которые мешают прогрессу в трезвости. Автор глубоко анализирует природу страха, гордыни и гнева. Это практическое руководство по очищению души и обретению покоя."},
         {n:"Сбросить камень", l:"каз", d:"Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды."},
         {n:"Новые очки (Чак Ч)", l:"рус", d:"Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение. Чак делится своим уникальным опытом проживания программы в радости и свободе. Он учит не просто не пить, а по-настоящему наслаждаться жизнью. Эта работа вдохновила тысячи людей на перемены."},
-        {n:"Новые очки (Чак Ч)", l:"каз", d:"Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын иәне оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі."},
+        {n:"Новые очки (Чак Ч)", l:"каз", d:"Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі."},
         {n:"Доктор Боб и славные ветераны", l:"рус", d:"История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба. Книга полна живых воспоминаний первых участников движения. Она показывает, как вера и служение помогли первым алкоголикам выжить. Это глубокое историческое исследование корней содружества."},
         {n:"АА Взрослеет", l:"рус", d:"Книга об истории развития сообщества, написанная Биллом У. Охватывает период становления традиций и структуры АА. Билл подробно описывает, как маленькое объединение превратилось во всемирное движение. В ней изложены три завета сообщества: выздоровление, единство и служение. Важное чтение для тех, кто интересуется устройством АА."},
         {n:"Пришли к убеждению", l:"рус", d:"Сборник личного опыта участников АА, посвященный духовному аспекту программы и поиску Высшей Силы. В ней представлены самые разные точки зрения — от атеистов до глубоко верующих. Книга показывает, что в АА есть место каждому, независимо от убеждений. Она расширяет границы понимания духовности в программе."},
@@ -349,96 +454,6 @@
         {c:"Экибастуз",n:"АА «Чистое Небо»",a:"инфо по тел.",t:"По запросу",p:"+77753500562", sc:[]},
         {c:"Жетысай",n:"АА «куат»",a:"ул. Ауэзова",t:"Пн, Ср, Пт: 19:00",p:"+77073183839", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
     ];
-
-    window.onload = () => {
-        const savedTheme = localStorage.getItem('aa_theme');
-        if(savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.body.classList.add('dark-mode'); document.getElementById('theme-icon').innerText = '☀️';
-        }
-        const s = document.getElementById('citySelect'), ct = ["all", ...new Set(data.map(x => x.c))].sort();
-        ct.forEach(c => { const o = document.createElement('option'); o.value=c; o.innerText=c==="all" ? i18n[curLang].allCities : c; s.appendChild(o); });
-        let st = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
-        document.getElementById('date-input').value = st;
-        loadTrust(); setLang(curLang);
-        document.getElementById('mot-text').innerText = phrases[Math.floor(((new Date())-(new Date((new Date()).getFullYear(),0,0)))/86400000)%phrases.length];
-    };
-
-    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
-    
-    function updateDate(v) {
-        if(!v) return; localStorage.setItem('aa_sober_v3', v);
-        const s = new Date(v), n = new Date();
-        let y = n.getFullYear()-s.getFullYear(), m = n.getMonth()-s.getMonth(), d = n.getDate()-s.getDate();
-        if(d<0){ m--; d+=new Date(n.getFullYear(), n.getMonth(), 0).getDate(); }
-        if(m<0){ y--; m+=12; }
-        const tD = Math.floor((n-s)/86400000);
-        const unit = i18n[curLang].units;
-        document.getElementById('complex-sober-display').innerText = `${y} ${plural(y,unit[0])} ${m} ${plural(m,unit[1])} ${d} ${plural(d,unit[2])}`;
-        document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD,unit[2])}`;
-    }
-
-    function goTo(t) {
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active-nav'));
-        document.getElementById(`tab-${t}`).classList.add('active');
-        document.getElementById(`btn-${t==='profile'?'p':t[0]}`).classList.add('active-nav');
-        if(t==='lit') renderLit(); if(t==='groups') render(); window.scrollTo(0,0);
-    }
-    
-    function toggleSos() { const box = document.getElementById('sos-box'); box.style.display = (box.style.display === 'flex') ? 'none' : 'flex'; }
-    function toggleAcc(id, btn) { const el = document.getElementById(id); const isOpen = el.style.display === 'block'; document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open')); if(!isOpen) { el.style.display = 'block'; btn.classList.add('open'); } }
-    function toggleToday() { onlyToday = !onlyToday; document.getElementById('todayFilter').classList.toggle('active', onlyToday); render(); }
-
-    function setLang(lang) {
-        curLang = lang; localStorage.setItem('aa_lang', lang);
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`l-${lang}`).classList.add('active');
-        const d = i18n[lang];
-        if (document.getElementById('t-head')) document.getElementById('t-head').innerText = d.head; 
-        if (document.getElementById('t-mot-lab')) document.getElementById('t-mot-lab').innerText = d.motLab;
-        if (document.getElementById('t-kaspi')) document.getElementById('t-kaspi').innerText = d.kaspi;
-        if (document.getElementById('todayFilter')) document.getElementById('todayFilter').innerText = d.todayBtn; 
-        if (document.getElementById('btn-sos-main')) document.getElementById('btn-sos-main').innerText = d.sosMain + " / КӨМЕК КЕРЕК ПЕ?";
-        if (document.getElementById('n-prof')) document.getElementById('n-prof').innerText = d.nProf; 
-        if (document.getElementById('btn-tr-head')) document.getElementById('btn-tr-head').innerText = d.trustHead;
-        const navs = document.querySelectorAll('.nav-txt'); if (navs.length >= 4) d.nav.forEach((t, i) => navs[i].innerText = t);
-        const s = document.getElementById('citySelect'); if(s && s.options[0]) s.options[0].innerText = d.allCities;
-        updateDate(document.getElementById('date-input').value);
-        if(document.getElementById('tab-lit').classList.contains('active')) renderLit();
-        if(document.getElementById('tab-groups').classList.contains('active')) render();
-    }
-
-    function saveTrust(id) { const n = document.getElementById(`tr-n-${id}`).value, p = document.getElementById(`tr-p-${id}`).value; localStorage.setItem(`aa_trust_n_${id}`, n); localStorage.setItem(`aa_trust_p_${id}`, p); document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, ''); }
-    function loadTrust() { for (let i = 0; i < 5; i++) { const n = localStorage.getItem(`aa_trust_n_${i}`) || "", p = localStorage.getItem(`aa_trust_p_${i}`) || ""; if(document.getElementById(`tr-n-${i}`)) { document.getElementById(`tr-n-${i}`).value = n; document.getElementById(`tr-p-${i}`).value = p; document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, ''); } } }
-
-    function toggleBook(id) { const desc = document.getElementById(`desc-${id}`); const current = desc.style.display; document.querySelectorAll('.book-desc').forEach(d => d.style.display = 'none'); desc.style.display = (current === 'block') ? 'none' : 'block'; }
-    function renderLit() { const c = document.getElementById('book-list'); c.innerHTML = ""; books.forEach((b, index) => { c.innerHTML += `<div class="book-item" onclick="toggleBook(${index})"><div class="book-header"><div class="book-title">${b.n}</div><span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${b.l}</span></div><div class="book-desc" id="desc-${index}">${b.d}</div></div>`; }); }
-
-    function getGroupStatus(g) {
-        if (!g.sc || g.sc.length === 0) return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
-        const now = new Date(); const d = now.getDay(); const curM = now.getHours() * 60 + now.getMinutes();
-        const todaySlots = g.sc.filter(s => s.d === d).sort((a,b) => a.s - b.s);
-        for (let slot of todaySlots) {
-            const startM = Math.floor(slot.s / 100) * 60 + (slot.s % 100), endM = Math.floor(slot.e / 100) * 60 + (slot.e % 100);
-            if (curM >= startM && curM < endM) return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${endM - curM} МИН</div>`;
-            if (curM < startM) return `<div class="status-badge s-soon"><div class="status-dot"></div>${i18n[curLang].sSoon} ${Math.floor((startM - curM) / 60) > 0 ? Math.floor((startM - curM) / 60) + ' Ч ' : ''}${(startM - curM) % 60} МИН</div>`;
-        }
-        return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
-    }
-
-    function render() {
-        const f = document.getElementById('citySelect').value, c = document.getElementById('list-container');
-        const now = new Date(), currentDay = now.getDay(); c.innerHTML = "";
-        data.forEach(g => {
-            const hasMeetingToday = g.sc.some(s => s.d === currentDay);
-            if((f === 'all' || g.c === f) && (!onlyToday || hasMeetingToday)) {
-                let icons = `${g.o ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`;
-                let mapUrl = g.map ? g.map : `https://2gis.kz/search/${encodeURIComponent(g.c + ', ' + g.a)}`;
-                let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">${curLang==='ru'?'Перейти в Zoom/Чат':'Zoom-ға өту'}</a>` : `<a href="${mapUrl}" target="_blank" class="link-active">${g.a}</a>`;
-                c.innerHTML += `<div class="card group-card">${getGroupStatus(g)}<div class="city-tag">${g.c}</div><div class="group-name">${g.n} <span style="float:right; font-size:14px;">${icons}</span></div><div class="info-row"><span>📍</span>${aH}</div><div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p.replace(/\s/g, '')}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`;
-            }
-        });
-    }
 </script>
 </body>
 </html>
