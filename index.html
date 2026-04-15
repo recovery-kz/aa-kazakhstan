@@ -64,7 +64,9 @@
         .time-value { font-size: 42px; font-weight: 800; color: var(--primary); display: block; line-height: 1; }
         .time-label { font-size: 14px; color: var(--primary); font-weight: 600; text-transform: uppercase; }
 
-        input[type="date"] { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; font-size: 16px; }
+        input[type="date"] { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 10px; font-size: 16px; text-align: center; }
+
+        .sos-btn-large { display: block; background: var(--sos); color: white; text-decoration: none; padding: 16px; border-radius: 15px; margin-top: 10px; font-weight: 800; font-size: 15px; text-align: center; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
 
         .book-item { background: var(--card-bg); width: 100%; padding: 12px 15px; border-radius: 12px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); border-top: 1px solid var(--border); }
         .book-title { font-size: 13px; font-weight: 700; color: var(--text-main); flex: 1; padding-right: 10px; }
@@ -72,10 +74,12 @@
         .lang-ru { background: #e3f2fd; color: #1976d2; }
         .lang-kz { background: #fbe9e7; color: #d84315; }
         
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); cursor: pointer; border: none; background: none; font-size: 8.5px; }
-        .nav-item.active-nav { color: var(--primary); font-weight: 700; }
-        .nav-item span { font-size: 18px; margin-bottom: 2px; }
+        /* Новая высокая нижняя панель для предотвращения нахлеста текста */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; height: 85px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); cursor: pointer; border: none; background: none; padding: 5px 2px; }
+        .nav-item.active-nav { color: var(--primary); font-weight: 800; }
+        .nav-item span { font-size: 22px; margin-bottom: 4px; }
+        .nav-txt { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
 
         .group-card { border-left: 6px solid var(--primary); padding: 15px; text-align: left; }
         .city-tag { font-size: 10px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
@@ -111,7 +115,7 @@
             <div class="time-block"><span class="time-value" id="val-days">0</span><span class="time-label" id="lbl-days">Дней</span></div>
             <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
                 <input type="date" id="date-input" onchange="updateDate(this.value)">
-                <button onclick="confirmReset()" id="t-reset" style="width:100%; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text-sub); font-weight:700; font-size:11px;">СБРОСИТЬ ОТСЧЕТ</button>
+                <a href="tel:+77072080553" class="sos-btn-large" id="t-sos-btn">🚨 НУЖНА ПОМОЩЬ? (SOS)</a>
             </div>
         </div>
         <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" style="text-decoration:none; width:100%;">
@@ -129,7 +133,7 @@
         <div class="card" style="padding: 20px; text-align: left; border-top: 5px solid var(--accent);">
             <div style="font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 12px;" id="n-v-title">🎉 13-летие группы «Виктория»!</div>
             <div style="font-size: 14px; color: var(--text-main); line-height: 1.6;" id="n-v-text">
-                Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет! Ждем всех!
+                Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет! Это годы единства и бесценного опыта выздоровления. Ждем всех!
             </div>
         </div>
     </div>
@@ -151,14 +155,6 @@
         </div>
         <div id="list-container" style="width:100%;"></div>
     </div>
-
-    <div id="tab-sos" class="content-section">
-        <div class="card" style="background:var(--card-bg); padding:30px 20px; border:2px solid var(--sos); text-align:center;">
-            <div style="color:var(--sos); font-weight:800; font-size:22px; margin-bottom:15px;" id="t-sos-title">НУЖНА ПОМОЩЬ?</div>
-            <a href="tel:+77072080553" style="display:block; background:var(--sos); color:white; text-decoration:none; padding:18px; border-radius:15px; margin:10px 0; font-weight:700;">+7 (707) 208-05-53 <span>(РУС)</span></a>
-            <a href="tel:+77074337408" style="display:block; background:#34495e; color:white; text-decoration:none; padding:18px; border-radius:15px; margin:10px 0; font-weight:700;">+7 (707) 433-74-08 <span>(КАЗ)</span></a>
-        </div>
-    </div>
 </main>
 
 <nav class="bottom-nav">
@@ -166,13 +162,12 @@
     <button class="nav-item" id="btn-n" onclick="goTo('news')"><span>📰</span><span class="nav-txt">Новости</span></button>
     <button class="nav-item" id="btn-l" onclick="goTo('lit')"><span>📚</span><span class="nav-txt">Книги</span></button>
     <button class="nav-item" id="btn-g" onclick="goTo('groups')"><span>📍</span><span class="nav-txt">Группы</span></button>
-    <button class="nav-item" id="btn-s" onclick="goTo('sos')"><span>🚨</span><span class="nav-txt">SOS</span></button>
 </nav>
 
 <script>
     const i18n = {
-        ru: { head: "АА КАЗАХСТАНА", motLab: "Мотивация на сегодня", reset: "СБРОСИТЬ ОТСЧЕТ", kaspi: "❤️ Седьмая Традиция", litCom: "ЛИТЕРАТУРНЫЙ КОМИТЕТ", litPrice: "Наличие и цены:", nav: ["Счетчик", "Новости", "Книги", "Группы", "SOS"], units: [["Год","Года","Лет"],["Месяц","Месяца","Месяцев"],["День","Дня","Дней"]], confirm: "Сбросить отсчет?", allCities: "Все города и Онлайн", newsV: { title: "🎉 13-летие группы «Виктория»!", text: "Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет!" } },
-        kz: { head: "ҚАЗАҚСТАН АА", motLab: "Бүгінгі мотивация", reset: "ҚАЙТА ОРНАТУ", kaspi: "❤️ Жетінші Дәстүр", litCom: "ӘДЕБИЕТ КОМИТЕТІ", litPrice: "Бағасы мен қолжетімділігі:", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар", "SOS"], units: [["Жыл","Жыл","Жыл"],["Ай","Ай","Ай"],["Күн","Күн","Күн"]], confirm: "Қайта орнату?", allCities: "Барлық қалалар", newsV: { title: "🎉 «Виктория» тобына 13 жыл!", text: "Достар! <b>9 мамырда</b> алғашқы Анонимді Алкоголиктер тобының туған күні! «Виктория» тобына 13 жыл!" } }
+        ru: { head: "АА КАЗАХСТАНА", motLab: "Мотивация на сегодня", sosBtn: "🚨 НУЖНА ПОМОЩЬ? (SOS)", kaspi: "❤️ Седьмая Традиция", litCom: "ЛИТЕРАТУРНЫЙ КОМИТЕТ", litPrice: "Наличие и цены:", nav: ["Счетчик", "Новости", "Книги", "Группы"], units: [["Год","Года","Лет"],["Месяц","Месяца","Месяцев"],["День","Дня","Дней"]], allCities: "Все города и Онлайн", newsV: { title: "🎉 13-летие группы «Виктория»!", text: "Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет!" } },
+        kz: { head: "ҚАЗАҚСТАН АА", motLab: "Бүгінгі мотивация", sosBtn: "🚨 КӨМЕК КЕРЕК ПЕ? (SOS)", kaspi: "❤️ Жетінші Дәстүр", litCom: "ӘДЕБИЕТ КОМИТЕТІ", litPrice: "Бағасы мен қолжетімділігі:", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар"], units: [["Жыл","Жыл","Жыл"],["Ай","Ай","Ай"],["Күн","Күн","Күн"]], allCities: "Барлық қалалар", newsV: { title: "🎉 «Виктория» тобына 13 жыл!", text: "Достар! <b>9 мамырда</b> алғашқы Анонимді Алкоголиктер тобының туған күні! «Виктория» тобына 13 жыл!" } }
     };
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
@@ -190,7 +185,7 @@
         const d = i18n[lang];
         document.getElementById('t-head').innerText = d.head;
         document.getElementById('t-mot-lab').innerText = d.motLab;
-        document.getElementById('t-reset').innerText = d.reset;
+        document.getElementById('t-sos-btn').innerText = d.sosBtn;
         document.getElementById('t-kaspi').innerText = d.kaspi;
         document.getElementById('t-lit-com').innerText = d.litCom;
         document.getElementById('t-lit-price').innerText = d.litPrice;
@@ -205,10 +200,8 @@
 
     const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Мы не старые люди, пытающиеся стать молодыми.", "Ищи сходства, а не различия.", "Доверься Богу, чисти кухню.", "Принятие — ключ ко всем моим проблемам.", "Ничего не меняется, если я ничего не меняю.", "Трезвость — это дар.", "Помогая другому, ты помогаешь себе.", "Один день за один раз.", "Просто начни с начала.", "Будь честен с самим собой.", "Твоя Высшая Сила любит тебя.", "Принципы выше личностей.", "Сначала надень маску на себя.", "Не анализируй — действуй.", "Держись поближе к победителям."];
     
-    // ПОЛНЫЙ ПЕРЕЧЕНЬ: 28 ПОЗИЦИЙ
     const books = [{n:"Анонимные Алкоголики (с историями) твердый",l:"рус"},{n:"Анонимные Алкоголики (стандарт)",l:"рус"},{n:"Анонимные Алкоголики (стандарт)",l:"каз"},{n:"Анонимные Алкоголики (стандарт) карманный",l:"рус"},{n:"Двенадцать шагов и двенадцать традиций",l:"рус"},{n:"Двенадцать шагов и двенадцать традиций",l:"каз"},{n:"Ежедневные размышления",l:"рус"},{n:"Ежедневные размышления",l:"каз"},{n:"Жить трезвыми",l:"рус"},{n:"Жить трезвыми",l:"каз"},{n:"Сбросить камень",l:"рус"},{n:"Сбросить камень",l:"каз"},{n:"Новые очки (Чак Ч)",l:"рус"},{n:"Новые очки (Чак Ч)",l:"каз"},{n:"Доктор Боб и славные ветераны",l:"рус"},{n:"АА Взрослеет",l:"рус"},{n:"Пришли к убеждению",l:"рус"},{n:"Рук-во по обслуживанию АА + 12 Принципов",l:"рус"},{n:"Рабочая тетрадь по изучению 12 традиций",l:"рус"},{n:"Рабочая тетрадь по изучению Принципов обслуживания",l:"рус"},{n:"Вопросник по 12 традициям",l:"рус"},{n:"12 традиций в иллюстрациях",l:"рус"},{n:"Думаешь ты особенный?",l:"рус"},{n:"Молодежь и АА",l:"рус"},{n:"Женщины в АА",l:"рус"},{n:"Группа АА там где все начинается",l:"рус"},{n:"Пособие по работе АА в ЛУ",l:"рус"},{n:"Марк Х. (Спикерские)",l:"рус"}];
 
-    // ПОЛНЫЙ ПЕРЕЧЕНЬ: 46 ГРУПП
     const data = [{c:"Онлайн",n:"АА «Пробуждение»",a:"https://us06web.zoom.us/j/82036099070",t:"Вт, Чт, Сб: 21:00-22:30",p:"+77772329996",online:true},{c:"Онлайн",n:"АА «Бірлік» (каз)",a:"https://us02web.zoom.us/j/5204364841",t:"Ср: 21:00-22:30",p:"+77074337408",online:true},{c:"Онлайн",n:"АА «ШАГ ЗА ШАГОМ»",a:"https://t.me/+JqgMpZCz_fY1OTVi",t:"Вт: 19:00-20:30 (открытая)",p:"",online:true},{c:"Алматы",n:"АА «Виктория»",a:"ул. Жубанова 3а, 301 каб., 3 эт.",t:"Вт (откр), Чт: 19:30-21:00; Сб: 19:00-20:30",p:"+77059907938",z:"https://zoom.us/j/5290200881"},{c:"Алматы",n:"АА «8 марта»",a:"ул. Зенкова 24, дом Офицеров",t:"Ежедневно: 19:00-20:30; Вт, Чт: 12:00",p:"+77011218501"},{c:"Алматы",n:"АА «Турксиб»",a:"уточнять по номеру (+77478601105)",t:"Вт, Чт: 19:00-20:30; Вс (откр): 17:00-18:30",p:"+77478601105"},{c:"Алматы",n:"АА «АлмА» (женская)",a:"ул. Зенкова 24, дом Офицеров",t:"Сб: 12:00-13:30",p:"+77755006846"},{c:"Алматы",n:"АА «Шапагат» (каз)",a:"ул. Жубанова 3а, 301 каб.",t:"Пн, Ср: 19:00-20:30; Сб (откр): 17:00-18:30",p:"+77471652435"},{c:"Алматы",n:"АА «Друзья Билла»",a:"ул. Жибек Жолы 64/47, оф. 215",t:"Вт, Чт (откр): 12:00-13:30",p:"+77475637587"},{c:"Алматы",n:"АА «Чайхана» (новички)",a:"ул. Жубанова 3а, 301 каб.",t:"Вс (откр): 11:00-12:30",p:"+77059907938",z:"https://zoom.us/j/5290200881"},{c:"Алматы",n:"АА «Аксай»",a:"пр. Райымбека 493",t:"Вс: 13:00-14:15",p:"+77764533418"},{c:"Алматы",n:"АА «Наурыз»",a:"ул. Тимирязева 42, каб. 102",t:"Вт, Чт, Пт, Сб (откр): 19:00-20:30",p:"+77083171769"},{c:"Алматы",n:"АА «Женский клуб»",a:"ул. Жубанова 3а, 301 каб.",t:"Вс (откр для женщин): 13:00-14:30",p:"+77055730900",z:"https://zoom.us/j/5290200881"},{c:"Алматы",n:"АА «Новые очки»",a:"ул. Жибек Жолы 64/47, оф. 215",t:"Пн, Ср, Пт (откр): 19:00-20:15; Сб: 14:00",p:"+77073084757"},{c:"Алматы",n:"АА «Боралдай»",a:"ул. Курчатова 13а",t:"Сб: 17:00",p:"+77772819098"},{c:"Алматы",n:"Мужская группа «ААА»",a:"ул. Зенкова 24, дом Офицеров",t:"Сб: 17:00-18:15",p:"+77713709966"},{c:"Астана",n:"АА «51 параллель»",a:"ул. Петрова 14/3, вход Hada",t:"Ср: 19:00-20:15; Сб: 15:00-16:15",p:"+77718993679"},{c:"Астана",n:"АА «Свобода»",a:"ул. Петрова 14/3, вход Hada",t:"Пн, Чт, Пт: 19:00-20:00",p:"+77071234699"},{c:"Астана",n:"АА «Есиль» (каз)",a:"ул. Петрова 14/3, вход Hada",t:"Вс: 17:00-18:30",p:"+77753601528"},{c:"Астана",n:"АА «Большая перемена»",a:"ул. Дукенулы 26",t:"Пн, Пт: 19:00-20:00",p:"+77071234699"},{c:"Астана",n:"АА «Сана»",a:"пр. Кабанбай Батыра 58А",t:"Вт, Чт: 20:00-21:15",p:"+77718993679"},{c:"Астана",n:"АА «Путь»",a:"ул. Ташенова 26",t:"Вт, Ср, Чт: 19:00-20:15",p:"+77718993679"},{c:"Астана",n:"АА «Возрождение»",a:"ул. Куйши Дина 27",t:"Вт: 19:00-20:15",p:"+77075650586"},{c:"Астана",n:"АА «Гармония»",a:"ул. Арасан 2/2",t:"Пн, Пт: 19:15",p:"+77753601528"},{c:"Астана",n:"АА «Үміт» (каз)",a:"ул. Ш. Кудайбердиулы 94",t:"Ср: 19:00-20:15",p:"+77074337408"},{c:"Актау",n:"АА «Парус»",a:"29-й мкр, дом 218",t:"Пн, Пт: 19:15-20:30",p:"+77770655797"},{c:"Актобе",n:"АА «ОАЗИС»",a:"ул. Абулхаир–Хана 1, оф. 228",t:"Вт, Чт: 19:00-20:15; Сб: 14:00-15:15",p:"+77476845424"},{c:"Атырау",n:"АА «НАЧАЛО»",a:"мкр. Авангард-3, 34а",t:"Вт, Чт: 19:00-20:30; Сб: 12:00-13:30",p:"+77054492468"},{c:"Караганда",n:"АА «Решение есть»",a:"ул. Ерубаева 34",t:"Суббота: 15:45",p:"+77007656935"},{c:"Кокшетау",n:"АА «Синегорье»",a:"ул. Ауельбекова 127",t:"Вт, Пт: 19:30-20:30",p:"+77713630302"},{c:"Конаев",n:"АА «Надежда»",a:"18 мкр, ул. Курылысшы 8а",t:"Ср: 19:00-20:00",p:"+77781661081"},{c:"Костанай",n:"АА «ДОСТАР»",a:"ул. 5 апреля 67, 2 эт.",t:"Пн, Ср, Пт: 19:00-20:30",p:"+77777435620"},{c:"Костанай",n:"АА «12 Шаг»",a:"ул. Г. Арыстанбекова 23",t:"Вт, Чт: 19:00-20:30; Вс: 19:00",p:"+77714290869"},{c:"Павлодар",n:"АА «Крепость»",a:"ул. Торайгырова 10/1, оф. 4",t:"Пн, Ср, Пт: 19:00-20:00",p:"+77086361510"},{c:"Петропавловск",n:"АА «Последняя капля»",a:"ул. Букетова 4",t:"Сб: 20:00",p:"+77758272514"},{c:"Рудный",n:"АА «Новая свобода»",a:"ул. Парковая 55",t:"Ср, Вс: 19:30-20:45",p:"+77754947917"},{c:"Семей",n:"АА «СЕМЁРОЧКА»",a:"инфо по тел.",t:"По запросу",p:"+77076400913"},{c:"Талдыкурган",n:"АА «жетысу»",a:"ул. Шевченко 100",t:"Пн, Ср, Пт: 19:00",p:"+77079928240"},{c:"Усть-Каменогорск",n:"АА «УСТЬЕ»",a:"ул. Казахстан 99",t:"Пн, Ср: 18:00-19:30",p:"+77777495088"},{c:"Кызылорда",n:"АА «сырдарья»",a:"ул. Муратбаева 8б, каб. 2",t:"Вт, Чт: 19:00; Вс: 11:00",p:"+77074337408"},{c:"Шымкент",n:"АА «Юг»",a:"Шаяхметова 14/1, каб. 12а",t:"Пн, Ср, Пт: 19:00-20:30",p:"+77016749853"},{c:"Шымкент",n:"АА «Шым»",a:"ул. Мангельдина 33",t:"Вт, Чт: 19:00-20:00; Сб: 12:00-13:00",p:"+77026372329"},{c:"Шымкент",n:"АА «СВОБОДА»",a:"ул. Московская 9а",t:"Вс: 13:00-14:30",p:"+77059906737"},{c:"Шымкент",n:"АА «ПАНА» (каз)",a:"ул. Шаяхметова 14/1",t:"Вс: 13:00-14:00",p:"+77026372329"},{c:"Экибастуз",n:"АА «Чистое Небо»",a:"инфо по тел.",t:"По запросу",p:"+77753500562"},{c:"Жетысай",n:"АА «куат»",a:"ул. Ауэзова, каб. 12",t:"Пн, Ср, Пт: 19:00",p:"+77073183839"}];
 
     function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
@@ -250,8 +243,6 @@
             }
         });
     }
-
-    function confirmReset() { if(confirm(i18n[curLang].confirm)){ const t=new Date().toISOString().split('T')[0]; document.getElementById('date-input').value=t; updateDate(t); } }
 
     window.onload = () => {
         const savedTheme = localStorage.getItem('aa_theme');
