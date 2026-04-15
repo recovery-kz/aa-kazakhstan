@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YEP3FSQ2YW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YEP3FSQ2YW');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>АА Казахстана</title>
@@ -85,7 +93,6 @@
         .nav-item span:first-child { font-size: 18px; margin-bottom: 2px; }
         .nav-txt { font-size: 8px; text-transform: uppercase; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
 
-        /* ФИЛЬТРЫ ГРУПП */
         .group-filters { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; }
         .filter-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--primary); font-weight: 800; font-size: 13px; cursor: pointer; transition: 0.2s; }
         .filter-btn.active { background: var(--primary); color: white; }
@@ -236,7 +243,7 @@
         {n:"Жить трезвыми", l:"рус", d:"Практическое пособие с конкретными советами о том, как не выпить «первую рюмку» в обычных жизненных ситуациях."},
         {n:"Жить трезвыми", l:"каз", d:"Күнделікті өмірдегі ішімдіктен бас тартудың практикалық әдістері мен кеңестері жинақталған құрал."},
         {n:"Сбросить камень", l:"рус", d:"Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту."},
-        {n:"Сбросить камень", l:"каз", d:"Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал."},
+        {n:"Сбросить камень", l:"каз", d:"Мінез-құлықтағы кемшіліктермен жұмыс істеуге иәне рухани дамуға арналған көмекші құрал."},
         {n:"Новые очки (Чак Ч)", l:"рус", d:"Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение."},
         {n:"Новые очки (Чак Ч)", l:"каз", d:"Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді."},
         {n:"Доктор Боб и славные ветераны", l:"рус", d:"История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба."},
@@ -392,8 +399,6 @@
         c.innerHTML = "";
         data.forEach(g => {
             const hasMeetingToday = g.sc.some(s => s.d === currentDay);
-            
-            // Фильтрация по городу И по кнопке "Сегодня"
             const cityMatch = (f === 'all' || g.c === f);
             const todayMatch = (!onlyToday || hasMeetingToday);
 
