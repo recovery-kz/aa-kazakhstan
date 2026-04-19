@@ -17,10 +17,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="АА КАЗ">
-    <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
-    
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2B4F60">
+    
+    <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
     <style>
@@ -238,7 +238,7 @@
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
     let onlyToday = false;
-    let saveTimeout;
+    let saveTimeout = null;
 
     function toggleSos() { const box = document.getElementById('sos-box'); box.style.display = (box.style.display === 'flex') ? 'none' : 'flex'; }
     function toggleTheme() { const isDark = document.body.classList.toggle('dark-mode'); localStorage.setItem('aa_theme', isDark ? 'dark' : 'light'); document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙'; }
@@ -246,15 +246,22 @@
     function toggleToday() { onlyToday = !onlyToday; document.getElementById('todayFilter').classList.toggle('active', onlyToday); render(); }
     function saveTrust(id) { const n = document.getElementById(`tr-n-${id}`).value, p = document.getElementById(`tr-p-${id}`).value; localStorage.setItem(`aa_trust_n_${id}`, n); localStorage.setItem(`aa_trust_p_${id}`, p); document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, ''); }
 
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ СОХРАНЕНИЯ
     function saveNotes(val) {
         const status = document.getElementById('save-status');
-        status.innerText = "...";
-        status.classList.add('show');
-        clearTimeout(saveTimeout);
+        if (status) {
+            status.innerText = "...";
+            status.classList.add('show');
+        }
+        
+        if (saveTimeout) clearTimeout(saveTimeout);
+        
         saveTimeout = setTimeout(() => {
             localStorage.setItem('aa_user_notes', val);
-            status.innerText = "✓ Сохранено";
-            setTimeout(() => status.classList.remove('show'), 2000);
+            if (status) {
+                status.innerText = "✓ Сохранено";
+                setTimeout(() => status.classList.remove('show'), 2000);
+            }
         }, 800);
     }
 
@@ -324,12 +331,20 @@
         if(t==='lit') renderLit(); if(t==='groups') render(); window.scrollTo(0,0);
     }
 
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ ЗАГРУЗКИ (ДОБАВЛЕНА ПОДСТАНОВКА ТЕКСТА)
     function loadTrust() { 
         for (let i = 0; i < 5; i++) { 
             const n = localStorage.getItem(`aa_trust_n_${i}`) || "", p = localStorage.getItem(`aa_trust_p_${i}`) || ""; 
-            if(document.getElementById(`tr-n-${i}`)) { document.getElementById(`tr-n-${i}`).value = n; document.getElementById(`tr-p-${i}`).value = p; document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, ''); } 
+            if(document.getElementById(`tr-n-${i}`)) { 
+                document.getElementById(`tr-n-${i}`).value = n; 
+                document.getElementById(`tr-p-${i}`).value = p; 
+                document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, ''); 
+            } 
         }
-        document.getElementById('user-notes').value = localStorage.getItem('aa_user_notes') || "";
+        // Гарантированная загрузка заметок в поле ввода
+        const savedNotes = localStorage.getItem('aa_user_notes') || "";
+        const notesArea = document.getElementById('user-notes');
+        if (notesArea) notesArea.value = savedNotes;
     }
 
     function toggleBook(id) { const desc = document.getElementById(`desc-${id}`); const current = desc.style.display; document.querySelectorAll('.book-desc').forEach(d => d.style.display = 'none'); desc.style.display = (current === 'block') ? 'none' : 'block'; }
@@ -375,11 +390,7 @@
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').then(reg => {
-                console.log('SW Registered', reg);
-            }).catch(err => {
-                console.log('SW Registration failed', err);
-            });
+            navigator.serviceWorker.register('sw.js');
         });
     }
 
