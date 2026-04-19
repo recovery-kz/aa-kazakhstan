@@ -1,0 +1,21 @@
+{
+  "name": "Анонимные Алкоголики Казахстана",
+  "short_name": "АА КАЗ",
+  "description": "Мобильное приложение сообщества АА Казахстана",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#2B4F60",
+  "theme_color": "#2B4F60",
+  "icons": [
+    {
+      "src": "https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
