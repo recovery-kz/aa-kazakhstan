@@ -10,17 +10,17 @@
     </script>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>АА Казахстана</title>
     <link rel="manifest" href="manifest.json">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="АА КАЗ">
+    <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
+    
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2B4F60">
-    
-    <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
     <style>
@@ -90,6 +90,9 @@
         .acc-btn:after { content: '▼'; font-size: 10px; color: var(--accent); transition: 0.3s; }
         .acc-btn.open:after { transform: rotate(180deg); }
         .acc-content { display: none; padding: 15px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
+
+        .save-indicator { font-size: 10px; font-weight: 800; color: var(--open); opacity: 0; transition: opacity 0.3s; text-transform: uppercase; margin-left: 10px; }
+        .save-indicator.show { opacity: 1; }
 
         .notes-area { width: 100%; min-height: 120px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text-main); font-family: inherit; font-size: 14px; resize: none; outline: none; margin-top: 5px; }
         .prayer-text { font-style: italic; font-size: 15px; line-height: 1.6; color: var(--primary); text-align: center; padding: 10px 0; white-space: pre-line; }
@@ -183,8 +186,12 @@
             </div>
             <button class="acc-btn" onclick="toggleAcc('acc-prayer', this)" id="btn-pr-head">МОЛИТВА</button>
             <div class="acc-content" id="acc-prayer"><div class="prayer-text" id="prayer-content">Загрузка...</div></div>
-            <button class="acc-btn" onclick="toggleAcc('acc-notes', this)" id="btn-nt-head">ЗАМЕТКИ ПО ДНЮ</button>
-            <div class="acc-content" id="acc-notes"><textarea class="notes-area" id="user-notes" placeholder="..." oninput="saveNotes(this.value)"></textarea></div>
+            <button class="acc-btn" onclick="toggleAcc('acc-notes', this)" id="btn-nt-head">
+                ЗАМЕТКИ ПО ДНЮ <span id="save-status" class="save-indicator">✓ Сохранено</span>
+            </button>
+            <div class="acc-content" id="acc-notes">
+                <textarea class="notes-area" id="user-notes" placeholder="..." oninput="processNotes(this.value)"></textarea>
+            </div>
         </div>
     </div>
 
@@ -231,13 +238,26 @@
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
     let onlyToday = false;
-    
+    let saveTimeout;
+
     function toggleSos() { const box = document.getElementById('sos-box'); box.style.display = (box.style.display === 'flex') ? 'none' : 'flex'; }
     function toggleTheme() { const isDark = document.body.classList.toggle('dark-mode'); localStorage.setItem('aa_theme', isDark ? 'dark' : 'light'); document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙'; }
     function toggleAcc(id, btn) { const el = document.getElementById(id); const isOpen = el.style.display === 'block'; document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open')); if(!isOpen) { el.style.display = 'block'; btn.classList.add('open'); } }
     function toggleToday() { onlyToday = !onlyToday; document.getElementById('todayFilter').classList.toggle('active', onlyToday); render(); }
     function saveTrust(id) { const n = document.getElementById(`tr-n-${id}`).value, p = document.getElementById(`tr-p-${id}`).value; localStorage.setItem(`aa_trust_n_${id}`, n); localStorage.setItem(`aa_trust_p_${id}`, p); document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, ''); }
-    function saveNotes(val) { localStorage.setItem('aa_user_notes', val); }
+
+    function processNotes(val) {
+        const status = document.getElementById('save-status');
+        status.innerText = "...";
+        status.classList.add('show');
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            localStorage.setItem('aa_user_notes', val);
+            status.innerText = "✓ Сохранено";
+            setTimeout(() => status.classList.remove('show'), 2000);
+        }, 500);
+    }
+    function saveNotes(val) { processNotes(val); }
 
     function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
 
@@ -375,7 +395,7 @@
         {n:"Сбросить камень", l:"рус", d:"Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту. Она помогает распознать скрытые препятствия, которые мешают прогрессу в трезвости. Автор глубоко анализирует природу страха, гордыни и гнева. Это практическое руководство по очищению души и обретению покоя."},
         {n:"Сбросить камень", l:"каз", d:"Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды."},
         {n:"Новые очки (Чак Ч)", l:"рус", d:"Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение. Чак делится своим уникальным опытом проживания программы в радости и свободе. Он учит не просто не пить, а по-настоящему наслаждаться жизнью. Эта работа вдохновила тысячи людей на перемены."},
-        {n:"Новые очки (Чак Ч)", l:"каз", d:"Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі."},
+        {n:"Новые очки (Чак Ч)", l:"каз", d:"Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын и оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің и ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі."},
         {n:"Доктор Боб и славные ветераны", l:"рус", d:"История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба. Книга полна живых воспоминаний первых участников движения. Она показывает, как вера и служение помогли первым алкоголикам выжить. Это глубокое историческое исследование корней содружества."},
         {n:"АА Взрослеет", l:"рус", d:"Книга об истории развития сообщества, написанная Биллом У. Охватывает период становления традиций и структуры АА. Билл подробно описывает, как маленькое объединение превратилось во всемирное движение. В ней изложены три завета сообщества: выздоровление, единство и служение. Важное чтение для тех, кто интересуется устройством АА."},
         {n:"Пришли к убеждению", l:"рус", d:"Сборник личного опыта участников АА, посвященный духовному аспекту программы и поиску Высшей Силы. В ней представлены самые разные точки зрения — от атеистов до глубоко верующих. Книга показывает, что в АА есть место каждому, независимо от убеждений. Она расширяет границы понимания духовности в программе."},
