@@ -388,7 +388,7 @@
     const i18n = {
         ru: {
             head: 'АА КАЗАХСТАНА', total: 'Всего:', units: [['год','года','лет'],['мес.','мес.','мес.'],['день','дня','дней']],
-            motLab: 'Мотивация на сегодня', kaspi: '❤️ Седьмая Традиция', nav: ['Счетчик','Новости','Книги','Группы'], allCities: 'Все города',
+            motLab: 'Ежедневные размышления', kaspi: '❤️ Седьмая Традиция', nav: ['Счетчик','Новости','Книги','Группы'], allCities: 'Все города',
             sOpen: 'ОТКРЫТО. ЕЩЕ', sSoon: 'ЧЕРЕЗ', sClosed: 'ЗАКРЫТО', todayBtn: '📅 Сегодня', sosMain: '🚨 НУЖНА ПОМОЩЬ?',
             sosRu: 'РУССКИЙ ЯЗЫК', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Мой путь', trustHead: 'ДОВЕРЕННЫЕ ЛИЦА', prayerHead: 'МОЛИТВА', notesHead: 'ЗАМЕТКИ ПО ДНЮ',
             nextMedal: 'До медали', left: 'Осталось', prayer: 'Боже, дай мне разум и душевный покой принять то, что я не в силах изменить,\nмужество изменить то, что могу,\nи мудрость отличить одно от другого.',
@@ -399,7 +399,7 @@
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
-            motLab: 'Бүгінгі мотивация', kaspi: '❤️ Жетінші Дәстүр', nav: ['Есептегіш','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар',
+            motLab: 'Күнделікті ойлар', kaspi: '❤️ Жетінші Дәстүр', nav: ['Есептегіш','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар',
             sOpen: 'АШЫҚ. ТАҒЫ', sSoon: 'БАСТАЛАДЫ', sClosed: 'ЖАБЫҚ', todayBtn: '📅 Бүгін', sosMain: '🚨 КӨМЕК КЕРЕК ПЕ?',
             sosRu: 'ОРЫС ТІЛІ', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Менің жолым', trustHead: 'СЕНІМДІ ТҰЛҒАЛАР', prayerHead: 'ДҰҒА', notesHead: 'КҮНДЕЛІКТІ ЖАЗБАЛАР',
             nextMedal: 'Медальға дейін', left: 'Қалды', prayer: 'Уа, Тәңірім, мен өзгерте алмайтын нәрселерді қабылдауға жан тыныштығын,\nөзгерте алатын нәрселерді өзгертуге батылдық,\nжәне олардың айырмашылығын білетін даналық бере гөр.',
@@ -413,8 +413,6 @@
     let curLang = localStorage.getItem('aa_lang') || 'ru';
     let onlyToday = false;
     let saveTimeout = null;
-
-    const phrases = ['Главное — не пить только сегодня.','Живи и давай жить другим.','Первым делом — главное.','Это тоже пройдет.','Тише едешь — дальше будешь.','Боже, дай мне разум и душевный покой...','Обида — это яд, который мы пьем сами.','Программа АА — это программа действий.','Смирение — это путь к свободе.','Благодарное сердце не пьет.','Трезвость — это дар.'];
 
     const books = [
         {n:'Анонимные Алкоголики (с историями) твердый', l:'рус', d:'Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма. Книга помогает понять природу болезни и предлагает четкий план действий для обретения свободы. Это фундамент, на котором строится жизнь миллионов людей по всему миру.'},
@@ -608,9 +606,24 @@
         document.getElementById('medal-info-text').innerText = `${i18n[curLang].nextMedal}: ${i18n[curLang].left} ${daysLeft} ${plural(daysLeft, i18n[curLang].units[2])}`;
     }
 
+    function saveSoberDate(v) {
+        localStorage.setItem('aa_sober_v3', v);
+        localStorage.setItem('aa_sober', v);
+        localStorage.setItem('sobriety_date', v);
+        localStorage.setItem('soberDate', v);
+    }
+
+    function getSavedSoberDate() {
+        return localStorage.getItem('aa_sober_v3')
+            || localStorage.getItem('aa_sober')
+            || localStorage.getItem('sobriety_date')
+            || localStorage.getItem('soberDate')
+            || '';
+    }
+
     function updateDate(v) {
         if (!v) return;
-        localStorage.setItem('aa_sober_v3', v);
+        saveSoberDate(v);
         const s = new Date(v);
         const n = new Date();
         let y = n.getFullYear() - s.getFullYear();
@@ -826,11 +839,34 @@
         }
     }
 
-    function setMotivation() {
-        const today = new Date();
-        const startOfYear = new Date(today.getFullYear(), 0, 0);
-        const dayOfYear = Math.floor((today - startOfYear) / 86400000);
-        document.getElementById('mot-text').innerText = phrases[dayOfYear % phrases.length];
+    async function setMotivation() {
+        const motEl = document.getElementById('mot-text');
+        if (!motEl) return;
+        motEl.innerText = 'Загрузка...';
+
+        try {
+            const response = await fetch('https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/daily_reflections_short.json', { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const reflections = await response.json();
+
+            const today = new Date();
+            const key = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            const item = reflections[key];
+
+            if (!item) {
+                motEl.innerText = curLang === 'kz' ? 'Бүгінге мәтін табылмады.' : 'Размышление на сегодня не найдено.';
+                return;
+            }
+
+            const line = `${item.date_ru}. ${item.title}`;
+
+            motEl.innerHTML = `<strong>${escapeHtml(line)}</strong><br>${escapeHtml(item.quote)}`;
+        } catch (error) {
+            console.error('Не удалось загрузить ежедневные размышления:', error);
+            motEl.innerText = curLang === 'kz'
+                ? 'Күнделікті ойларды жүктеу мүмкін болмады.'
+                : 'Не удалось загрузить ежедневные размышления.';
+        }
     }
 
     function attachEvents() {
@@ -869,7 +905,7 @@
         applySavedTheme();
         attachEvents();
         rebuildCityOptions();
-        const storedDate = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
+        const storedDate = getSavedSoberDate() || new Date().toISOString().split('T')[0];
         document.getElementById('date-input').value = storedDate;
         loadTrust();
         setLang(curLang);
