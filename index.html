@@ -10,65 +10,170 @@
     </script>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <title>АА Казахстана</title>
     <link rel="manifest" href="manifest.json">
-    
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="АА КАЗ">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#2B4F60">
-    
+
     <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
     <style>
-        :root { 
-            --primary: #2B4F60; --accent: #F39C12; --bg: #F5F5F5; --card-bg: #FFFFFF;
-            --text-main: #333333; --text-sub: #555555; --border: #DDDDDD;
-            --sos: #e74c3c; --kaspi: #f14635; --nav-bg: #FFFFFF; --nav-inactive: #bdc3c7;
-            --open: #27ae60; --soon: #e67e22; --closed: #7f8c8d;
+        :root {
+            --primary: #2B4F60;
+            --accent: #F39C12;
+            --bg: #F5F5F5;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-sub: #555555;
+            --border: #DDDDDD;
+            --sos: #e74c3c;
+            --kaspi: #f14635;
+            --nav-bg: #FFFFFF;
+            --nav-inactive: #bdc3c7;
+            --open: #27ae60;
+            --soon: #e67e22;
+            --closed: #7f8c8d;
+            --link: #2B4F60;
         }
 
         body.dark-mode {
-            --primary: #3a667a; --bg: #121212; --card-bg: #1E1E1E;
-            --text-main: #E0E0E0; --text-sub: #AAAAAA; --border: #333333;
-            --nav-bg: #1E1E1E; --nav-inactive: #555555;
+            --primary: #3a667a;
+            --bg: #121212;
+            --card-bg: #1E1E1E;
+            --text-main: #E0E0E0;
+            --text-sub: #AAAAAA;
+            --border: #333333;
+            --nav-bg: #1E1E1E;
+            --nav-inactive: #555555;
+            --link: #7fb3d5;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
-        
-        header { 
-            background: var(--primary); color: white; padding: 15px 0; 
-            text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
-            position: sticky; top: 0; z-index: 1000; width: 100%;
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
             padding-top: env(safe-area-inset-top);
-            display: flex; flex-direction: column; align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .header-controls { position: absolute; width: 100%; display: flex; justify-content: space-between; padding: 0 15px; top: 50%; transform: translateY(-50%); }
-        .theme-toggle { background: rgba(255,255,255,0.1); border: none; border-radius: 8px; color: white; padding: 6px 10px; cursor: pointer; font-size: 16px; }
-        .lang-switch { display: flex; gap: 3px; background: rgba(255,255,255,0.1); padding: 4px; border-radius: 8px; }
-        .lang-btn { color: white; font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; cursor: pointer; border: none; background: none; }
-        .lang-btn.active { background: var(--accent); color: white; }
+        .header-controls {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 3px;
+            background: rgba(255,255,255,0.1);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .lang-btn {
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .lang-btn.active {
+            background: var(--accent);
+            color: white;
+        }
 
         .header-logo { width: 35px; height: 35px; margin-bottom: 2px; object-fit: contain; }
         .header-title { font-weight: 800; letter-spacing: 1px; font-size: 12px; text-transform: uppercase; }
 
-        .main-container { flex: 1; padding: 15px 15px 100px 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .content-section { display: none; width: 100%; max-width: 500px; flex-direction: column; align-items: center; }
-        .active { display: flex !important; animation: fadeIn 0.2s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 15px; width: 100%; overflow: hidden; }
-        .news-img { width: 100%; height: auto; display: block; border-bottom: 1px solid var(--border); }
+        .main-container {
+            flex: 1;
+            padding: 15px 15px 100px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
 
+        .content-section {
+            display: none;
+            width: 100%;
+            max-width: 500px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .active {
+            display: flex !important;
+            animation: fadeIn 0.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .news-img { width: 100%; height: auto; display: block; }
         .motivation-card { border-left: 5px solid var(--accent); padding: 15px; }
         .mot-label { color: var(--accent); font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
         .mot-text { color: var(--text-main); font-size: 14px; line-height: 1.4; font-weight: 600; font-style: italic; }
-
         .counter-card { padding: 20px; text-align: center; }
         .complex-sober-row { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
         .total-days-row { font-size: 14px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; }
@@ -78,64 +183,117 @@
         .medal-bar-fill { background: linear-gradient(90deg, #f1c40f, #f39c12); height: 100%; width: 0%; transition: width 1s ease-out; }
         .medal-info-text { font-size: 11px; font-weight: 700; color: var(--accent); margin-top: 6px; text-transform: uppercase; }
 
-        input[type="date"], .profile-input { background: var(--bg); color: var(--text-main); border: 1px solid var(--border); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 10px; font-size: 16px; text-align: center; }
+        input[type="date"], .profile-input, select, textarea { font: inherit; }
+
+        input[type="date"], .profile-input {
+            background: var(--bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
+        }
+
         .profile-input { text-align: left; font-size: 14px; padding: 10px; }
 
         .sos-wrapper { width: 100%; margin-top: 15px; position: relative; }
-        .sos-main-btn { background: var(--sos); color: white; padding: 14px; border-radius: 15px; text-align: center; font-weight: 800; font-size: 14px; cursor: pointer; }
+        .sos-main-btn { background: var(--sos); color: white; padding: 14px; border-radius: 15px; text-align: center; font-weight: 800; font-size: 14px; cursor: pointer; border: none; width: 100%; }
         .sos-options { display: none; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .sos-options.open { display: flex; }
         .sos-opt-link { background: #34495e; color: white; text-decoration: none; padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
 
-        .acc-btn { width: 100%; background: var(--card-bg); border: none; padding: 18px; text-align: left; font-weight: 800; color: var(--primary); font-size: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid var(--border); }
-        .acc-btn:after { content: '▼'; font-size: 10px; color: var(--accent); transition: 0.3s; }
-        .acc-btn.open:after { transform: rotate(180deg); }
+        .acc-btn {
+            width: 100%;
+            background: var(--card-bg);
+            border: none;
+            padding: 18px;
+            text-align: left;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            gap: 10px;
+        }
+
+        .acc-btn-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+        .acc-btn-title { min-width: 0; }
+        .acc-btn::after { content: '▼'; font-size: 10px; color: var(--accent); transition: 0.3s; flex-shrink: 0; }
+        .acc-btn.open::after { transform: rotate(180deg); }
         .acc-content { display: none; padding: 15px; background: var(--card-bg); border-bottom: 1px solid var(--border); }
 
-        .save-indicator { font-size: 10px; font-weight: 800; color: var(--open); opacity: 0; transition: opacity 0.3s; text-transform: uppercase; margin-left: 10px; }
+        .save-indicator { font-size: 10px; font-weight: 800; color: var(--open); opacity: 0; transition: opacity 0.3s; text-transform: uppercase; white-space: nowrap; }
         .save-indicator.show { opacity: 1; }
 
-        .notes-area { width: 100%; min-height: 120px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; color: var(--text-main); font-family: inherit; font-size: 14px; resize: none; outline: none; margin-top: 5px; }
-        .prayer-text { font-style: italic; font-size: 15px; line-height: 1.6; color: var(--primary); text-align: center; padding: 10px 0; white-space: pre-line; }
+        .notes-area {
+            width: 100%;
+            min-height: 120px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            outline: none;
+            margin-top: 5px;
+        }
 
+        .prayer-text { font-style: italic; font-size: 15px; line-height: 1.6; color: var(--primary); text-align: center; padding: 10px 0; white-space: pre-line; }
         .trust-item { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
         .trust-fields { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-        .call-btn { background: var(--primary); color: white; text-decoration: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .call-btn { background: var(--primary); color: white; text-decoration: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+        .call-btn.disabled { opacity: 0.4; pointer-events: none; }
 
         .book-item { background: var(--card-bg); width: 100%; padding: 15px; border-radius: 15px; margin-bottom: 8px; display: flex; flex-direction: column; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 1px solid var(--border); cursor: pointer; }
-        .book-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .book-title { font-size: 14px; font-weight: 700; color: var(--text-main); flex: 1; padding-right: 15px; line-height: 1.3; }
+        .book-header { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
+        .book-title { font-size: 14px; font-weight: 700; color: var(--text-main); flex: 1; line-height: 1.3; }
         .book-desc { font-size: 12px; color: var(--text-sub); line-height: 1.4; margin-top: 10px; display: none; padding-top: 10px; border-top: 1px dashed var(--border); }
-        .lang-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; min-width: 40px; text-align: center; }
+        .lang-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; min-width: 40px; text-align: center; flex-shrink: 0; }
         .lang-ru { background: #e3f2fd; color: #1976d2; }
         .lang-kz { background: #fbe9e7; color: #d84315; }
-        
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); cursor: pointer; border: none; background: none; padding: 2px; min-width: 0; }
         .nav-item.active-nav { color: var(--primary); font-weight: 800; }
         .nav-txt { font-size: 8px; text-transform: uppercase; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
 
-        .group-filters { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; height: 50px; align-items: stretch; }
-        .filter-btn { flex: 1; padding: 0 12px; height: 100%; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--primary); font-weight: 800; font-size: 13px; cursor: pointer; }
+        .group-filters { width: 100%; display: flex; gap: 10px; margin-bottom: 15px; min-height: 50px; align-items: stretch; }
+        .filter-btn { flex: 1; padding: 0 12px; min-height: 50px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--primary); font-weight: 800; font-size: 13px; cursor: pointer; }
         .filter-btn.active { background: var(--primary); color: white; }
-        #citySelect { flex: 2; height: 100%; padding: 0 14px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); font-weight: 800; }
+        #citySelect { flex: 2; min-height: 50px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--text-main); font-weight: 800; }
 
         .group-card { border-left: 6px solid var(--primary); padding: 15px; text-align: left; }
-        .status-badge { font-size: 10px; font-weight: 800; margin-bottom: 5px; display: flex; align-items: center; }
+        .status-badge { font-size: 10px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
         .s-open { color: var(--open); } .s-open .status-dot { background: var(--open); }
         .s-soon { color: var(--soon); } .s-soon .status-dot { background: var(--soon); }
         .s-closed { color: var(--closed); } .s-closed .status-dot { background: var(--closed); }
-        .link-active { color: var(--primary); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--primary); }
+
+        .group-name { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; line-height: 1.3; }
+        .city-tag { font-size: 11px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        .group-icons { font-size: 14px; margin-left: 6px; }
+        .info-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; line-height: 1.45; color: var(--text-main); }
+        .info-row-icon { width: 18px; flex-shrink: 0; text-align: center; }
+        .group-phones { display: flex; flex-direction: column; gap: 6px; }
+        .phone-link, .inline-link { color: var(--link); text-decoration: none; font-weight: 700; }
+        .muted { color: var(--text-sub); }
     </style>
 </head>
 <body>
-
 <header>
     <div class="header-controls">
-        <button class="theme-toggle" onclick="toggleTheme()" id="theme-icon">🌙</button>
+        <button class="theme-toggle" id="theme-icon" type="button">🌙</button>
         <div class="lang-switch">
-            <button class="lang-btn active" id="l-ru" onclick="setLang('ru')">RU</button>
-            <button class="lang-btn" id="l-kz" onclick="setLang('kz')">KZ</button>
+            <button class="lang-btn active" id="l-ru" type="button">RU</button>
+            <button class="lang-btn" id="l-kz" type="button">KZ</button>
         </div>
     </div>
     <img src="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png" alt="Лого" class="header-logo">
@@ -156,17 +314,17 @@
                 <div class="medal-info-text" id="medal-info-text">До следующей медали: ...</div>
             </div>
             <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
-                <input type="date" id="date-input" onchange="updateDate(this.value)">
+                <input type="date" id="date-input">
                 <div class="sos-wrapper">
-                    <div class="sos-main-btn" id="btn-sos-main" onclick="toggleSos()">🚨 НУЖНА ПОМОЩЬ? / КӨМЕК КЕРЕК ПЕ?</div>
+                    <button class="sos-main-btn" id="btn-sos-main" type="button">🚨 НУЖНА ПОМОЩЬ?</button>
                     <div class="sos-options" id="sos-box">
-                        <a href="tel:+77072080553" class="sos-opt-link"><span>РУССКИЙ ЯЗЫК</span> <span>📞</span></a>
-                        <a href="tel:+77074337408" class="sos-opt-link" style="background:#2c3e50;"><span>ҚАЗАҚ ТІЛІ</span> <span>📞</span></a>
+                        <a href="tel:+77072080553" class="sos-opt-link"><span id="sos-ru-text">РУССКИЙ ЯЗЫК</span><span>📞</span></a>
+                        <a href="tel:+77074337408" class="sos-opt-link" style="background:#2c3e50;"><span id="sos-kz-text">ҚАЗАҚ ТІЛІ</span><span>📞</span></a>
                     </div>
                 </div>
             </div>
         </div>
-        <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" style="text-decoration:none; width:100%;">
+        <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" rel="noopener noreferrer" style="text-decoration:none; width:100%;">
             <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border); margin-bottom:0;">
                 <span style="font-weight:700; color:var(--primary); font-size:14px;" id="t-kaspi">❤️ Седьмая Традиция</span>
                 <span style="background:var(--kaspi); color:white; padding:5px 12px; border-radius:8px; font-weight:800; font-size:12px;">KASPI</span>
@@ -176,37 +334,30 @@
 
     <div id="tab-profile" class="content-section">
         <div class="card" style="width:100%;">
-            <button class="acc-btn" onclick="toggleAcc('acc-trust', this)" id="btn-tr-head">ДОВЕРЕННЫЕ ЛИЦА</button>
+            <button class="acc-btn" type="button" data-acc-target="acc-trust" id="btn-tr-head"><span class="acc-btn-left"><span class="acc-btn-title" id="trust-head-text">ДОВЕРЕННЫЕ ЛИЦА</span></span></button>
             <div class="acc-content" id="acc-trust">
-                <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-0" oninput="saveTrust(0)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-0" oninput="saveTrust(0)"></div><a href="#" id="call-0" class="call-btn">📞</a></div>
-                <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-1" oninput="saveTrust(1)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-1" oninput="saveTrust(1)"></div><a href="#" id="call-1" class="call-btn">📞</a></div>
-                <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-2" oninput="saveTrust(2)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-2" oninput="saveTrust(2)"></div><a href="#" id="call-2" class="call-btn">📞</a></div>
-                <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-3" oninput="saveTrust(3)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-3" oninput="saveTrust(3)"></div><a href="#" id="call-3" class="call-btn">📞</a></div>
-                <div class="trust-item"><div class="trust-fields"><input type="text" placeholder="Имя" class="profile-input" id="tr-n-4" oninput="saveTrust(4)"><input type="tel" placeholder="Номер" class="profile-input" id="tr-p-4" oninput="saveTrust(4)"></div><a href="#" id="call-4" class="call-btn">📞</a></div>
+                <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-0"><input type="tel" class="profile-input" id="tr-p-0"></div><a href="#" id="call-0" class="call-btn disabled">📞</a></div>
+                <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-1"><input type="tel" class="profile-input" id="tr-p-1"></div><a href="#" id="call-1" class="call-btn disabled">📞</a></div>
+                <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-2"><input type="tel" class="profile-input" id="tr-p-2"></div><a href="#" id="call-2" class="call-btn disabled">📞</a></div>
+                <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-3"><input type="tel" class="profile-input" id="tr-p-3"></div><a href="#" id="call-3" class="call-btn disabled">📞</a></div>
+                <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-4"><input type="tel" class="profile-input" id="tr-p-4"></div><a href="#" id="call-4" class="call-btn disabled">📞</a></div>
             </div>
-            <button class="acc-btn" onclick="toggleAcc('acc-prayer', this)" id="btn-pr-head">МОЛИТВА</button>
+            <button class="acc-btn" type="button" data-acc-target="acc-prayer" id="btn-pr-head"><span class="acc-btn-left"><span class="acc-btn-title" id="prayer-head-text">МОЛИТВА</span></span></button>
             <div class="acc-content" id="acc-prayer"><div class="prayer-text" id="prayer-content">Загрузка...</div></div>
-            <button class="acc-btn" onclick="toggleAcc('acc-notes', this)" id="btn-nt-head">
-                ЗАМЕТКИ ПО ДНЮ <span id="save-status" class="save-indicator">✓ Сохранено</span>
-            </button>
-            <div class="acc-content" id="acc-notes">
-                <textarea class="notes-area" id="user-notes" placeholder="..." oninput="saveNotes(this.value)"></textarea>
-            </div>
+            <button class="acc-btn" type="button" data-acc-target="acc-notes" id="btn-nt-head"><span class="acc-btn-left"><span class="acc-btn-title" id="notes-head-text">ЗАМЕТКИ ПО ДНЮ</span><span id="save-status" class="save-indicator">✓ Сохранено</span></span></button>
+            <div class="acc-content" id="acc-notes"><textarea class="notes-area" id="user-notes"></textarea></div>
         </div>
     </div>
 
     <div id="tab-news" class="content-section">
-        <div class="card"><img src="https://github.com/recovery-kz/aa-kazakhstan/blob/main/forum26.jpeg?raw=true" class="news-img"></div>
-        <div class="card" style="padding: 20px; text-align: left; border-top: 5px solid var(--accent);">
-            <div style="font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 12px;" id="n-v-title">🎉 13-летие группы «Виктория»!</div>
-            <div style="font-size: 14px; color: var(--text-main); line-height: 1.6;" id="n-v-text">Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет! Это годы единства и бесценного опыта выздоровления. Ждем всех!</div>
-        </div>
+        <div class="card"><img src="https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/ChatGPT%20Image%2020%20%D0%B0%D0%BF%D1%80.%202026%20%D0%B3.,%2009_15_29.png" class="news-img" alt="Новость АА Казахстана 1"></div>
+        <div class="card"><img src="https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/forum26.jpeg" class="news-img" alt="Новость АА Казахстана 2"></div>
     </div>
 
     <div id="tab-lit" class="content-section">
-        <div class="card counter-card" style="border: 1px solid var(--border); margin-bottom: 15px;">
+        <div class="card counter-card" style="border:1px solid var(--border); margin-bottom:15px;">
             <div style="font-weight:800; color:var(--primary);" id="t-lit-com">ЛИТЕРАТУРНЫЙ КОМИТЕТ</div>
-            <div style="font-size:12px; color:var(--text-sub); margin: 5px 0;" id="t-lit-price">Наличие и цены:</div>
+            <div style="font-size:12px; color:var(--text-sub); margin:5px 0;" id="t-lit-price">Наличие и цены:</div>
             <div style="font-weight:700; color:var(--primary);">Вячеслав</div>
             <a href="tel:+77775567141" style="display:inline-block; background:var(--primary); color:white; padding:12px 20px; border-radius:12px; text-decoration:none; font-weight:700; margin-top:10px; font-size:14px;">📞 +7 (777) 556-71-41</a>
         </div>
@@ -215,263 +366,528 @@
 
     <div id="tab-groups" class="content-section">
         <div class="group-filters">
-            <select id="citySelect" onchange="render()"></select>
-            <button id="todayFilter" onclick="toggleToday()" class="filter-btn">📅 Сегодня</button>
+            <select id="citySelect"></select>
+            <button id="todayFilter" type="button" class="filter-btn">📅 Сегодня</button>
         </div>
         <div id="list-container" style="width:100%;"></div>
     </div>
 </main>
 
 <nav class="bottom-nav">
-    <button class="nav-item active-nav" id="btn-c" onclick="goTo('counter')"><span>⏱</span><span class="nav-txt">Счетчик</span></button>
-    <button class="nav-item" id="btn-n" onclick="goTo('news')"><span>📰</span><span class="nav-txt">Новости</span></button>
-    <button class="nav-item" id="btn-l" onclick="goTo('lit')"><span>📚</span><span class="nav-txt">Книги</span></button>
-    <button class="nav-item" id="btn-g" onclick="goTo('groups')"><span>📍</span><span class="nav-txt">Группы</span></button>
-    <button class="nav-item" id="btn-p" onclick="goTo('profile')"><span>👤</span><span class="nav-txt" id="n-prof">Мой путь</span></button>
+    <button class="nav-item active-nav" id="btn-c" type="button" data-tab="counter"><span>⏱</span><span class="nav-txt">Счетчик</span></button>
+    <button class="nav-item" id="btn-n" type="button" data-tab="news"><span>📰</span><span class="nav-txt">Новости</span></button>
+    <button class="nav-item" id="btn-l" type="button" data-tab="lit"><span>📚</span><span class="nav-txt">Книги</span></button>
+    <button class="nav-item" id="btn-g" type="button" data-tab="groups"><span>📍</span><span class="nav-txt">Группы</span></button>
+    <button class="nav-item" id="btn-p" type="button" data-tab="profile"><span>👤</span><span class="nav-txt" id="n-prof">Мой путь</span></button>
 </nav>
 
 <script>
+(() => {
+    'use strict';
+
     const i18n = {
-        ru: { head: "АА КАЗАХСТАНА", total: "Всего:", units: [["год","года","лет"],["мес.","мес.","мес."],["день","дня","дней"]], motLab: "Мотивация на сегодня", kaspi: "❤️ Седьмая Традиция", nav: ["Счетчик", "Новости", "Книги", "Группы"], allCities: "Все города", sOpen: "ОТКРЫТО. ЕЩЕ", sSoon: "ЧЕРЕЗ", sClosed: "ЗАКРЫТО", todayBtn: "📅 Сегодня", sosMain: "🚨 НУЖНА ПОМОЩЬ?", nProf: "Мой путь", trustHead: "ДОВЕРЕННЫЕ ЛИЦА", prayerHead: "МОЛИТВА", notesHead: "ЗАМЕТКИ ПО ДНЮ", nextMedal: "До медали", left: "Осталось", prayer: "Боже, дай мне разум и душевный покой принять то, что я не в силах изменить,\nмужество изменить то, что могу,\nи мудрость отличить одно от другого.", placeholder: "Ваши мысли, благодарности или инсайты...", newsTitle: "🎉 13-летие группы «Виктория»!", newsText: "Друзья! <b>9 мая</b> мы отмечаем День рождения первой группы АА в Казахстане. Нашей любимой «Виктории» 13 лет! Это годы единства и бесценного опыта выздоровления. Ждем всех!", litCom: "ЛИТЕРАТУРНЫЙ КОМИТЕТ", litPrice: "Наличие и цены:" },
-        kz: { head: "ҚАЗАҚСТАН АА", total: "Барлығы:", units: [["жыл","жыл","жыл"],["ай","ай","ай"],["күн","күн","күн"]], motLab: "Бүгінгі мотивация", kaspi: "❤️ Жетінші Дәстүр", nav: ["Есептегіш", "Жаңалықтар", "Кітаптар", "Топтар"], allCities: "Барлық қалалар", sOpen: "АШЫҚ. ТАҒЫ", sSoon: "БАСТАЛАДЫ", sClosed: "ЖАБЫҚ", todayBtn: "📅 Бүгін", sosMain: "🚨 КӨМЕК КЕРЕК ПЕ?", nProf: "Менің жолым", trustHead: "СЕНІМДІ ТҰЛҒАЛАР", prayerHead: "ДҰҒА", notesHead: "КҮНДЕЛІКТІ ЖАЗБАЛАР", nextMedal: "Медальға дейін", left: "Қалды", prayer: "Уа, Тәңірім, мен өзгерте алмайтын нәрселерді қабылдауға жан тыныштығын,\nөзгерте алатын нәрселерді өзгертуге батылдық,\nжәне олардың айырмашылығын білетін даналық бере гөр.", placeholder: "Ойларыңыз, ризашылықтарыңыз немесе инсайттарыңыз...", newsTitle: "🎉 «Виктория» тобының 13 жылдығы!", newsText: "Достар! <b>9 мамырда</b> Қазақстандағы алғашқы АА тобының туған күнін атап өтеміз. Сүйікті «Викториямызға» 13 жыл! Бұл бірлік пен баға жетпес сауығу тәжірибесінің жылдары. Барлығыңызды күтеміз!", litCom: "ӘДЕБИЕТ КОМИТЕТІ", litPrice: "Қолжетімділігі мен бағасы:" }
+        ru: {
+            head: 'АА КАЗАХСТАНА', total: 'Всего:', units: [['год','года','лет'],['мес.','мес.','мес.'],['день','дня','дней']],
+            motLab: 'Мотивация на сегодня', kaspi: '❤️ Седьмая Традиция', nav: ['Счетчик','Новости','Книги','Группы'], allCities: 'Все города',
+            sOpen: 'ОТКРЫТО. ЕЩЕ', sSoon: 'ЧЕРЕЗ', sClosed: 'ЗАКРЫТО', todayBtn: '📅 Сегодня', sosMain: '🚨 НУЖНА ПОМОЩЬ?',
+            sosRu: 'РУССКИЙ ЯЗЫК', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Мой путь', trustHead: 'ДОВЕРЕННЫЕ ЛИЦА', prayerHead: 'МОЛИТВА', notesHead: 'ЗАМЕТКИ ПО ДНЮ',
+            nextMedal: 'До медали', left: 'Осталось', prayer: 'Боже, дай мне разум и душевный покой принять то, что я не в силах изменить,\nмужество изменить то, что могу,\nи мудрость отличить одно от другого.',
+            placeholder: 'Ваши мысли, благодарности или инсайты...', litCom: 'ЛИТЕРАТУРНЫЙ КОМИТЕТ', litPrice: 'Наличие и цены:',
+            trustName: 'Имя', trustPhone: 'Номер', openMap: 'Открыть в 2ГИС', addressLabel: 'Адрес', scheduleLabel: 'Расписание', phoneLabel: 'Телефон', phonesLabel: 'Телефоны',
+            openZoom: 'Открыть Zoom', openChat: 'Открыть чат', zoomLabel: 'Zoom', chatLabel: 'Чат', savePending: '...', saveDone: '✓ Сохранено',
+            minutesShort: 'МИН', hoursShort: 'Ч', noSchedule: 'По запросу'
+        },
+        kz: {
+            head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
+            motLab: 'Бүгінгі мотивация', kaspi: '❤️ Жетінші Дәстүр', nav: ['Есептегіш','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар',
+            sOpen: 'АШЫҚ. ТАҒЫ', sSoon: 'БАСТАЛАДЫ', sClosed: 'ЖАБЫҚ', todayBtn: '📅 Бүгін', sosMain: '🚨 КӨМЕК КЕРЕК ПЕ?',
+            sosRu: 'ОРЫС ТІЛІ', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Менің жолым', trustHead: 'СЕНІМДІ ТҰЛҒАЛАР', prayerHead: 'ДҰҒА', notesHead: 'КҮНДЕЛІКТІ ЖАЗБАЛАР',
+            nextMedal: 'Медальға дейін', left: 'Қалды', prayer: 'Уа, Тәңірім, мен өзгерте алмайтын нәрселерді қабылдауға жан тыныштығын,\nөзгерте алатын нәрселерді өзгертуге батылдық,\nжәне олардың айырмашылығын білетін даналық бере гөр.',
+            placeholder: 'Ойларыңыз, ризашылықтарыңыз немесе инсайттарыңыз...', litCom: 'ӘДЕБИЕТ КОМИТЕТІ', litPrice: 'Қолжетімділігі мен бағасы:',
+            trustName: 'Аты', trustPhone: 'Нөмірі', openMap: '2ГИС ашу', addressLabel: 'Мекенжай', scheduleLabel: 'Кесте', phoneLabel: 'Телефон', phonesLabel: 'Телефондар',
+            openZoom: 'Zoom ашу', openChat: 'Чатты ашу', zoomLabel: 'Zoom', chatLabel: 'Чат', savePending: '...', saveDone: '✓ Сақталды',
+            minutesShort: 'МИН', hoursShort: 'САҒ', noSchedule: 'Сұраныс бойынша'
+        }
     };
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
     let onlyToday = false;
     let saveTimeout = null;
 
-    function toggleSos() { const box = document.getElementById('sos-box'); box.style.display = (box.style.display === 'flex') ? 'none' : 'flex'; }
-    function toggleTheme() { const isDark = document.body.classList.toggle('dark-mode'); localStorage.setItem('aa_theme', isDark ? 'dark' : 'light'); document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙'; }
-    function toggleAcc(id, btn) { const el = document.getElementById(id); const isOpen = el.style.display === 'block'; document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none'); document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open')); if(!isOpen) { el.style.display = 'block'; btn.classList.add('open'); } }
-    function toggleToday() { onlyToday = !onlyToday; document.getElementById('todayFilter').classList.toggle('active', onlyToday); render(); }
-    function saveTrust(id) { const n = document.getElementById(`tr-n-${id}`).value, p = document.getElementById(`tr-p-${id}`).value; localStorage.setItem(`aa_trust_n_${id}`, n); localStorage.setItem(`aa_trust_p_${id}`, p); document.getElementById(`call-${id}`).href = "tel:" + p.replace(/\s/g, ''); }
+    const phrases = ['Главное — не пить только сегодня.','Живи и давай жить другим.','Первым делом — главное.','Это тоже пройдет.','Тише едешь — дальше будешь.','Боже, дай мне разум и душевный покой...','Обида — это яд, который мы пьем сами.','Программа АА — это программа действий.','Смирение — это путь к свободе.','Благодарное сердце не пьет.','Трезвость — это дар.'];
 
-    // ИСПРАВЛЕННАЯ ФУНКЦИЯ СОХРАНЕНИЯ
+    const books = [
+        {n:'Анонимные Алкоголики (с историями) твердый', l:'рус', d:'Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма. Книга помогает понять природу болезни и предлагает четкий план действий для обретения свободы. Это фундамент, на котором строится жизнь миллионов людей по всему миру.'},
+        {n:'Анонимные Алкоголики (стандарт)', l:'рус', d:'Классическое издание Большой Книги без сокращений. Фундаментальный текст, по которому выздоравливают миллионы людей во всем мире. Содержит изложение принципов, которые помогли первым участникам остаться трезвыми. Идеально подходит для глубокого изучения программы и работы со спонсором.'},
+        {n:'Анонимные Алкоголики (стандарт)', l:'каз', d:'Анонимді Маскүнемдер қауымдастығының негізгі кітабы. Онда сауығу бағдарламасының принциптері мен тәжірибелері баяндалған. Бұл кітап қазақ тілді қауымдастық мүшелеріне арналған басты құрал болып табылады. Сауығудың 12 қадамын түсінуге және қолдануға көмектеседі.'},
+        {n:'Анонимные Алкоголики (стандарт) карманный', l:'рус', d:'Удобный формат основной книги, который всегда можно взять с собой на встречу или в поездку. Содержит полный текст без изменений, но в компактном виде. Позволяет обращаться к мудрости сообщества в любой момент дня. Легко помещается в сумку или карман.'},
+        {n:'Двенадцать шагов и двенадцать традиций', l:'рус', d:'Книга, подробно раскрывающая 12 принципов личного выздоровления и 12 правил устройства групп сообщества. Она дает глубокое понимание каждого шага, помогая проработать дефекты характера. Вторая часть книги объясняет, как группам оставаться едиными и эффективно нести весть. Это необходимое дополнение к Большой Книги.'},
+        {n:'Двенадцать шагов и двенадцать традиций', l:'каз', d:'Жеке сауығудың 12 қадамы мен қауымдастық өмірінің 12 дәстүрі туралы тереңірек түсінік беретін еңбек. Бұл кітап қадамдарды өмірде қалай қолдану керектігін егжей-тегжейлі түсіндіреді. Дәстүрлер бөлімі топтардың өзара қарым-қатынасын реттейді. Рухани өсуді қалайтын әрбір мүшеге қажет.'},
+        {n:'Ежедневные размышления', l:'рус', d:'Сборник коротких чтений на каждый день года, написанный самими членами АА для поддержки ежедневной трезвости. Каждое размышление основано на цитате из литературы АА. Помогает настроиться на нужный лад с самого утра и сохранять осознанность. Читатели находят в ней утешение и практическую мудрость.'},
+        {n:'Ежедневные размышления', l:'каз', d:'Жылдың әр күніне арналған қысқаша оқулар жинағы. Күнделікті рухани сергектікті сақтауға және бағдарламаны еске түсіруге көмектеседі. Әр күнге арналған парақшада АА әдебиетінен үзінді мен мүшелердің тәжірибесі берілген. Бұл кітап күнделікті медитация үшін өте қолайлы.'},
+        {n:'Жить трезвыми', l:'рус', d:'Практическое пособие с конкретными советами о том, как не выпить «первую рюмку» в обычных жизненных ситуациях. Книга предлагает простые методы, которые работают здесь и сейчас. Она разбирает такие темы, как праздники, стресс, тяга и старые привычки. Идеально подходит для новичков на первых этапах пути.'},
+        {n:'Жить трезвыми', l:'каз', d:'Күнделікті өмірдегі ішімдіктен бас тартудың практикалық әдістері мен кеңестері жинақталған құрал. «Бірінші стақанды» қалай көтермеу керектігін қарапайым тілмен түсіндіреді. Кітапта өмірлік қиындықтармен күресудің нақты жолдары көрсетілген. Жаңадан келгендер үшін таптырмас нұсқаулық.'},
+        {n:'Сбросить камень', l:'рус', d:'Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту. Она помогает распознать скрытые препятствия, которые мешают прогрессу в трезвости. Автор глубоко анализирует природу страха, гордыни и гнева. Это практическое руководство по очищению души и обретению покоя.'},
+        {n:'Сбросить камень', l:'каз', d:'Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды.'},
+        {n:'Новые очки (Чак Ч)', l:'рус', d:'Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение. Чак делится своим уникальным опытом проживания программы в радости и свободе. Он учит не просто не пить, а по-настоящему наслаждаться жизнью. Эта работа вдохновила тысячи людей на перемены.'},
+        {n:'Новые очки (Чак Ч)', l:'каз', d:'Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі.'},
+        {n:'Доктор Боб и славные ветераны', l:'рус', d:'История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба. Книга полна живых воспоминаний первых участников движения. Она показывает, как вера и служение помогли первым алкоголикам выжить. Это глубокое историческое исследование корней содружества.'},
+        {n:'АА Взрослеет', l:'рус', d:'Книга об истории развития сообщества, написанная Биллом У. Охватывает период становления традиций и структуры АА. Билл подробно описывает, как маленькое объединение превратилось во всемирное движение. В ней изложены три завета сообщества: выздоровление, единство и служение. Важное чтение для тех, кто интересуется устройством АА.'},
+        {n:'Пришли к убеждению', l:'рус', d:'Сборник личного опыта участников АА, посвященный духовному аспекту программы и поиску Высшей Силы. В ней представлены самые разные точки зрения — от атеистов до глубоко верующих. Книга показывает, что в АА есть место каждому, независимо от убеждений. Она расширяет границы понимания духовности в программе.'},
+        {n:'Рук-во по обслуживанию АА + 12 Принципов', l:'рус', d:'Техническое руководство по структуре обслуживания АА и 12 принципов всемирного служения. Объясняет, как работают конференции, советы и делегаты. Показывает, как обеспечивается связь между группами и сообществом в целом. Необходима для тех, кто занимается ответственным служением.'},
+        {n:'Рабочая тетрадь по изучению 12 традиций', l:'рус', d:'Материал для углубленного разбора традиций в малых группах с вопросами для обсуждения. Помогает понять, как применять традиции не только в группе, но и в личной жизни. Содержит практические примеры и упражнения. Укрепляет единство содружества через осознание общих принципов.'},
+        {n:'Рабочая тетрадь по изучению Принципов обслуживания', l:'рус', d:'Пособие для тех, кто хочет глубже понять структуру и принципы работы конференций и советов. Разбирает сложные вопросы управления и ответственности в АА. Помогает новым служителям быстрее войти в курс дела. Структурирует знания о всемирном обслуживании.'},
+        {n:'Вопросник по 12 традициям', l:'рус', d:'Краткий список вопросов для проверки здоровья группы и понимания традиций. Помогает группе оценить свою эффективность в несении вести. Выявляет слабые места в единстве и анонимности. Отличный инструмент для проведения рабочих собраний группы.'},
+        {n:'12 традиций в иллюстрациях', l:'рус', d:'Наглядное пособие, где каждая традиция объяснена простыми словами и снабжена картинками. Идеально подходит для первичного ознакомления с принципами устройства АА. Делает сложные понятия доступными для каждого. Популярна среди новичков и опытных участников.'},
+        {n:'Думаешь ты особенный?', l:'рус', d:'Брошюра для тех, кто сомневается, подходит ли ему программа АА из-за возраста или социального статуса. Разрушает мифы об «особых» случаях алкоголизма. Показывает, что болезнь не выбирает профессию или доход. Помогает человеку преодолеть барьер уникальности и прийти на собрание.'},
+        {n:'Молодежь и АА', l:'рус', d:'Истории молодых людей, которые смогли признать проблему и обрести трезвость в раннем возрасте. Показывает, что алкоголизм не зависит от стажа употребления. Вдохновляет молодежь не ждать дна, а начать жить полноценно уже сейчас. Содержит советы по преодолению социального давления сверстников.'},
+        {n:'Женщины в АА', l:'рус', d:'Специальный выпуск историй женщин, столкнувшихся с алкоголизмом и нашедших поддержку в содружестве. Затрагивает темы материнства, отношений и социальной реабилитации. Помогает женщинам почувствовать, что они не одиноки в своей беде. Дает надежду на восстановление семьи и обретение достоинства.'},
+        {n:'Группа АА там где все начинается', l:'рус', d:'Важное пособие о том, как создать группу, проводить собрания и нести весть. Описывает роли служителей группы и их обязанности. Дает рекомендации по ведению финансовой отчетности и аренде помещения. Фундаментальный документ для развития здоровой атмосферы на собраниях.'},
+        {n:'Пособие по работе АА в ЛУ', l:'рус', d:'Методический материал для служения в лечебных учреждениях и больницах. Объясняет специфику взаимодействия с персоналом клиник. Дает советы по проведению информационных встреч для пациентов. Помогает эффективно наладить мост между больницей и группами АА.'}
+    ];
+
+    const data = [
+        {c:'Онлайн',n:'АА «Пробуждение»',a:'https://us06web.zoom.us/j/82036099070',t:'Вт, Чт, Сб: 21:00-22:30',p:['+7 777 232 9996'],online:true,o:true,sc:[{d:2,s:2100,e:2230},{d:4,s:2100,e:2230},{d:6,s:2100,e:2230}]},
+        {c:'Онлайн',n:'АА «Бірлік» (каз)',a:'https://us02web.zoom.us/j/5204364841',t:'Ср: 21:00-22:30',p:['+7 707 433 7408'],online:true,k:true,o:true,sc:[{d:3,s:2100,e:2230}]},
+        {c:'Онлайн',n:'АА «ШАГ ЗА ШАГОМ»',a:'https://t.me/+JqgMpZCz_fY1OTVi',t:'Вт (откр): 19:00-20:30',p:[],online:true,o:true,chat:true,sc:[{d:2,s:1900,e:2030}]},
+        {c:'Алматы',n:'АА «Виктория»',a:'ул. Жубанова 3а, 301 каб.',t:'Вт (откр), Чт: 19:30-21:00; Сб: 19:00-20:30',p:['+7 705 990 7938'],z:'https://zoom.us/j/5290200881',o:true,sc:[{d:2,s:1930,e:2100},{d:4,s:1930,e:2100},{d:6,s:1900,e:2030}]},
+        {c:'Алматы',n:'АА «8 марта»',a:'ул. Зенкова 24',t:'Ежедневно: 19:00-20:30; Вт, Чт: 12:00',p:['+7 701 121 8501'],o:true,sc:[{d:1,s:1900,e:2030},{d:2,s:1900,e:2030},{d:3,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030},{d:0,s:1900,e:2030},{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
+        {c:'Алматы',n:'АА «Турксиб»',a:'уточнять по номеру',t:'Вт, Чт: 19:00-20:30; Вс (откр): 17:00-18:30',p:['+7 747 860 1105'],o:true,map:'https://2gis.kz/almaty/geo/9430047374991567',sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1700,e:1830}]},
+        {c:'Алматы',n:'АА «АлмА» (женская)',a:'ул. Зенкова 24',t:'Сб: 12:00-13:30',p:['+7 775 500 6846'],f:true,o:true,sc:[{d:6,s:1200,e:1330}]},
+        {c:'Алматы',n:'АА «Шапагат» (каз)',a:'ул. Жубанова 3а',t:'Пн, Ср: 19:00-20:30; Сб (откр): 17:00-18:30',p:['+7 747 165 2435'],k:true,o:true,sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:6,s:1700,e:1830}]},
+        {c:'Алматы',n:'АА «Друзья Билла»',a:'ул. Жибек Жолы 64/47, оф. 215',t:'Вт, Чт: 12:00-13:30',p:['+7 747 563 7587'],o:true,sc:[{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
+        {c:'Алматы',n:'АА «Чайхана» (новички)',a:'ул. Жубанова 3а',t:'Вс (откр): 11:00-12:30',p:['+7 705 990 7938'],z:'https://zoom.us/j/5290200881',o:true,sc:[{d:0,s:1100,e:1230}]},
+        {c:'Алматы',n:'АА «Аксай»',a:'пр. Райымбека 493',t:'Вс: 13:00-14:15',p:['+7 776 453 3418'],o:true,sc:[{d:0,s:1300,e:1415}]},
+        {c:'Алматы',n:'АА «Наурыз»',a:'ул. Тимирязева 42 к23, каб. 102',t:'Вт, Чт, Пт, Сб (откр): 19:00-20:30',p:['+7 708 317 1769'],o:true,sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030}]},
+        {c:'Алматы',n:'АА «Женский клуб»',a:'ул. Жубанова 3а',t:'Вс (откр): 13:00-14:30; Ср (Zoom): 21:00',p:['+7 705 573 0900'],f:true,o:true,sc:[{d:0,s:1300,e:1430},{d:3,s:2100,e:2230}]},
+        {c:'Алматы',n:'АА «НОВЫЕ ОЧКИ»',a:'ул. Жибек Жолы 64/47, оф. 215',t:'Пн, Ср, Пт: 19:00-20:15; Сб: 14:00',p:['+7 707 308 4757'],o:true,sc:[{d:1,s:1900,e:2015},{d:3,s:1900,e:2015},{d:5,s:1900,e:2015},{d:6,s:1400,e:1515}]},
+        {c:'Алматы',n:'АА «боралдай»',a:'ул. Курчатова 13а',t:'Сб: 17:00',p:['+7 777 281 9098'],sc:[{d:6,s:1700,e:1830}]},
+        {c:'Алматы',n:'Мужская группа «ААА»',a:'ул. Зенкова 24',t:'Сб: 17:00-18:15',p:['+7 771 370 9966'],sc:[{d:6,s:1700,e:1815}]},
+        {c:'Астана',n:'АА «51 параллель»',a:'ул. Петрова 14/3',t:'Ср: 19:00-20:15; Сб: 15:00-16:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:3,s:1900,e:2015},{d:6,s:1500,e:1615}]},
+        {c:'Астана',n:'АА «Свобода»',a:'ул. Петрова 14/3',t:'Пн, Чт, Пт: 19:00-20:00',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:1,s:1900,e:2000},{d:4,s:1900,e:2000},{d:5,s:1900,e:2000}]},
+        {c:'Астана',n:'АА «Есиль» (каз)',a:'ул. Петрова 14/3',t:'Вс: 17:00-18:30',p:['+7 775 360 1528','+7 707 123 4699','+7 771 899 3679'],k:true,sc:[{d:0,s:1700,e:1830}]},
+        {c:'Астана',n:'АА «большая перемена»',a:'ул. Дукенулы 26',t:'Пн, Пт: 19:00-20:00',p:['+7 707 123 4699'],sc:[{d:1,s:1900,e:2000},{d:5,s:1900,e:2000}]},
+        {c:'Астана',n:'АА «Сана»',a:'пр. Кабанбай Батыра 58А',t:'Вт, Чт: 20:00-21:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:2,s:2000,e:2115},{d:4,s:2000,e:2115}]},
+        {c:'Астана',n:'АА «ПУТЬ»',a:'ул. Ташенова 26',t:'Вт, Ср, Чт: 19:00-20:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:2,s:1900,e:2015},{d:3,s:1900,e:2015},{d:4,s:1900,e:2015}]},
+        {c:'Астана',n:'АА «ВОЗРОЖДЕНИЕ»',a:'ул. Куйши Дина 27',t:'Вт: 19:00-20:15',p:['+7 707 565 0586','+7 701 642 3838'],sc:[{d:2,s:1900,e:2015}]},
+        {c:'Астана',n:'АА «гармония»',a:'ул. Арасан 2/2',t:'Пн, Пт: 19:15',p:['+7 775 360 1528','+7 707 123 4699','+7 771 899 3679'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
+        {c:'Астана',n:'АА «үміт» (каз)',a:'ул. Ш. Кудайбердиулы 94',t:'Ср: 19:00-20:15',p:['+7 707 433 7408'],k:true,sc:[{d:3,s:1900,e:2015}]},
+        {c:'Актау',n:'АА «Парус»',a:'29-й мкр, дом 218',t:'Пн, Пт: 19:15-20:30',p:['+7 777 065 5797'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
+        {c:'Актобе',n:'АА «ОАЗИС»',a:'ул. Абулхаир-Хана 1, оф. 228',t:'Вт, Чт: 19:00-20:15; Сб: 14:00-15:15',p:['+7 747 684 5424'],o:true,sc:[{d:2,s:1900,e:2015},{d:4,s:1900,e:2015},{d:6,s:1400,e:1515}]},
+        {c:'Атырау',n:'АА «НАЧАЛО»',a:'мкр. Авангард-3, 34а',t:'Вт, Чт: 19:00-20:30; Сб: 12:00-13:30',p:['+7 705 449 2468'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:6,s:1200,e:1330}]},
+        {c:'Караганда',n:'АА «решение есть»',a:'ул. Ерубаева 34',t:'Суббота: 15:45',p:['+7 700 765 6935'],sc:[{d:6,s:1545,e:1715}]},
+        {c:'Кокшетау',n:'АА «Синегорье»',a:'ул. Ауельбекова 127',t:'Вт, Пт: 19:30-20:30',p:['+7 771 363 0302'],sc:[{d:2,s:1930,e:2030},{d:5,s:1930,e:2030}]},
+        {c:'Конаев',n:'АА «НАДЕЖДА»',a:'ул. Курылысшы 8а',t:'Ср: 19:00-20:00',p:['+7 778 166 1081'],sc:[{d:3,s:1900,e:2000}]},
+        {c:'Костанай',n:'АА «ДОСТАР»',a:'ул. 5 апреля 67, подъезд 3',t:'Пн, Ср, Пт: 19:00-20:30',p:['+7 777 743 5620','+7 747 743 5620'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
+        {c:'Костанай',n:'АА «12 Шаг»',a:'ул. Г. Арыстанбекова 23',t:'Вт, Чт, Вс: 19:00-20:30',p:['+7 777 743 5620','+7 771 429 0869'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1900,e:2030}]},
+        {c:'Павлодар',n:'АА «Крепость»',a:'ул. Торайгырова 10/1, каб. 4',t:'Пн, Ср, Пт: 19:00-20:00',p:['+7 708 636 1510'],sc:[{d:1,s:1900,e:2000},{d:3,s:1900,e:2000},{d:5,s:1900,e:2000}]},
+        {c:'Петропавловск',n:'АА «Последняя капля»',a:'ул. Букетова 4',t:'Сб: 20:00',p:['+7 775 827 2514'],sc:[{d:6,s:2000,e:2130}]},
+        {c:'Рудный',n:'АА «Новая свобода»',a:'ул. Парковая 55',t:'Ср, Вс: 19:30-20:45',p:['+7 775 494 7917'],sc:[{d:3,s:1930,e:2045},{d:0,s:1930,e:2045}]},
+        {c:'Семей',n:'АА «СЕМЁРОЧКА»',a:'инфо по тел.',t:'По запросу',p:['+7 707 640 0913'],sc:[]},
+        {c:'Талдыкурган',n:'АА «жетысу»',a:'ул. Шевченко 100',t:'Пн, Ср, Пт: 19:00',p:['+7 707 992 8240'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
+        {c:'Усть-Каменогорск',n:'АА «УСТЬЕ»',a:'ул. Казахстан 99',t:'Пн, Ср, Пт: 18:00-19:30',p:['+7 777 246 7979','+7 705 508 3033'],sc:[{d:1,s:1800,e:1930},{d:3,s:1800,e:1930},{d:5,s:1800,e:1930}]},
+        {c:'Кызылорда',n:'АА «сырдарья»',a:'ул. Муратбаева 8б, каб. 2',t:'Вт, Чт: 19:00; Вс: 11:00',p:['+7 707 433 7408'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1100,e:1230}]},
+        {c:'Шымкент',n:'АА «Юг»',a:'Шаяхметова 14/1, каб. 12а',t:'Пн, Ср, Пт: 19:00-20:30',p:['+7 701 674 9853'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
+        {c:'Шымкент',n:'АА «Шым»',a:'ул. Мангельдина 33',t:'Вт, Чт: 19:00-20:00; Сб: 12:00-13:00',p:['+7 702 637 2329'],sc:[{d:2,s:1900,e:2000},{d:4,s:1900,e:2000},{d:6,s:1200,e:1300}]},
+        {c:'Шымкент',n:'АА «СВОБОДА»',a:'ул. Московская 9а',t:'Вс: 13:00-14:30',p:['+7 705 990 6737'],sc:[{d:0,s:1300,e:1430}]},
+        {c:'Шымкент',n:'АА «ПАНА» (каз)',a:'ул. Шаяхметова 14/1, каб. 12а',t:'Вс: 13:00-14:00',p:['+7 702 637 2329'],k:true,sc:[{d:0,s:1300,e:1400}]},
+        {c:'Экибастуз',n:'АА «Чистое Небо»',a:'инфо по тел.',t:'По запросу',p:['+7 775 350 0562'],sc:[]},
+        {c:'Жетысай',n:'АА «куат»',a:'ул. Ауэзова, каб. 12',t:'Пн, Ср, Пт: 19:00',p:['+7 707 318 3839'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
+    ];
+
+    function cleanPhone(phone) { return String(phone || '').replace(/[^\d+]/g, ''); }
+    function escapeHtml(value) { return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
+    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
+
+    function formatRemainingMinutes(minutes) {
+        const d = i18n[curLang];
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        if (hours > 0) return `${hours} ${d.hoursShort} ${mins} ${d.minutesShort}`;
+        return `${mins} ${d.minutesShort}`;
+    }
+
+    function build2GISLink(g) {
+        if (!g || !g.a || g.online) return '';
+        const rawAddress = String(g.a).trim();
+        if (!rawAddress) return '';
+        if (/^(инфо по тел\.?|уточнять по номеру)$/i.test(rawAddress)) return '';
+        if (g.map) return g.map;
+        return `https://2gis.kz/search/${encodeURIComponent(g.c + ', ' + rawAddress)}`;
+    }
+
+    function toggleSos() {
+        const box = document.getElementById('sos-box');
+        box.classList.toggle('open');
+    }
+
+    function toggleTheme() {
+        const isDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('aa_theme', isDark ? 'dark' : 'light');
+        document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+    }
+
+    function toggleAcc(id, btn) {
+        const el = document.getElementById(id);
+        const isOpen = el.style.display === 'block';
+        document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none');
+        document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open'));
+        if (!isOpen) {
+            el.style.display = 'block';
+            btn.classList.add('open');
+        }
+    }
+
+    function toggleToday() {
+        onlyToday = !onlyToday;
+        document.getElementById('todayFilter').classList.toggle('active', onlyToday);
+        renderGroups();
+    }
+
+    function setTrustCallState(id, phone) {
+        const link = document.getElementById(`call-${id}`);
+        const clean = cleanPhone(phone || '');
+        if (clean) {
+            link.href = `tel:${clean}`;
+            link.classList.remove('disabled');
+        } else {
+            link.href = '#';
+            link.classList.add('disabled');
+        }
+    }
+
+    function saveTrust(id) {
+        const n = document.getElementById(`tr-n-${id}`).value;
+        const p = document.getElementById(`tr-p-${id}`).value;
+        localStorage.setItem(`aa_trust_n_${id}`, n);
+        localStorage.setItem(`aa_trust_p_${id}`, p);
+        setTrustCallState(id, p);
+    }
+
     function saveNotes(val) {
         const status = document.getElementById('save-status');
         if (status) {
-            status.innerText = "...";
+            status.innerText = i18n[curLang].savePending;
             status.classList.add('show');
         }
-        
         if (saveTimeout) clearTimeout(saveTimeout);
-        
         saveTimeout = setTimeout(() => {
             localStorage.setItem('aa_user_notes', val);
             if (status) {
-                status.innerText = "✓ Сохранено";
+                status.innerText = i18n[curLang].saveDone;
                 setTimeout(() => status.classList.remove('show'), 2000);
             }
         }, 800);
     }
 
-    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
-
-    function updateMedalProgress(tD, startDateVal) {
-        const start = new Date(startDateVal); const now = new Date();
-        let targetDate = new Date(start); let lastMilestoneDate = new Date(start);
-        if (tD < 365) {
-            let mCount = 0;
-            while (targetDate <= now) { lastMilestoneDate = new Date(targetDate); mCount++; targetDate = new Date(start.getFullYear(), start.getMonth() + mCount, start.getDate()); }
+    function updateMedalProgress(totalDays, startDateVal) {
+        const start = new Date(startDateVal);
+        const now = new Date();
+        let targetDate = new Date(start);
+        let lastMilestoneDate = new Date(start);
+        if (totalDays < 365) {
+            let monthCount = 0;
+            while (targetDate <= now) {
+                lastMilestoneDate = new Date(targetDate);
+                monthCount += 1;
+                targetDate = new Date(start.getFullYear(), start.getMonth() + monthCount, start.getDate());
+            }
         } else {
-            let yCount = 0;
-            while (targetDate <= now) { lastMilestoneDate = new Date(targetDate); yCount++; targetDate = new Date(start.getFullYear() + yCount, start.getMonth(), start.getDate()); }
+            let yearCount = 0;
+            while (targetDate <= now) {
+                lastMilestoneDate = new Date(targetDate);
+                yearCount += 1;
+                targetDate = new Date(start.getFullYear() + yearCount, start.getMonth(), start.getDate());
+            }
         }
-        const totalInterval = targetDate - lastMilestoneDate; const timePassed = now - lastMilestoneDate;
-        let progress = (timePassed / totalInterval) * 100;
-        document.getElementById('medal-fill-main').style.width = Math.min(100, Math.max(0, progress)) + '%';
-        const daysLeft = Math.ceil((targetDate - now) / 86400000);
+        const totalInterval = targetDate - lastMilestoneDate;
+        const timePassed = now - lastMilestoneDate;
+        const progress = totalInterval > 0 ? Math.min(100, Math.max(0, (timePassed / totalInterval) * 100)) : 100;
+        document.getElementById('medal-fill-main').style.width = `${progress}%`;
+        const daysLeft = Math.max(0, Math.ceil((targetDate - now) / 86400000));
         document.getElementById('medal-info-text').innerText = `${i18n[curLang].nextMedal}: ${i18n[curLang].left} ${daysLeft} ${plural(daysLeft, i18n[curLang].units[2])}`;
     }
 
     function updateDate(v) {
-        if(!v) return; localStorage.setItem('aa_sober_v3', v);
-        const s = new Date(v), n = new Date();
-        let y = n.getFullYear()-s.getFullYear(), m = n.getMonth()-s.getMonth(), d = n.getDate()-s.getDate();
-        if(d<0){ m--; d+=new Date(n.getFullYear(), n.getMonth(), 0).getDate(); }
-        if(m<0){ y--; m+=12; }
-        const tD = Math.floor((n-s)/86400000);
-        document.getElementById('complex-sober-display').innerText = `${y} ${plural(y,i18n[curLang].units[0])} ${m} ${plural(m,i18n[curLang].units[1])} ${d} ${plural(d,i18n[curLang].units[2])}`;
-        document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD,i18n[curLang].units[2])}`;
+        if (!v) return;
+        localStorage.setItem('aa_sober_v3', v);
+        const s = new Date(v);
+        const n = new Date();
+        let y = n.getFullYear() - s.getFullYear();
+        let m = n.getMonth() - s.getMonth();
+        let d = n.getDate() - s.getDate();
+        if (d < 0) {
+            m--;
+            d += new Date(n.getFullYear(), n.getMonth(), 0).getDate();
+        }
+        if (m < 0) {
+            y--;
+            m += 12;
+        }
+        const tD = Math.max(0, Math.floor((n - s) / 86400000));
+        document.getElementById('complex-sober-display').innerText = `${y} ${plural(y, i18n[curLang].units[0])} ${m} ${plural(m, i18n[curLang].units[1])} ${d} ${plural(d, i18n[curLang].units[2])}`;
+        document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD, i18n[curLang].units[2])}`;
         updateMedalProgress(tD, v);
     }
 
     function setLang(lang) {
-        curLang = lang; localStorage.setItem('aa_lang', lang);
+        curLang = lang;
+        localStorage.setItem('aa_lang', lang);
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`l-${lang}`).classList.add('active');
         const d = i18n[lang];
-        document.getElementById('t-head').innerText = d.head; 
+        document.getElementById('t-head').innerText = d.head;
         document.getElementById('t-mot-lab').innerText = d.motLab;
         document.getElementById('t-kaspi').innerText = d.kaspi;
-        document.getElementById('todayFilter').innerText = d.todayBtn; 
-        document.getElementById('btn-sos-main').innerText = d.sosMain + " / КӨМЕК КЕРЕК ПЕ?";
-        document.getElementById('n-prof').innerText = d.nProf; 
-        document.getElementById('btn-tr-head').innerText = d.trustHead;
-        document.getElementById('btn-pr-head').innerText = d.prayerHead;
-        document.getElementById('btn-nt-head').innerText = d.notesHead;
+        document.getElementById('todayFilter').innerText = d.todayBtn;
+        document.getElementById('btn-sos-main').innerText = d.sosMain;
+        document.getElementById('sos-ru-text').innerText = d.sosRu;
+        document.getElementById('sos-kz-text').innerText = d.sosKz;
+        document.getElementById('n-prof').innerText = d.nProf;
+        document.getElementById('trust-head-text').innerText = d.trustHead;
+        document.getElementById('prayer-head-text').innerText = d.prayerHead;
+        document.getElementById('notes-head-text').innerText = d.notesHead;
         document.getElementById('prayer-content').innerText = d.prayer;
         document.getElementById('user-notes').placeholder = d.placeholder;
-        document.getElementById('n-v-title').innerText = d.newsTitle;
-        document.getElementById('n-v-text').innerHTML = d.newsText;
         document.getElementById('t-lit-com').innerText = d.litCom;
         document.getElementById('t-lit-price').innerText = d.litPrice;
-        const navs = document.querySelectorAll('.nav-txt'); d.nav.forEach((t, i) => navs[i].innerText = t);
-        const s = document.getElementById('citySelect'); if(s && s.options[0]) s.options[0].innerText = d.allCities;
+        document.querySelectorAll('.nav-txt').forEach((el, i) => { if (d.nav[i]) el.innerText = d.nav[i]; });
+        for (let i = 0; i < 5; i++) {
+            document.getElementById(`tr-n-${i}`).placeholder = d.trustName;
+            document.getElementById(`tr-p-${i}`).placeholder = d.trustPhone;
+        }
+        rebuildCityOptions();
         updateDate(document.getElementById('date-input').value);
-        if(document.getElementById('tab-lit').classList.contains('active')) renderLit();
-        if(document.getElementById('tab-groups').classList.contains('active')) render();
+        if (document.getElementById('tab-lit').classList.contains('active')) renderLit();
+        if (document.getElementById('tab-groups').classList.contains('active')) renderGroups();
     }
 
-    function goTo(t) {
+    function goTo(tab) {
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active-nav'));
-        document.getElementById(`tab-${t}`).classList.add('active');
-        document.getElementById(`btn-${t==='profile'?'p':t[0]}`).classList.add('active-nav');
-        if(t==='lit') renderLit(); if(t==='groups') render(); window.scrollTo(0,0);
+        document.getElementById(`tab-${tab}`).classList.add('active');
+        document.getElementById(`btn-${tab==='profile'?'p':tab[0]}`).classList.add('active-nav');
+        if (tab === 'lit') renderLit();
+        if (tab === 'groups') renderGroups();
+        window.scrollTo(0, 0);
     }
 
-    // ИСПРАВЛЕННАЯ ФУНКЦИЯ ЗАГРУЗКИ (ДОБАВЛЕНА ПОДСТАНОВКА ТЕКСТА)
-    function loadTrust() { 
-        for (let i = 0; i < 5; i++) { 
-            const n = localStorage.getItem(`aa_trust_n_${i}`) || "", p = localStorage.getItem(`aa_trust_p_${i}`) || ""; 
-            if(document.getElementById(`tr-n-${i}`)) { 
-                document.getElementById(`tr-n-${i}`).value = n; 
-                document.getElementById(`tr-p-${i}`).value = p; 
-                document.getElementById(`call-${i}`).href = "tel:" + p.replace(/\s/g, ''); 
-            } 
+    function loadTrust() {
+        for (let i = 0; i < 5; i++) {
+            const n = localStorage.getItem(`aa_trust_n_${i}`) || '';
+            const p = localStorage.getItem(`aa_trust_p_${i}`) || '';
+            document.getElementById(`tr-n-${i}`).value = n;
+            document.getElementById(`tr-p-${i}`).value = p;
+            setTrustCallState(i, p);
         }
-        // Гарантированная загрузка заметок в поле ввода
-        const savedNotes = localStorage.getItem('aa_user_notes') || "";
-        const notesArea = document.getElementById('user-notes');
-        if (notesArea) notesArea.value = savedNotes;
+        document.getElementById('user-notes').value = localStorage.getItem('aa_user_notes') || '';
     }
 
-    function toggleBook(id) { const desc = document.getElementById(`desc-${id}`); const current = desc.style.display; document.querySelectorAll('.book-desc').forEach(d => d.style.display = 'none'); desc.style.display = (current === 'block') ? 'none' : 'block'; }
-    function renderLit() { const c = document.getElementById('book-list'); c.innerHTML = ""; books.forEach((b, index) => { c.innerHTML += `<div class="book-item" onclick="toggleBook(${index})"><div class="book-header"><div class="book-title">${b.n}</div><span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${b.l}</span></div><div class="book-desc" id="desc-${index}">${b.d}</div></div>`; }); }
+    function toggleBook(id) {
+        const desc = document.getElementById(`desc-${id}`);
+        const current = desc.style.display;
+        document.querySelectorAll('.book-desc').forEach(d => d.style.display = 'none');
+        desc.style.display = current === 'block' ? 'none' : 'block';
+    }
+
+    function renderLit() {
+        const c = document.getElementById('book-list');
+        c.innerHTML = books.map((b, index) => `
+            <div class="book-item" data-book-index="${index}">
+                <div class="book-header">
+                    <div class="book-title">${escapeHtml(b.n)}</div>
+                    <span class="lang-tag lang-${b.l==='рус'?'ru':'kz'}">${escapeHtml(b.l)}</span>
+                </div>
+                <div class="book-desc" id="desc-${index}">${escapeHtml(b.d)}</div>
+            </div>
+        `).join('');
+    }
 
     function getGroupStatus(g) {
         if (!g.sc || g.sc.length === 0) return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
-        const now = new Date(); const d = now.getDay(); const curM = now.getHours() * 60 + now.getMinutes();
+        const now = new Date();
+        const d = now.getDay();
+        const curM = now.getHours() * 60 + now.getMinutes();
         const todaySlots = g.sc.filter(s => s.d === d).sort((a,b) => a.s - b.s);
-        for (let slot of todaySlots) {
-            const startM = Math.floor(slot.s / 100) * 60 + (slot.s % 100), endM = Math.floor(slot.e / 100) * 60 + (slot.e % 100);
-            if (curM >= startM && curM < endM) return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${endM - curM} МИН</div>`;
-            if (curM < startM) return `<div class="status-badge s-soon"><div class="status-dot"></div>${i18n[curLang].sSoon} ${Math.floor((startM - curM) / 60) > 0 ? Math.floor((startM - curM) / 60) + ' Ч ' : ''}${(startM - curM) % 60} МИН</div>`;
+        for (const slot of todaySlots) {
+            const startM = Math.floor(slot.s / 100) * 60 + (slot.s % 100);
+            const endM = Math.floor(slot.e / 100) * 60 + (slot.e % 100);
+            if (curM >= startM && curM < endM) return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${formatRemainingMinutes(endM - curM)}</div>`;
+            if (curM < startM) return `<div class="status-badge s-soon"><div class="status-dot"></div>${i18n[curLang].sSoon} ${formatRemainingMinutes(startM - curM)}</div>`;
         }
         return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
     }
 
-    function render() {
-        const f = document.getElementById('citySelect').value, c = document.getElementById('list-container');
-        const now = new Date(), currentDay = now.getDay(); c.innerHTML = "";
-        data.forEach(g => {
-            if((f === 'all' || g.c === f) && (!onlyToday || g.sc.some(s => s.d === currentDay))) {
-                let icons = `${g.o ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`;
-                let mapUrl = g.map ? g.map : `https://2gis.kz/search/${encodeURIComponent(g.c + ', ' + g.a)}`;
-                let aH = g.online ? `<a href="${g.a}" target="_blank" class="link-active">${curLang==='ru'?'Перейти в Zoom/Чат':'Zoom-ға өту'}</a>` : `<a href="${mapUrl}" target="_blank" class="link-active">${g.a}</a>`;
-                c.innerHTML += `<div class="card group-card">${getGroupStatus(g)}<div class="city-tag">${g.c}</div><div class="group-name">${g.n} <span style="float:right; font-size:14px;">${icons}</span></div><div class="info-row"><span>📍</span>${aH}</div><div class="info-row"><span>⏰</span>${g.t}</div>${g.p?`<div class="info-row"><span>📞</span><a href="tel:${g.p.replace(/\s/g, '')}" style="color:var(--primary);font-weight:700;text-decoration:none;">${g.p}</a></div>`:''}</div>`;
-            }
+    function renderPhones(arr) {
+        const title = arr.length > 1 ? i18n[curLang].phonesLabel : i18n[curLang].phoneLabel;
+        return `
+            <div class="info-row">
+                <span class="info-row-icon">📞</span>
+                <div>
+                    <div class="muted">${title}</div>
+                    <div class="group-phones">${arr.map(phone => `<a href="tel:${cleanPhone(phone)}" class="phone-link">${escapeHtml(phone)}</a>`).join('')}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderAddress(g) {
+        if (!g.a) return '';
+        const mapLink = build2GISLink(g);
+        const linkHtml = mapLink ? `<br><a href="${mapLink}" target="_blank" rel="noopener noreferrer" class="inline-link">${i18n[curLang].openMap}</a>` : '';
+        return `
+            <div class="info-row">
+                <span class="info-row-icon">📍</span>
+                <div>
+                    <div class="muted">${i18n[curLang].addressLabel}</div>
+                    <div>${escapeHtml(g.a)}${linkHtml}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderOnlineLinks(g) {
+        let html = '';
+        if (g.online && g.a) {
+            const label = g.chat ? i18n[curLang].chatLabel : i18n[curLang].zoomLabel;
+            const text = g.chat ? i18n[curLang].openChat : i18n[curLang].openZoom;
+            html += `
+                <div class="info-row">
+                    <span class="info-row-icon">🌐</span>
+                    <div>
+                        <div class="muted">${label}</div>
+                        <a href="${g.a}" target="_blank" rel="noopener noreferrer" class="inline-link">${text}</a>
+                    </div>
+                </div>
+            `;
+        }
+        if (g.z) {
+            html += `
+                <div class="info-row">
+                    <span class="info-row-icon">💬</span>
+                    <div>
+                        <div class="muted">${i18n[curLang].zoomLabel}</div>
+                        <a href="${g.z}" target="_blank" rel="noopener noreferrer" class="inline-link">${i18n[curLang].openZoom}</a>
+                    </div>
+                </div>
+            `;
+        }
+        return html;
+    }
+
+    function renderGroups() {
+        const selected = document.getElementById('citySelect').value;
+        const c = document.getElementById('list-container');
+        const currentDay = new Date().getDay();
+        const filtered = data.filter(g => (selected === 'all' || g.c === selected) && (!onlyToday || g.sc.some(s => s.d === currentDay)));
+        c.innerHTML = filtered.map(g => {
+            const icons = `${g.online ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`.trim();
+            return `
+                <div class="card group-card">
+                    ${getGroupStatus(g)}
+                    <div class="city-tag">${escapeHtml(g.c)}</div>
+                    <div class="group-name">${escapeHtml(g.n)} ${icons ? `<span class="group-icons">${icons}</span>` : ''}</div>
+                    ${renderAddress(g)}
+                    ${renderOnlineLinks(g)}
+                    <div class="info-row">
+                        <span class="info-row-icon">⏰</span>
+                        <div>
+                            <div class="muted">${i18n[curLang].scheduleLabel}</div>
+                            <div>${escapeHtml(g.t || i18n[curLang].noSchedule)}</div>
+                        </div>
+                    </div>
+                    ${g.p && g.p.length ? renderPhones(g.p) : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    function rebuildCityOptions() {
+        const s = document.getElementById('citySelect');
+        const current = s.value || 'all';
+        const ct = ['all', ...new Set(data.map(x => x.c))].sort((a,b) => a.localeCompare(b, 'ru'));
+        s.innerHTML = '';
+        ct.forEach(city => {
+            const o = document.createElement('option');
+            o.value = city;
+            o.innerText = city === 'all' ? i18n[curLang].allCities : city;
+            s.appendChild(o);
+        });
+        s.value = [...s.options].some(opt => opt.value === current) ? current : 'all';
+    }
+
+    function applySavedTheme() {
+        const savedTheme = localStorage.getItem('aa_theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const shouldDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+        if (shouldDark) {
+            document.body.classList.add('dark-mode');
+            document.getElementById('theme-icon').innerText = '☀️';
+        }
+    }
+
+    function setMotivation() {
+        const today = new Date();
+        const startOfYear = new Date(today.getFullYear(), 0, 0);
+        const dayOfYear = Math.floor((today - startOfYear) / 86400000);
+        document.getElementById('mot-text').innerText = phrases[dayOfYear % phrases.length];
+    }
+
+    function attachEvents() {
+        document.getElementById('theme-icon').addEventListener('click', toggleTheme);
+        document.getElementById('l-ru').addEventListener('click', () => setLang('ru'));
+        document.getElementById('l-kz').addEventListener('click', () => setLang('kz'));
+        document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
+        document.getElementById('todayFilter').addEventListener('click', toggleToday);
+        document.getElementById('citySelect').addEventListener('change', renderGroups);
+        document.getElementById('date-input').addEventListener('change', e => updateDate(e.target.value));
+        document.getElementById('user-notes').addEventListener('input', e => saveNotes(e.target.value));
+        document.querySelectorAll('.acc-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const target = button.getAttribute('data-acc-target');
+                if (target) toggleAcc(target, button);
+            });
+        });
+        document.querySelectorAll('.nav-item').forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.getAttribute('data-tab');
+                if (tab) goTo(tab);
+            });
+        });
+        for (let i = 0; i < 5; i++) {
+            document.getElementById(`tr-n-${i}`).addEventListener('input', () => saveTrust(i));
+            document.getElementById(`tr-p-${i}`).addEventListener('input', () => saveTrust(i));
+        }
+        document.getElementById('book-list').addEventListener('click', e => {
+            const item = e.target.closest('.book-item');
+            if (!item) return;
+            toggleBook(item.getAttribute('data-book-index'));
         });
     }
 
-    window.onload = () => {
-        const savedTheme = localStorage.getItem('aa_theme');
-        if(savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.body.classList.add('dark-mode'); document.getElementById('theme-icon').innerText = '☀️';
-        }
-        const s = document.getElementById('citySelect'), ct = ["all", ...new Set(data.map(x => x.c))].sort();
-        ct.forEach(c => { const o = document.createElement('option'); o.value=c; o.innerText=c==="all" ? i18n[curLang].allCities : c; s.appendChild(o); });
-        let st = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
-        document.getElementById('date-input').value = st;
-        loadTrust(); setLang(curLang);
-        document.getElementById('mot-text').innerText = phrases[Math.floor(((new Date())-(new Date((new Date()).getFullYear(),0,0)))/86400000)%phrases.length];
-    };
+    function init() {
+        applySavedTheme();
+        attachEvents();
+        rebuildCityOptions();
+        const storedDate = localStorage.getItem('aa_sober_v3') || new Date().toISOString().split('T')[0];
+        document.getElementById('date-input').value = storedDate;
+        loadTrust();
+        setLang(curLang);
+        setMotivation();
+        renderGroups();
+        renderLit();
+    }
+
+    window.addEventListener('load', init);
 
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('Service Worker registered'))
+                .catch(error => console.error('Service Worker registration failed:', error));
         });
     }
-
-    const phrases = ["Главное — не пить только сегодня.", "Живи и давай жить другим.", "Первым делом — главное.", "Это тоже пройдет.", "Тише едешь — дальше будешь.", "Боже, дай мне разум и душевный покой...", "Обида — это яд, который мы пьем сами.", "Программа АА — это программа действий.", "Смирение — это путь к свободе.", "Благодарное сердце не пьет.", "Трезвость — это дар."];
-    const books = [
-        {n:"Анонимные Алкоголики (с историями) твердый", l:"рус", d:"Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма. Книга помогает понять природу болезни и предлагает четкий план действий для обретения свободы. Это фундамент, на котором строится жизнь миллионов людей по всему миру."},
-        {n:"Анонимные Алкоголики (стандарт)", l:"рус", d:"Классическое издание Большой Книги без сокращений. Фундаментальный текст, по которому выздоравливают миллионы людей во всем мире. Содержит изложение принципов, которые помогли первым участникам остаться трезвыми. Идеально подходит для глубокого изучения программы и работы со спонсором."},
-        {n:"Анонимные Алкоголики (стандарт)", l:"каз", d:"Анонимді Маскүнемдер қауымдастығының негізгі кітабы. Онда сауығу бағдарламасының принциптері мен тәжірибелері баяндалған. Бұл кітап қазақ тілді қауымдастық мүшелеріне арналған басты құрал болып табылады. Сауығудың 12 қадамын түсінуге және қолдануға көмектеседі."},
-        {n:"Анонимные Алкоголики (стандарт) карманный", l:"рус", d:"Удобный формат основной книги, который всегда можно взять с собой на встречу или в поездку. Содержит полный текст без изменений, но в компактном виде. Позволяет обращаться к мудрости сообщества в любой момент дня. Легко помещается в сумку или карман."},
-        {n:"Двенадцать шагов и двенадцать традиций", l:"рус", d:"Книга, подробно раскрывающая 12 принципов личного выздоровления и 12 правил устройства групп сообщества. Она дает глубокое понимание каждого шага, помогая проработать дефекты характера. Вторая часть книги объясняет, как группам оставаться едиными и эффективно нести весть. Это необходимое дополнение к Большой Книги."},
-        {n:"Двенадцать шагов и двенадцать традиций", l:"каз", d:"Жеке сауығудың 12 қадамы мен қауымдастық өмірінің 12 дәстүрі туралы тереңірек түсінік беретін еңбек. Бұл кітап қадамдарды өмірде қалай қолдану керектігін егжей-тегжейлі түсіндіреді. Дәстүрлер бөлімі топтардың өзара қарым-қатынасын реттейді. Рухани өсуді қалайтын әрбір мүшеге қажет."},
-        {n:"Ежедневные размышления", l:"рус", d:"Сборник коротких чтений на каждый день года, написанный самими членами АА для поддержки ежедневной трезвости. Каждое размышление основано на цитате из литературы АА. Помогает настроиться на нужный лад with самого утра и сохранять осознанность. Читатели находят в ней утешение и практическую мудрость."},
-        {n:"Ежедневные размышления", l:"каз", d:"Жылдың әр күніне арналған қысқаша оқулар жинағы. Күнделікті рухани сергектікті сақтауға и бағдарламаны еске түсіруге көмектеседі. Әр күнге арналған парақшада АА әдебиетінен үзінді мен мүшелердің тәжірибесі берілген. Бұл кітап күнделікті медитация үшін өте қолайлы."},
-        {n:"Жить трезвыми", l:"рус", d:"Практическое пособие with конкретными советами о том, как не выпить «первую рюмку» в обычных жизненных ситуациях. Книга предлагает простые методы, которые работают здесь и сейчас. Она разбирает такие темы, как праздники, стресс, тяга и старые привычки. Идеально подходит для новичков на первых этапах пути."},
-        {n:"Жить трезвыми", l:"каз", d:"Күнделікті өмірдегі ішімдіктен бас тартудың практикалық әдістері мен кеңестері жинақталған құрал. «Бірінші стақанды» қалай көтермеу керектігін қарапайым тілмен түсіндіреді. Кітапта өмірлік қиындықтармен күресудин нақты жолдары көрсетілген. Жаңадан келгендер үшін таптырмас нұсқаулық."},
-        {n:"Сбросить камень", l:"рус", d:"Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту. Она помогает распознать скрытые препятствия, которые мешают прогрессу в трезвости. Автор глубоко анализирует природу страха, гордыни и гнева. Это практическое руководство по очищению души и обретению покоя."},
-        {n:"Сбросить камень", l:"каз", d:"Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды."},
-        {n:"Новые очки (Чак Ч)", l:"рус", d:"Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение. Чак делится своим уникальным опытом проживания программы в радости и свободе. Он учит не просто не пить, а по-настоящему наслаждаться жизнью. Эта работа вдохновила тысячи людей на перемены."},
-        {n:"Новые очки (Чак Ч)", l:"каз", d:"Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын и оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің и ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі."},
-        {n:"Доктор Боб и славные ветераны", l:"рус", d:"История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба. Книга полна живых воспоминаний первых участников движения. Она показывает, как вера и служение помогли первым алкоголикам выжить. Это глубокое историческое исследование корней содружества."},
-        {n:"АА Взрослеет", l:"рус", d:"Книга об истории развития сообщества, написанная Биллом У. Охватывает период становления традиций и структуры АА. Билл подробно описывает, как маленькое объединение превратилось во всемирное движение. В ней изложены три завета сообщества: выздоровление, единство и служение. Важное чтение для тех, кто интересуется устройством АА."},
-        {n:"Пришли к убеждению", l:"рус", d:"Сборник личного опыта участников АА, посвященный духовному аспекту программы и поиску Высшей Силы. В ней представлены самые разные точки зрения — от атеистов до глубоко верующих. Книга показывает, что в АА есть место каждому, независимо от убеждений. Она расширяет границы понимания духовности в программе."},
-        {n:"Рук-во по обслуживанию АА + 12 Принципов", l:"рус", d:"Техническое руководство по структуре обслуживания АА и 12 принципов всемирного служения. Объясняет, как работают конференции, советы и делегаты. Показывает, как обеспечивается связь между группами и сообществом в целом. Необходима для тех, кто занимается ответственным служением."},
-        {n:"Рабочая тетрадь по изучению 12 традиций", l:"рус", d:"Материал для углубленного разбора традиций в малых группах with вопросами для обсуждения. Помогает понять, как применять традиции не только в группе, но и в личной жизни. Содержит практические примеры и упражнения. Укрепляет единство содружества через осознание общих принципов."},
-        {n:"Рабочая тетрадь по изучению Принципов обслуживания", l:"рус", d:"Пособие для тех, кто хочет глубже понять структуру и принципы работы конференций и советов. Разбирает сложные вопросы управления и ответственности в АА. Помогает новым служителям быстрее войти в курс дела. Структурирует знания о всемирном обслуживании."},
-        {n:"Вопросник по 12 традициям", l:"рус", d:"Краткий список вопросов для проверки здоровья группы и понимания традиций. Помогает группе оценить свою эффективность в несении вести. Выявляет слабые места в единстве и анонимности. Отличный инструмент для проведения рабочих собраний группы."},
-        {n:"12 традиций в иллюстрациях", l:"рус", d:"Наглядное пособие, где каждая традиция объяснена простыми словами и снабжена картинками. Идеально подходит для первичного ознакомления with принципами устройства АА. Делает сложные понятия доступными для каждого. Популярна среди новичков и опытных участников."},
-        {n:"Думаешь ты особенный?", l:"рус", d:"Брошюра для тех, кто сомневается, подходит ли ему программа АА из-за возраста или социального статуса. Разрушает мифы об «особых» случаях алкоголизма. Показывает, что болезнь не выбирает профессию или доход. Помогает человеку преодолеть барьер уникальности и прийти на собрание."},
-        {n:"Молодежь и АА", l:"рус", d:"Истории молодых людей, которые смогли признать проблему и обрести трезвость в раннем возрасте. Показывает, что алкоголизм не зависит от стажа употребления. Вдохновляет молодежь не ждать дна, а начать жить полноценно уже сейчас. Содержит советы по преодолению социального давления сверстников."},
-        {n:"Женщины в АА", l:"рус", d:"Специальный выпуск историй женщин, столкнувшихся with алкоголизмом и нашедших поддержку в содружестве. Затрагивает темы материнства, отношений и социальной реабилитации. Помогает женщинам почувствовать, что они не одиноки в своей беде. Дает надежду на восстановление семьи и обретение достоинства."},
-        {n:"Группа АА там где все начинается", l:"рус", d:"Важное пособие о том, как создать группу, проводить собрания и нести весть. Описывает роли служителей группы и их обязанности. Дает рекомендации по ведению финансовой отчетности и аренде помещения. Фундаментальный документ для развития здоровой атмосферы на собраниях."},
-        {n:"Пособие по работе АА в ЛУ", l:"рус", d:"Методический материал для служения в лечебных учреждениях и больницах. Объясняет специфику взаимодействия with персоналом клиник. Дает советы по проведению информационных встреч для пациентов. Помогает эффективно наладить мост между больницей и группами АА."}
-    ];
-    const data = [
-        {c:"Онлайн",n:"АА «Пробуждение»",a:"https://us06web.zoom.us/j/82036099070",t:"Вт, Чт, Сб: 21:00-22:30",p:"+7 777 232 9996",online:true, o:true, sc:[{d:2,s:2100,e:2230},{d:4,s:2100,e:2230},{d:6,s:2100,e:2230}]},
-        {c:"Онлайн",n:"АА «Бірлік» (каз)",a:"https://us02web.zoom.us/j/5204364841",t:"Ср: 21:00-22:30",p:"+7 707 433 7408",online:true, k:true, o:true, sc:[{d:3,s:2100,e:2230}]},
-        {c:"Онлайн",n:"АА «ШАГ ЗА ШАГОМ»",a:"https://t.me/+JqgMpZCz_fY1OTVi",t:"Вт (откр): 19:00-20:30",p:"",online:true, o:true, sc:[{d:2,s:1900,e:2030}]},
-        {c:"Алматы",n:"АА «Виктория»",a:"ул. Жубанова 3а, 301 каб.",t:"Вт (откр), Чт: 19:30-21:00; Сб: 19:00-20:30",p:"+7 705 990 7938",z:"https://zoom.us/j/5290200881", o:true, sc:[{d:2,s:1930,e:2100},{d:4,s:1930,e:2100},{d:6,s:1900,e:2030}]},
-        {c:"Алматы",n:"АА «8 марта»",a:"ул. Зенкова 24",t:"Ежедневно: 19:00-20:30; Вт, Чт: 12:00",p:"+7 701 121 8501", o:true, sc:[{d:1,s:1900,e:2030},{d:2,s:1900,e:2030},{d:3,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030},{d:0,s:1900,e:2030},{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
-        {c:"Алматы",n:"АА «Турксиб»",a:"уточнять по номеру",t:"Вт, Чт: 19:00-20:30; Вс (откр): 17:00-18:30",p:"+7 747 860 1105", o:true, map:"https://2gis.kz/almaty/geo/9430047374991567", sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1700,e:1830}]},
-        {c:"Алматы",n:"АА «АлмА» (женская)",a:"ул. Зенкова 24",t:"Сб: 12:00-13:30",p:"+7 775 500 6846", f:true, o:true, sc:[{d:6,s:1200,e:1330}]},
-        {c:"Алматы",n:"АА «Шапагат» (каз)",a:"ул. Жубанова 3а",t:"Пн, Ср: 19:00-20:30; Сб (откр): 17:00-18:30",p:"+7 747 165 2435", k:true, o:true, sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:6,s:1700,e:1830}]},
-        {c:"Алматы",n:"АА «Друзья Билла»",a:"ул. Жибек Жолы 64/47, оф. 215",t:"Вт, Чт: 12:00-13:30",p:"+7 747 563 7587", o:true, sc:[{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
-        {c:"Алматы",n:"АА «Чайхана» (новички)",a:"ул. Жубанова 3а",t:"Вс (откр): 11:00-12:30",p:"+7 705 990 7938",z:"https://zoom.us/j/5290200881", o:true, sc:[{d:0,s:1100,e:1230}]},
-        {c:"Алматы",n:"АА «Аксай»",a:"пр. Райымбека 493",t:"Вс: 13:00-14:15",p:"+7 776 453 3418", o:true, sc:[{d:0,s:1300,e:1415}]},
-        {c:"Алматы",n:"АА «Наурыз»",a:"ул. Тимирязева 42 к23, каб. 102",t:"Вт, Чт, Пт, Сб (откр): 19:00-20:30",p:"+7 708 317 1769", o:true, sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030}]},
-        {c:"Алматы",n:"АА «Женский клуб»",a:"ул. Жубанова 3а",t:"Вс (откр): 13:00-14:30; Ср (Zoom): 21:00",p:"+7 705 573 0900", f:true, o:true, sc:[{d:0,s:1300,e:1430},{d:3,s:2100,e:2230}]},
-        {c:"Алматы",n:"АА «НОВЫЕ ОЧКИ»",a:"ул. Жибек Жолы 64/47, оф. 215",t:"Пн, Ср, Пт: 19:00-20:15; Сб: 14:00",p:"+7 707 308 4757", o:true, sc:[{d:1,s:1900,e:2015},{d:3,s:1900,e:2015},{d:5,s:1900,e:2015},{d:6,s:1400,e:1515}]},
-        {c:"Алматы",n:"АА «боралдай»",a:"ул. Курчатова 13а",t:"Сб: 17:00",p:"+7 777 281 9098", sc:[{d:6,s:1700,e:1830}]},
-        {c:"Алматы",n:"Мужская группа «ААА»",a:"ул. Зенкова 24",t:"Сб: 17:00-18:15",p:"+7 771 370 9966", sc:[{d:6,s:1700,e:1815}]},
-        {c:"Астана",n:"АА «51 параллель»",a:"ул. Петрова 14/3",t:"Ср: 19:00-20:15; Сб: 15:00-16:15",p:"+7 771 899 3679; +7 707 123 4699; +7 775 360 1528", sc:[{d:3,s:1900,e:2015},{d:6,s:1500,e:1615}]},
-        {c:"Астана",n:"АА «Свобода»",a:"ул. Петрова 14/3",t:"Пн, Чт, Пт: 19:00-20:00",p:"+7 771 899 3679; +7 707 123 4699; +7 775 360 1528", sc:[{d:1,s:1900,e:2000},{d:4,s:1900,e:2000},{d:5,s:1900,e:2000}]},
-        {c:"Астана",n:"АА «Есиль» (каз)",a:"ул. Петрова 14/3",t:"Вс: 17:00-18:30",p:"+7 775 360 1528; +7 707 123 4699; +7 771 899 3679", k:true, sc:[{d:0,s:1700,e:1830}]},
-        {c:"Астана",n:"АА «большая перемена»",a:"ул. Дукенулы 26",t:"Пн, Пт: 19:00-20:00",p:"+7 707 123 4699", sc:[{d:1,s:1900,e:2000},{d:5,s:1900,e:2000}]},
-        {c:"Астана",n:"АА «Сана»",a:"пр. Кабанбай Батыра 58А",t:"Вт, Чт: 20:00-21:15",p:"+7 771 899 3679; +7 707 123 4699; +7 775 360 1528", sc:[{d:2,s:2000,e:2115},{d:4,s:2000,e:2115}]},
-        {c:"Астана",n:"АА «ПУТЬ»",a:"ул. Ташенова 26",t:"Вт, Ср, Чт: 19:00-20:15",p:"+7 771 899 3679; +7 707 123 4699; +7 775 360 1528", sc:[{d:2,s:1900,e:2015},{d:3,s:1900,e:2015},{d:4,s:1900,e:2015}]},
-        {c:"Астана",n:"АА «ВОЗРОЖДЕНИЕ»",a:"ул. Куйши Дина 27",t:"Вт: 19:00-20:15",p:"+7 707 565 0586; +7 701 642 3838", sc:[{d:2,s:1900,e:2015}]},
-        {c:"Астана",n:"АА «гармония»",a:"ул. Арасан 2/2",t:"Пн, Пт: 19:15",p:"+7 775 360 1528; +7 707 123 4699; +7 771 899 3679", sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
-        {c:"Астана",n:"АА «үміт» (каз)",a:"ул. Ш. Кудайбердиулы 94",t:"Ср: 19:00-20:15",p:"+7 707 433 7408", k:true, sc:[{d:3,s:1900,e:2015}]},
-        {c:"Актау",n:"АА «Парус»",a:"29-й мкр, дом 218",t:"Пн, Пт: 19:15-20:30",p:"+7 777 065 5797", sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
-        {c:"Актобе",n:"АА «ОАЗИС»",a:"ул. Абулхаир-Хана 1, оф. 228",t:"Вт, Чт: 19:00-20:15; Сб: 14:00-15:15",p:"+7 747 684 5424", o:true, sc:[{d:2,s:1900,e:2015},{d:4,s:1900,e:2015},{d:6,s:1400,e:1515}]},
-        {c:"Атырау",n:"АА «НАЧАЛО»",a:"мкр. Авангард-3, 34а",t:"Вт, Чт: 19:00-20:30; Сб: 12:00-13:30",p:"+7 705 449 2468", sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:6,s:1200,e:1330}]},
-        {c:"Караганда",n:"АА «решение есть»",a:"ул. Ерубаева 34",t:"Суббота: 15:45",p:"+7 700 765 6935", sc:[{d:6,s:1545,e:1715}]},
-        {c:"Кокшетау",n:"АА «Синегорье»",a:"ул. Ауельбекова 127",t:"Вт, Пт: 19:30-20:30",p:"+7 771 363 0302", sc:[{d:2,s:1930,e:2030},{d:5,s:1930,e:2030}]},
-        {c:"Конаев",n:"АА «НАДЕЖДА»",a:"ул. Курылысшы 8а",t:"Ср: 19:00-20:00",p:"+7 778 166 1081", sc:[{d:3,s:1900,e:2000}]},
-        {c:"Костанай",n:"АА «ДОСТАР»",a:"ул. 5 апреля 67, подъезд 3",t:"Пн, Ср, Пт: 19:00-20:30",p:"+7 777 743 5620; +7 747 743 5620", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
-        {c:"Костанай",n:"АА «12 Шаг»",a:"ул. Г. Арыстанбекова 23",t:"Вт, Чт, Вс: 19:00-20:30",p:"+7 777 743 5620; +7 771 429 0869", sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1900,e:2030}]},
-        {c:"Павлодар",n:"АА «Крепость»",a:"ул. Торайгырова 10/1, каб. 4",t:"Пн, Ср, Пт: 19:00-20:00",p:"+7 708 636 1510", sc:[{d:1,s:1900,e:2000},{d:3,s:1900,e:2000},{d:5,s:1900,e:2000}]},
-        {c:"Петропавловск",n:"АА «Последняя капля»",a:"ул. Букетова 4",t:"Сб: 20:00",p:"+7 775 827 2514", sc:[{d:6,s:2000,e:2130}]},
-        {c:"Рудный",n:"АА «Новая свобода»",a:"ул. Парковая 55",t:"Ср, Вс: 19:30-20:45",p:"+7 775 494 7917", sc:[{d:3,s:1930,e:2045},{d:0,s:1930,e:2045}]},
-        {c:"Семей",n:"АА «СЕМЁРОЧКА»",a:"инфо по тел.",t:"По запросу",p:"+7 707 640 0913", sc:[]},
-        {c:"Талдыкурган",n:"АА «жетысу»",a:"ул. Шевченко 100",t:"Пн, Ср, Пт: 19:00",p:"+7 707 992 8240", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
-        {c:"Усть-Каменогорск",n:"АА «УСТЬЕ»",a:"ул. Казахстан 99",t:"Пн, Ср, Пт: 18:00-19:30",p:"+7 777 246 7979; +7 705 508 3033", sc:[{d:1,s:1800,e:1930},{d:3,s:1800,e:1930},{d:5,s:1800,e:1930}]},
-        {c:"Кызылорда",n:"АА «сырдарья»",a:"ул. Муратбаева 8б, каб. 2",t:"Вт, Чт: 19:00; Вс: 11:00",p:"+7 707 433 7408", sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1100,e:1230}]},
-        {c:"Шымкент",n:"АА «Юг»",a:"Шаяхметова 14/1, каб. 12а",t:"Пн, Ср, Пт: 19:00-20:30",p:"+7 701 674 9853", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
-        {c:"Шымкент",n:"АА «Шым»",a:"ул. Мангельдина 33",t:"Вт, Чт: 19:00-20:00; Сб: 12:00-13:00",p:"+7 702 637 2329", sc:[{d:2,s:1900,e:2000},{d:4,s:1900,e:2000},{d:6,s:1200,e:1300}]},
-        {c:"Шымкент",n:"АА «СВОБОДА»",a:"ул. Московская 9а",t:"Вс: 13:00-14:30",p:"+7 705 990 6737", sc:[{d:0,s:1300,e:1430}]},
-        {c:"Шымкент",n:"АА «ПАНА» (каз)",a:"ул. Шаяхметова 14/1, каб. 12а",t:"Вс: 13:00-14:00",p:"+7 702 637 2329", k:true, sc:[{d:0,s:1300,e:1400}]},
-        {c:"Экибастуз",n:"АА «Чистое Небо»",a:"инфо по тел.",t:"По запросу",p:"+7 775 350 0562", sc:[]},
-        {c:"Жетысай",n:"АА «куат»",a:"ул. Ауэзова, каб. 12",t:"Пн, Ср, Пт: 19:00",p:"+7 707 318 3839", sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
-    ];
+})();
 </script>
 </body>
 </html>
