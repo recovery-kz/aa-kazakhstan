@@ -18,40 +18,40 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="АА КАЗ">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#2B4F60">
-
-    <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
+    <meta name="theme-color" content="#FAF0E6"> <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
     <style>
         :root {
-            --primary: #2B4F60;
-            --accent: #F39C12;
-            --bg: #F5F5F5;
+            --primary: #003366; /* Темно-синий */
+            --accent: #D4AF37; /* Песочно-золотой */
+            --bg: #FAF0E6; /* Молочно-бежевый */
             --card-bg: #FFFFFF;
             --text-main: #333333;
             --text-sub: #555555;
-            --border: #DDDDDD;
-            --sos: #e74c3c;
-            --kaspi: #f14635;
+            --border: #E0E0E0;
+            --sos: #D22B2B;
+            --kaspi: #F14635;
             --nav-bg: #FFFFFF;
-            --nav-inactive: #bdc3c7;
-            --open: #27ae60;
-            --soon: #e67e22;
-            --closed: #7f8c8d;
-            --link: #2B4F60;
+            --nav-inactive: #A0A0A0;
+            --open: #2E8B57;
+            --soon: #D2691E;
+            --closed: #708090;
+            --link: #003366;
+            --ornament: #E6E6FA; /* Очень бледный узор */
         }
 
         body.dark-mode {
-            --primary: #3a667a;
-            --bg: #121212;
-            --card-bg: #1E1E1E;
-            --text-main: #E0E0E0;
-            --text-sub: #AAAAAA;
-            --border: #333333;
-            --nav-bg: #1E1E1E;
-            --nav-inactive: #555555;
-            --link: #7fb3d5;
+            --primary: #ADD8E6; /* Light Blue */
+            --bg: #1A1A1A;
+            --card-bg: #262626;
+            --text-main: #F0F0F0;
+            --text-sub: #C0C0C0;
+            --border: #404040;
+            --nav-bg: #262626;
+            --nav-inactive: #606060;
+            --link: #87CEFA;
+            --ornament: #333333; /* Бледный узор для темной темы */
         }
 
         * {
@@ -72,11 +72,11 @@
         }
 
         header {
-            background: var(--primary);
-            color: white;
+            background: var(--card-bg);
+            color: var(--primary);
             padding: 15px 0;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -85,6 +85,20 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            border-bottom: 2px solid var(--accent); /* Песочно-золотая плашка */
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L100 50 L50 100 L0 50 Z" fill="%23003366" fill-opacity="0.03"/></svg>'); /* Тонкий орнамент фона */
+            background-repeat: repeat;
+            opacity: 0.1;
+            z-index: -1;
         }
 
         .header-controls {
@@ -97,11 +111,11 @@
             transform: translateY(-50%);
         }
 
-        .theme-toggle {
-            background: rgba(255,255,255,0.1);
+        .theme-toggle, .lang-btn {
+            background: rgba(0,0,0,0.05);
             border: none;
             border-radius: 8px;
-            color: white;
+            color: var(--primary);
             padding: 6px 10px;
             cursor: pointer;
             font-size: 16px;
@@ -110,19 +124,16 @@
         .lang-switch {
             display: flex;
             gap: 3px;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.05);
             padding: 4px;
             border-radius: 8px;
         }
 
         .lang-btn {
-            color: white;
             font-size: 10px;
             font-weight: 800;
             padding: 4px 8px;
             border-radius: 6px;
-            cursor: pointer;
-            border: none;
             background: none;
         }
 
@@ -132,7 +143,7 @@
         }
 
         .header-logo { width: 35px; height: 35px; margin-bottom: 2px; object-fit: contain; }
-        .header-title { font-weight: 800; letter-spacing: 1px; font-size: 12px; text-transform: uppercase; }
+        .header-title { font-weight: 800; letter-spacing: 1px; font-size: 12px; text-transform: uppercase; color: var(--primary); }
 
         .main-container {
             flex: 1;
@@ -164,29 +175,105 @@
         .card {
             background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 15px;
             width: 100%;
             overflow: hidden;
+            border: 1px solid var(--border);
         }
 
         .news-img { width: 100%; height: auto; display: block; }
-        .motivation-card { border-left: 5px solid var(--accent); padding: 15px; }
-        .mot-label { color: var(--accent); font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 5px; }
-        .mot-text { color: var(--text-main); font-size: 14px; line-height: 1.4; font-weight: 600; font-style: italic; }
+
+        /* Ежедневные размышления */
+        .motivation-card {
+            border: 2px solid var(--accent); /* Тонкая орнаментальная рамка */
+            padding: 15px;
+            position: relative;
+        }
+
+        .motivation-card::before {
+            content: '●'; /* Маленький символ слева */
+            color: var(--accent);
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            font-size: 12px;
+        }
+
+        .mot-label {
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            padding-left: 20px; /* Отступ для символа */
+        }
+
+        .mot-text {
+            color: var(--text-main);
+            font-size: 14px;
+            line-height: 1.4;
+            font-weight: 600;
+            font-style: italic;
+            padding-left: 20px; /* Отступ для символа */
+        }
+
+        /* Счетчик трезвости */
         .counter-card { padding: 20px; text-align: center; }
-        .complex-sober-row { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 8px; }
+
+        .complex-sober-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .sober-unit {
+            border: 2px solid var(--accent); /* Тонкая орнаментальная рамка вокруг цифр */
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 70px;
+            background: var(--card-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .sober-num {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent); /* Золотые цифры */
+        }
+
+        .sober-label {
+            font-size: 10px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
         .total-days-row { font-size: 14px; font-weight: 600; color: var(--text-sub); margin-bottom: 12px; }
 
+        /* Шкала медали */
         .medal-progress-box { margin: 10px 0; padding: 0 10px; }
-        .medal-bar-bg { background: var(--border); height: 10px; border-radius: 5px; overflow: hidden; position: relative; }
-        .medal-bar-fill { background: linear-gradient(90deg, #f1c40f, #f39c12); height: 100%; width: 0%; transition: width 1s ease-out; }
+        .medal-bar-bg { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; position: relative; }
+        .medal-bar-fill {
+            background: linear-gradient(90deg, #FFD700, #D4AF37, #FFD700); /* Золотая лента с градиентом */
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease-out;
+            background-size: 200% 100%;
+            animation: shine 2s linear infinite; /* Анимация "перелива" */
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
         .medal-info-text { font-size: 11px; font-weight: 700; color: var(--accent); margin-top: 6px; text-transform: uppercase; }
 
         input[type="date"], .profile-input, select, textarea { font: inherit; }
 
         input[type="date"], .profile-input {
-            background: var(--bg);
+            background: var(--card-bg);
             color: var(--text-main);
             border: 1px solid var(--border);
             padding: 14px;
@@ -234,7 +321,7 @@
         .notes-area {
             width: 100%;
             min-height: 120px;
-            background: var(--bg);
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
             padding: 12px;
@@ -252,15 +339,27 @@
         .call-btn { background: var(--primary); color: white; text-decoration: none; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .call-btn.disabled { opacity: 0.4; pointer-events: none; }
 
-        .book-item { background: var(--card-bg); width: 100%; padding: 15px; border-radius: 15px; margin-bottom: 8px; display: flex; flex-direction: column; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 1px solid var(--border); cursor: pointer; }
+        .book-item { background: var(--card-bg); width: 100%; padding: 15px; border-radius: 15px; margin-bottom: 8px; display: flex; flex-direction: column; border-left: 5px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border); cursor: pointer; }
         .book-header { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
         .book-title { font-size: 14px; font-weight: 700; color: var(--text-main); flex: 1; line-height: 1.3; }
         .book-desc { font-size: 12px; color: var(--text-sub); line-height: 1.4; margin-top: 10px; display: none; padding-top: 10px; border-top: 1px dashed var(--border); }
         .lang-tag { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: 800; text-transform: uppercase; min-width: 40px; text-align: center; flex-shrink: 0; }
-        .lang-ru { background: #e3f2fd; color: #1976d2; }
-        .lang-kz { background: #fbe9e7; color: #d84315; }
+        .lang-ru { background: #E0F2F1; color: #00796B; }
+        .lang-kz { background: #FFF3E0; color: #E65100; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--nav-bg); display: flex; height: 75px; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 2000; padding-bottom: env(safe-area-inset-bottom); border-top: 1px solid var(--border); }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            display: flex;
+            height: 75px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            z-index: 2000;
+            padding-bottom: env(safe-area-inset-bottom);
+            border-top: 2px solid var(--accent); /* Песочно-золотая плашка */
+        }
+
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--nav-inactive); cursor: pointer; border: none; background: none; padding: 2px; min-width: 0; }
         .nav-item.active-nav { color: var(--primary); font-weight: 800; }
         .nav-txt { font-size: 8px; text-transform: uppercase; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; text-align: center; }
@@ -281,10 +380,21 @@
         .city-tag { font-size: 11px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
         .group-icons { font-size: 14px; margin-left: 6px; }
         .info-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; line-height: 1.45; color: var(--text-main); }
-        .info-row-icon { width: 18px; flex-shrink: 0; text-align: center; }
+        .info-row-icon { width: 18px; flex-shrink: 0; text-align: center; color: var(--accent); }
         .group-phones { display: flex; flex-direction: column; gap: 6px; }
         .phone-link, .inline-link { color: var(--link); text-decoration: none; font-weight: 700; }
         .muted { color: var(--text-sub); }
+
+        /* Тонкие орнаментальные разделители */
+        .ornament-divider {
+            width: 100%;
+            height: 20px;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="20" viewBox="0 0 100 20"><path d="M0 10 Q 25 0, 50 10 T 100 10" stroke="%23D4AF37" stroke-width="1" fill="none"/></svg>'); /* Линейный орнамент */
+            background-repeat: repeat-x;
+            opacity: 0.5;
+            margin: 10px 0;
+        }
+
     </style>
 </head>
 <body>
@@ -303,11 +413,15 @@
 <main class="main-container">
     <div id="tab-counter" class="content-section active">
         <div class="card motivation-card">
-            <div class="mot-label" id="t-mot-lab">Мотивация на сегодня</div>
+            <div class="mot-label" id="t-mot-lab">Ежедневные размышления</div>
             <div id="mot-text" class="mot-text">Загрузка...</div>
         </div>
-        <div class="card counter-card">
-            <div class="complex-sober-row" id="complex-sober-display">0 лет 0 мес. 0 дней</div>
+        <div class="ornament-divider"></div> <div class="card counter-card">
+            <div class="complex-sober-row" id="complex-sober-display">
+                <div class="sober-unit"><div class="sober-num">0</div><div class="sober-label">лет</div></div>
+                <div class="sober-unit"><div class="sober-num">0</div><div class="sober-label">мес.</div></div>
+                <div class="sober-unit"><div class="sober-num">0</div><div class="sober-label">дней</div></div>
+            </div>
             <div class="total-days-row" id="total-days-display">Всего: 0 дней</div>
             <div class="medal-progress-box">
                 <div class="medal-bar-bg"><div class="medal-bar-fill" id="medal-fill-main"></div></div>
@@ -324,8 +438,8 @@
                 </div>
             </div>
         </div>
-        <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" rel="noopener noreferrer" style="text-decoration:none; width:100%;">
-            <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border); margin-bottom:0;">
+        <div class="ornament-divider"></div> <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" rel="noopener noreferrer" style="text-decoration:none; width:100%;">
+            <div class="card" style="padding:15px; display:flex; justify-content:space-between; align-items:center; margin-bottom:0;">
                 <span style="font-weight:700; color:var(--primary); font-size:14px;" id="t-kaspi">❤️ Седьмая Традиция</span>
                 <span style="background:var(--kaspi); color:white; padding:5px 12px; border-radius:8px; font-weight:800; font-size:12px;">KASPI</span>
             </div>
@@ -342,16 +456,16 @@
                 <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-3"><input type="tel" class="profile-input" id="tr-p-3"></div><a href="#" id="call-3" class="call-btn disabled">📞</a></div>
                 <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-4"><input type="tel" class="profile-input" id="tr-p-4"></div><a href="#" id="call-4" class="call-btn disabled">📞</a></div>
             </div>
-            <button class="acc-btn" type="button" data-acc-target="acc-prayer" id="btn-pr-head"><span class="acc-btn-left"><span class="acc-btn-title" id="prayer-head-text">МОЛИТВА</span></span></button>
+            <div class="ornament-divider"></div> <button class="acc-btn" type="button" data-acc-target="acc-prayer" id="btn-pr-head"><span class="acc-btn-left"><span class="acc-btn-title" id="prayer-head-text">МОЛИТВА</span></span></button>
             <div class="acc-content" id="acc-prayer"><div class="prayer-text" id="prayer-content">Загрузка...</div></div>
-            <button class="acc-btn" type="button" data-acc-target="acc-notes" id="btn-nt-head"><span class="acc-btn-left"><span class="acc-btn-title" id="notes-head-text">ЗАМЕТКИ ПО ДНЮ</span><span id="save-status" class="save-indicator">✓ Сохранено</span></span></button>
+            <div class="ornament-divider"></div> <button class="acc-btn" type="button" data-acc-target="acc-notes" id="btn-nt-head"><span class="acc-btn-left"><span class="acc-btn-title" id="notes-head-text">ЗАМЕТКИ ПО ДНЮ</span><span id="save-status" class="save-indicator">✓ Сохранено</span></span></button>
             <div class="acc-content" id="acc-notes"><textarea class="notes-area" id="user-notes"></textarea></div>
         </div>
     </div>
 
     <div id="tab-news" class="content-section">
         <div class="card"><img src="https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/ChatGPT%20Image%2020%20%D0%B0%D0%BF%D1%80.%202026%20%D0%B3.,%2009_15_29.png" class="news-img" alt="Новость АА Казахстана 1"></div>
-        <div class="card"><img src="https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/forum26.jpeg" class="news-img" alt="Новость АА Казахстана 2"></div>
+        <div class="ornament-divider"></div> <div class="card"><img src="https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/forum26.jpeg" class="news-img" alt="Новость АА Казахстана 2"></div>
     </div>
 
     <div id="tab-lit" class="content-section">
@@ -361,7 +475,7 @@
             <div style="font-weight:700; color:var(--primary);">Вячеслав</div>
             <a href="tel:+77775567141" style="display:inline-block; background:var(--primary); color:white; padding:12px 20px; border-radius:12px; text-decoration:none; font-weight:700; margin-top:10px; font-size:14px;">📞 +7 (777) 556-71-41</a>
         </div>
-        <div id="book-list" style="width:100%;"></div>
+        <div class="ornament-divider"></div> <div id="book-list" style="width:100%;"></div>
     </div>
 
     <div id="tab-groups" class="content-section">
@@ -369,7 +483,7 @@
             <select id="citySelect"></select>
             <button id="todayFilter" type="button" class="filter-btn">📅 Сегодня</button>
         </div>
-        <div id="list-container" style="width:100%;"></div>
+        <div class="ornament-divider"></div> <div id="list-container" style="width:100%;"></div>
     </div>
 </main>
 
@@ -395,7 +509,8 @@
             placeholder: 'Ваши мысли, благодарности или инсайты...', litCom: 'ЛИТЕРАТУРНЫЙ КОМИТЕТ', litPrice: 'Наличие и цены:',
             trustName: 'Имя', trustPhone: 'Номер', openMap: 'Открыть в 2ГИС', addressLabel: 'Адрес', scheduleLabel: 'Расписание', phoneLabel: 'Телефон', phonesLabel: 'Телефоны',
             openZoom: 'Открыть Zoom', openChat: 'Открыть чат', zoomLabel: 'Zoom', chatLabel: 'Чат', savePending: '...', saveDone: '✓ Сохранено',
-            minutesShort: 'МИН', hoursShort: 'Ч', noSchedule: 'По запросу'
+            minutesShort: 'МИН', hoursShort: 'Ч', noSchedule: 'По запросу',
+            soberUnitsShort: ['лет', 'мес.', 'дней']
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
@@ -406,7 +521,8 @@
             placeholder: 'Ойларыңыз, ризашылықтарыңыз немесе инсайттарыңыз...', litCom: 'ӘДЕБИЕТ КОМИТЕТІ', litPrice: 'Қолжетімділігі мен бағасы:',
             trustName: 'Аты', trustPhone: 'Нөмірі', openMap: '2ГИС ашу', addressLabel: 'Мекенжай', scheduleLabel: 'Кесте', phoneLabel: 'Телефон', phonesLabel: 'Телефондар',
             openZoom: 'Zoom ашу', openChat: 'Чатты ашу', zoomLabel: 'Zoom', chatLabel: 'Чат', savePending: '...', saveDone: '✓ Сақталды',
-            minutesShort: 'МИН', hoursShort: 'САҒ', noSchedule: 'Сұраныс бойынша'
+            minutesShort: 'МИН', hoursShort: 'САҒ', noSchedule: 'Сұраныс бойынша',
+            soberUnitsShort: ['жыл', 'ай', 'күн']
         }
     };
 
@@ -428,7 +544,7 @@
         {n:'Сбросить камень', l:'рус', d:'Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту. Она помогает распознать скрытые препятствия, которые мешают прогрессу в трезвости. Автор глубоко анализирует природу страха, гордыни и гнева. Это практическое руководство по очищению души и обретению покоя.'},
         {n:'Сбросить камень', l:'каз', d:'Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды.'},
         {n:'Новые очки (Чак Ч)', l:'рус', d:'Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение. Чак делится своим уникальным опытом проживания программы в радости и свободе. Он учит не просто не пить, а по-настоящему наслаждаться жизнью. Эта работа вдохновила тысячи людей на перемены.'},
-        {n:'Новые очки (Чак Ч)', l:'каз', d:'Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі.'},
+        {n:'Новые очки (Чак Ч)', l:'каз', d:'Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің kitchen ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі.'},
         {n:'Доктор Боб и славные ветераны', l:'рус', d:'История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба. Книга полна живых воспоминаний первых участников движения. Она показывает, как вера и служение помогли первым алкоголикам выжить. Это глубокое историческое исследование корней содружества.'},
         {n:'АА Взрослеет', l:'рус', d:'Книга об истории развития сообщества, написанная Биллом У. Охватывает период становления традиций и структуры АА. Билл подробно описывает, как маленькое объединение превратилось во всемирное движение. В ней изложены три завета сообщества: выздоровление, единство и служение. Важное чтение для тех, кто интересуется устройством АА.'},
         {n:'Пришли к убеждению', l:'рус', d:'Сборник личного опыта участников АА, посвященный духовному аспекту программы и поиску Высшей Силы. В ней представлены самые разные точки зрения — от атеистов до глубоко верующих. Книга показывает, что в АА есть место каждому, независимо от убеждений. Она расширяет границы понимания духовности в программе.'},
@@ -470,7 +586,7 @@
         {c:'Астана',n:'АА «ВОЗРОЖДЕНИЕ»',a:'ул. Куйши Дина 27',t:'Вт: 19:00-20:15',p:['+7 707 565 0586','+7 701 642 3838'],sc:[{d:2,s:1900,e:2015}]},
         {c:'Астана',n:'АА «гармония»',a:'ул. Арасан 2/2',t:'Пн, Пт: 19:15',p:['+7 775 360 1528','+7 707 123 4699','+7 771 899 3679'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
         {c:'Астана',n:'АА «үміт» (каз)',a:'ул. Ш. Кудайбердиулы 94',t:'Ср: 19:00-20:15',p:['+7 707 433 7408'],k:true,sc:[{d:3,s:1900,e:2015}]},
-        {c:'Актау',n:'АА «Парус»',a:'29-й мкр, дом 218',t:'Пн, Пт: 19:15-20:30',p:['+7 777 065 5797'],p:['+7 708 840 6295'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
+        {c:'Актау',n:'АА «Парус»',a:'29-й мкр, дом 218',t:'Пн, Пт: 19:15-20:30',p:['+7 777 065 5797', '+7 708 840 6295'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
         {c:'Актобе',n:'АА «ОАЗИС»',a:'ул. Абулхаир-Хана 1, оф. 228',t:'Вт, Чт: 19:00-20:15; Сб: 14:00-15:15',p:['+7 747 684 5424'],o:true,sc:[{d:2,s:1900,e:2015},{d:4,s:1900,e:2015},{d:6,s:1400,e:1515}]},
         {c:'Атырау',n:'АА «НАЧАЛО»',a:'мкр. Авангард-3, 34а',t:'Вт, Чт: 19:00-20:30; Сб: 12:00-13:30',p:['+7 705 449 2468'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:6,s:1200,e:1330}]},
         {c:'Караганда',n:'АА «решение есть»',a:'ул. Ерубаева 34',t:'Суббота: 15:45',p:['+7 700 765 6935'],sc:[{d:6,s:1545,e:1715}]},
@@ -523,6 +639,8 @@
         const isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('aa_theme', isDark ? 'dark' : 'light');
         document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+        const themeColor = isDark ? '#1A1A1A' : '#FAF0E6';
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
     }
 
     function toggleAcc(id, btn) {
@@ -608,9 +726,10 @@
 
     function saveSoberDate(v) {
         localStorage.setItem('aa_sober_v3', v);
-        localStorage.setItem('aa_sober', v);
-        localStorage.setItem('sobriety_date', v);
-        localStorage.setItem('soberDate', v);
+        // Clean up old keys if they exist, to rely on a single source of truth
+        localStorage.removeItem('aa_sober');
+        localStorage.removeItem('sobriety_date');
+        localStorage.removeItem('soberDate');
     }
 
     function getSavedSoberDate() {
@@ -638,7 +757,23 @@
             m += 12;
         }
         const tD = Math.max(0, Math.floor((n - s) / 86400000));
-        document.getElementById('complex-sober-display').innerText = `${y} ${plural(y, i18n[curLang].units[0])} ${m} ${plural(m, i18n[curLang].units[1])} ${d} ${plural(d, i18n[curLang].units[2])}`;
+
+        // Update complex display with separate ornamental units
+        const units = [y, m, d];
+        const baseLabels = i18n[curLang].soberUnitsShort;
+        let yearLabel = baseLabels[0];
+        if (curLang === 'ru') {
+            yearLabel = (y >= 1 && y <= 4) ? 'года' : 'лет';
+        }
+        const labels = [yearLabel, baseLabels[1], baseLabels[2]];
+        const complexDisplay = document.getElementById('complex-sober-display');
+        complexDisplay.innerHTML = units.map((val, i) => `
+            <div class="sober-unit">
+                <div class="sober-num">${val}</div>
+                <div class="sober-label">${labels[i]}</div>
+            </div>
+        `).join('');
+
         document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD, i18n[curLang].units[2])}`;
         updateMedalProgress(tD, v);
     }
@@ -836,6 +971,9 @@
         if (shouldDark) {
             document.body.classList.add('dark-mode');
             document.getElementById('theme-icon').innerText = '☀️';
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1A1A1A');
+        } else {
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FAF0E6');
         }
     }
 
@@ -858,7 +996,9 @@
                 return;
             }
 
-            const line = `${item.date_ru}. ${item.title}`;
+            // Minimalist formatting: single line date & title with symbol
+            const formattedDate = `${String(today.getDate()).padStart(2, '0')} апреля`; // Simplistic; needs localization for full PWA
+            const line = `${formattedDate}. ${item.title.toUpperCase()}`;
 
             motEl.innerHTML = `<strong>${escapeHtml(line)}</strong><br>${escapeHtml(item.quote)}`;
         } catch (error) {
