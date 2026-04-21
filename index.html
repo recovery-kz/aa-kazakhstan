@@ -613,6 +613,14 @@
     function escapeHtml(value) { return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
     function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
 
+    function trackEvent(action, label, params = {}) {
+        if (typeof window.gtag !== 'function') return;
+        window.gtag('event', action, Object.assign({
+            event_category: 'engagement',
+            event_label: label
+        }, params));
+    }
+
     function formatRemainingMinutes(minutes) {
         const d = i18n[curLang];
         const hours = Math.floor(minutes / 60);
@@ -632,7 +640,9 @@
 
     function toggleSos() {
         const box = document.getElementById('sos-box');
+        const isOpening = !box.classList.contains('open');
         box.classList.toggle('open');
+        trackEvent(isOpening ? 'sos_open' : 'sos_close', 'main_button');
     }
 
     function toggleTheme() {
@@ -657,6 +667,7 @@
     function toggleToday() {
         onlyToday = !onlyToday;
         document.getElementById('todayFilter').classList.toggle('active', onlyToday);
+        trackEvent('groups_today_filter', onlyToday ? 'enabled' : 'disabled');
         renderGroups();
     }
 
@@ -776,10 +787,12 @@
 
         document.getElementById('total-days-display').innerText = `${i18n[curLang].total} ${tD} ${plural(tD, i18n[curLang].units[2])}`;
         updateMedalProgress(tD, v);
+        trackEvent('sobriety_date_set', 'counter', { value: tD });
     }
 
     function setLang(lang) {
         curLang = lang;
+        trackEvent('language_switch', lang);
         localStorage.setItem('aa_lang', lang);
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`l-${lang}`).classList.add('active');
@@ -811,6 +824,7 @@
     }
 
     function goTo(tab) {
+        trackEvent('open_tab', tab);
         document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active-nav'));
         document.getElementById(`tab-${tab}`).classList.add('active');
@@ -835,7 +849,10 @@
         const desc = document.getElementById(`desc-${id}`);
         const current = desc.style.display;
         document.querySelectorAll('.book-desc').forEach(d => d.style.display = 'none');
-        desc.style.display = current === 'block' ? 'none' : 'block';
+        const isOpening = current !== 'block';
+        desc.style.display = isOpening ? 'block' : 'none';
+        const book = books[Number(id)];
+        if (book && isOpening) trackEvent('book_open', book.n);
     }
 
     function renderLit() {
@@ -873,7 +890,7 @@
                 <span class="info-row-icon">📞</span>
                 <div>
                     <div class="muted">${title}</div>
-                    <div class="group-phones">${arr.map(phone => `<a href="tel:${cleanPhone(phone)}" class="phone-link">${escapeHtml(phone)}</a>`).join('')}</div>
+                    <div class="group-phones">${arr.map(phone => `<a href="tel:${cleanPhone(phone)}" class="phone-link" data-track="group_phone" data-phone="${escapeHtml(phone)}">${escapeHtml(phone)}</a>`).join('')}</div>
                 </div>
             </div>
         `;
@@ -882,7 +899,7 @@
     function renderAddress(g) {
         if (!g.a) return '';
         const mapLink = build2GISLink(g);
-        const linkHtml = mapLink ? `<br><a href="${mapLink}" target="_blank" rel="noopener noreferrer" class="inline-link">${i18n[curLang].openMap}</a>` : '';
+        const linkHtml = mapLink ? `<br><a href="${mapLink}" target="_blank" rel="noopener noreferrer" class="inline-link" data-track="map_open" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}">${i18n[curLang].openMap}</a>` : '';
         return `
             <div class="info-row">
                 <span class="info-row-icon">📍</span>
@@ -904,7 +921,7 @@
                     <span class="info-row-icon">🌐</span>
                     <div>
                         <div class="muted">${label}</div>
-                        <a href="${g.a}" target="_blank" rel="noopener noreferrer" class="inline-link">${text}</a>
+                        <a href="${g.a}" target="_blank" rel="noopener noreferrer" class="inline-link" data-track="open_online" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}" data-type="${g.chat ? 'chat' : 'zoom'}">${text}</a>
                     </div>
                 </div>
             `;
@@ -915,7 +932,7 @@
                     <span class="info-row-icon">💬</span>
                     <div>
                         <div class="muted">${i18n[curLang].zoomLabel}</div>
-                        <a href="${g.z}" target="_blank" rel="noopener noreferrer" class="inline-link">${i18n[curLang].openZoom}</a>
+                        <a href="${g.z}" target="_blank" rel="noopener noreferrer" class="inline-link" data-track="open_online" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}" data-type="zoom_extra">${i18n[curLang].openZoom}</a>
                     </div>
                 </div>
             `;
@@ -1010,18 +1027,28 @@
     }
 
     function attachEvents() {
-        document.getElementById('theme-icon').addEventListener('click', toggleTheme);
+        document.getElementById('theme-icon').addEventListener('click', () => {
+            toggleTheme();
+            trackEvent('theme_toggle', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
         document.getElementById('l-ru').addEventListener('click', () => setLang('ru'));
         document.getElementById('l-kz').addEventListener('click', () => setLang('kz'));
         document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
         document.getElementById('todayFilter').addEventListener('click', toggleToday);
-        document.getElementById('citySelect').addEventListener('change', renderGroups);
+        document.getElementById('citySelect').addEventListener('change', e => {
+            trackEvent('city_filter', e.target.value);
+            renderGroups();
+        });
         document.getElementById('date-input').addEventListener('change', e => updateDate(e.target.value));
         document.getElementById('user-notes').addEventListener('input', e => saveNotes(e.target.value));
         document.querySelectorAll('.acc-btn').forEach(button => {
             button.addEventListener('click', () => {
                 const target = button.getAttribute('data-acc-target');
-                if (target) toggleAcc(target, button);
+                if (target) {
+                    const isOpening = document.getElementById(target).style.display !== 'block';
+                    toggleAcc(target, button);
+                    trackEvent(isOpening ? 'accordion_open' : 'accordion_close', target);
+                }
             });
         });
         document.querySelectorAll('.nav-item').forEach(button => {
@@ -1033,15 +1060,61 @@
         for (let i = 0; i < 5; i++) {
             document.getElementById(`tr-n-${i}`).addEventListener('input', () => saveTrust(i));
             document.getElementById(`tr-p-${i}`).addEventListener('input', () => saveTrust(i));
+            document.getElementById(`call-${i}`).addEventListener('click', () => {
+                const phone = document.getElementById(`tr-p-${i}`).value;
+                if (cleanPhone(phone)) trackEvent('call', `trusted_contact_${i + 1}`, { phone_number: cleanPhone(phone) });
+            });
         }
         document.getElementById('book-list').addEventListener('click', e => {
             const item = e.target.closest('.book-item');
             if (!item) return;
             toggleBook(item.getAttribute('data-book-index'));
         });
+
+        document.getElementById('tab-counter').addEventListener('click', e => {
+            const sosLink = e.target.closest('.sos-opt-link');
+            if (sosLink) {
+                const label = sosLink.querySelector('span') ? sosLink.querySelector('span').innerText.trim() : 'sos_call';
+                trackEvent('call', label === 'ҚАЗАҚ ТІЛІ' ? 'sos_kz' : 'sos_ru');
+                return;
+            }
+
+            const donationLink = e.target.closest('a[href*="kaspi.kz/pay/FOAAK"]');
+            if (donationLink) trackEvent('donation_click', 'kaspi');
+        });
+
+        document.getElementById('tab-lit').addEventListener('click', e => {
+            const litCall = e.target.closest('a[href^="tel:+77775567141"]');
+            if (litCall) trackEvent('call', 'literature_committee');
+        });
+
+        document.getElementById('tab-groups').addEventListener('click', e => {
+            const phoneLink = e.target.closest('[data-track="group_phone"]');
+            if (phoneLink) {
+                const card = phoneLink.closest('.group-card');
+                const groupName = card && card.querySelector('.group-name') ? card.querySelector('.group-name').innerText.trim() : 'group_phone';
+                trackEvent('call', groupName, { phone_number: cleanPhone(phoneLink.getAttribute('data-phone') || '') });
+                return;
+            }
+
+            const mapLink = e.target.closest('[data-track="map_open"]');
+            if (mapLink) {
+                trackEvent('map_open', mapLink.getAttribute('data-group') || 'group_map', { city: mapLink.getAttribute('data-city') || '' });
+                return;
+            }
+
+            const onlineLink = e.target.closest('[data-track="open_online"]');
+            if (onlineLink) {
+                trackEvent('open_online', onlineLink.getAttribute('data-group') || 'online_group', {
+                    city: onlineLink.getAttribute('data-city') || '',
+                    meeting_type: onlineLink.getAttribute('data-type') || ''
+                });
+            }
+        });
     }
 
     function init() {
+        trackEvent('app_loaded', 'initial_load');
         applySavedTheme();
         attachEvents();
         rebuildCityOptions();
