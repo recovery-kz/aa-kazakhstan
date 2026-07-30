@@ -1,0 +1,39 @@
+name: Validate application
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'styles.css'
+      - 'app.js'
+      - 'i18n.js'
+      - 'groups.json'
+      - 'books.json'
+      - 'manifest.json'
+      - 'version.json'
+      - 'sw.js'
+      - 'scripts/validate-data.py'
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python scripts/validate-data.py
+      - run: node --check app.js && node --check i18n.js && node --check sw.js
+      - run: python -m json.tool groups.json >/dev/null && python -m json.tool books.json >/dev/null && python -m json.tool manifest.json >/dev/null && python -m json.tool version.json >/dev/null
+      - run: |
+          grep -q 'styles.css' index.html
+          grep -q 'app.js' index.html
+          grep -q 'i18n.js' index.html
+          grep -q 'aa-kaz-v10' sw.js
+          grep -q '77051871335' app.js
+          grep -q 'id="install-banner"' index.html
+          grep -q 'id="export-data"' index.html
