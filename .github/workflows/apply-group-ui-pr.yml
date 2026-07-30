@@ -26,6 +26,7 @@ jobs:
           path = Path('/tmp/apply_group_ui.py')
           text = path.read_text(encoding='utf-8')
           text = text.replace("if text.count(\"{c:\") != 43:\n    raise SystemExit(f'Unexpected group count: {text.count(\"{c:\")}')\n", "")
+          text = text[:text.index("\nsw = Path('service-worker.js')")]
           path.write_text(text, encoding='utf-8')
           PY
           python3 /tmp/apply_group_ui.py
@@ -34,7 +35,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html service-worker.js
+          git add index.html
           git diff --cached --quiet && exit 0
           git commit -m "Unify group cards and add favorites"
           git push origin HEAD:${{ github.head_ref }}
