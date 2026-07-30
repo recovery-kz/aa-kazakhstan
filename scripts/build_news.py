@@ -13,16 +13,64 @@ OUTPUT_FILE = ROOT / "news.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 
 
-def load_post(folder: Path) -> dict[str, Any] | None:
+def read_existing_dates() -> dict[str, str]:
+    """Сохраняет первоначальную дату уже опубликованных изображений."""
+    if not OUTPUT_FILE.exists():
+        return {}
+
+    try:
+        posts = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+    dates: dict[str, str] = {}
+
+    if not isinstance(posts, list):
+        return dates
+
+    for post in posts:
+        if not isinstance(post, dict):
+            continue
+
+        post_date = post.get("date")
+        images = post.get("images")
+
+        if not isinstance(post_date, str) or not isinstance(images, list):
+            continue
+
+        for image in images:
+            if isinstance(image, str):
+                dates[image] = post_date
+
+    return dates
+
+
+def load_flat_image(image: Path, existing_dates: dict[str, str]) -> dict[str, Any]:
+    """Каждый файл прямо в news/ становится отдельной новостью."""
+    relative_path = image.relative_to(ROOT).as_posix()
+    publication_date = existing_dates.get(relative_path, date.today().isoformat())
+
+    return {
+        "id": f"flat-{image.stem}",
+        "date": publication_date,
+        "title": "",
+        "category": "",
+        "description": "",
+        "language": "ru",
+        "images": [relative_path],
+    }
+
+
+def load_legacy_folder(folder: Path) -> dict[str, Any] | None:
+    """Поддержка старых публикаций с post.json, чтобы они не исчезли."""
     post_file = folder / "post.json"
 
     if not post_file.exists():
-        print(f"Пропущено: нет post.json — {folder.name}")
         return None
 
     try:
         post = json.loads(post_file.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as error:
+    except (json.JSONDecodeError, OSError) as error:
         print(f"Ошибка JSON в {post_file}: {error}")
         return None
 
@@ -33,18 +81,15 @@ def load_post(folder: Path) -> dict[str, Any] | None:
         return None
 
     if post.get("published") is not True:
-        print(f"Не опубликовано: {folder.name}")
         return None
 
     try:
-        publication_date = date.fromisoformat(post["date"])
+        publication_date = date.fromisoformat(str(post["date"]))
     except ValueError:
         print(f"Неверная дата в {post_file}")
         return None
 
-    # Будущие материалы пока не показываем
     if publication_date > date.today():
-        print(f"Запланировано на будущее: {folder.name}")
         return None
 
     images = sorted(
@@ -54,7 +99,6 @@ def load_post(folder: Path) -> dict[str, Any] | None:
     )
 
     if not images:
-        print(f"Пропущено: нет изображений — {folder.name}")
         return None
 
     return {
@@ -64,24 +108,26 @@ def load_post(folder: Path) -> dict[str, Any] | None:
         "category": str(post["category"]).strip(),
         "description": str(post.get("description", "")).strip(),
         "language": str(post.get("language", "ru")).strip(),
-        "images": [
-            image.relative_to(ROOT).as_posix()
-            for image in images
-        ],
+        "images": [image.relative_to(ROOT).as_posix() for image in images],
     }
 
 
 def main() -> None:
     NEWS_DIR.mkdir(exist_ok=True)
-
+    existing_dates = read_existing_dates()
     posts: list[dict[str, Any]] = []
 
-    for folder in NEWS_DIR.iterdir():
+    # Новый простой режим: изображения лежат непосредственно в news/.
+    for image in sorted(NEWS_DIR.iterdir()):
+        if image.is_file() and image.suffix.lower() in IMAGE_EXTENSIONS:
+            posts.append(load_flat_image(image, existing_dates))
+
+    # Временная совместимость со старой структурой публикаций.
+    for folder in sorted(NEWS_DIR.iterdir()):
         if not folder.is_dir():
             continue
 
-        post = load_post(folder)
-
+        post = load_legacy_folder(folder)
         if post:
             posts.append(post)
 
