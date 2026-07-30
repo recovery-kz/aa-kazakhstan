@@ -30,7 +30,7 @@ jobs:
 
       - name: Save news.json
         run: |
-          if git diff --quiet -- news.json; then
+          if [ -z "$(git status --porcelain -- news.json)" ]; then
             echo "news.json не изменился"
             exit 0
           fi
