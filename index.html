@@ -172,6 +172,24 @@
             to { opacity: 1; }
         }
 
+        .active.swipe-from-right {
+            animation: swipeFromRight 0.22s ease-out;
+        }
+
+        .active.swipe-from-left {
+            animation: swipeFromLeft 0.22s ease-out;
+        }
+
+        @keyframes swipeFromRight {
+            from { opacity: 0; transform: translateX(28px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes swipeFromLeft {
+            from { opacity: 0; transform: translateX(-28px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         .card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -530,6 +548,14 @@
     let onlyToday = false;
     let saveTimeout = null;
 
+    const TAB_ORDER = ['counter', 'news', 'lit', 'groups', 'profile'];
+    const SWIPE_MIN_DISTANCE = 60;
+    const SWIPE_MAX_VERTICAL_DRIFT = 80;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let swipeBlocked = false;
+
     const REFLECTIONS_STORAGE_KEY = 'aa_daily_reflections_cache_v1';
 
     const books = [
@@ -622,6 +648,7 @@
     {c:'Экибастуз',n:'АА «Чистое Небо»',a:'инфо по тел.',t:'По запросу',p:['+7 775 350 0562'],sc:[]},
     {c:'Жетысай',n:'АА «куат»',a:'ул. Ауэзова, каб. 12',t:'Пн, Ср, Пт: 19:00',p:['+7 707 318 3839'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
 ];
+
     function cleanPhone(phone) { return String(phone || '').replace(/[^\d+]/g, ''); }
     function escapeHtml(value) { return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
     function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
@@ -881,15 +908,76 @@
         if (document.getElementById('tab-groups').classList.contains('active')) renderGroups();
     }
 
-    function goTo(tab) {
-        trackEvent('open_tab', tab);
-        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active-nav'));
-        document.getElementById(`tab-${tab}`).classList.add('active');
-        document.getElementById(`btn-${tab==='profile'?'p':tab[0]}`).classList.add('active-nav');
+    function goTo(tab, direction = null) {
+        if (!TAB_ORDER.includes(tab)) return;
+
+        trackEvent('open_tab', tab, direction ? { navigation_method: 'swipe', swipe_direction: direction } : {});
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.classList.remove('active', 'swipe-from-right', 'swipe-from-left');
+        });
+        document.querySelectorAll('.nav-item').forEach(button => button.classList.remove('active-nav'));
+
+        const targetSection = document.getElementById(`tab-${tab}`);
+        targetSection.classList.add('active');
+
+        if (direction === 'left') targetSection.classList.add('swipe-from-right');
+        if (direction === 'right') targetSection.classList.add('swipe-from-left');
+
+        document.getElementById(`btn-${tab === 'profile' ? 'p' : tab[0]}`).classList.add('active-nav');
+
         if (tab === 'lit') renderLit();
         if (tab === 'groups') renderGroups();
         window.scrollTo(0, 0);
+    }
+
+    function getActiveTab() {
+        const activeSection = document.querySelector('.content-section.active');
+        return activeSection ? activeSection.id.replace('tab-', '') : 'counter';
+    }
+
+    function isSwipeBlockedTarget(target) {
+        return Boolean(target.closest(
+            'input, textarea, select, option, button, a, [contenteditable="true"], .book-item'
+        ));
+    }
+
+    function handleTouchStart(event) {
+        if (event.touches.length !== 1) {
+            swipeBlocked = true;
+            return;
+        }
+
+        const touch = event.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+        touchStartTime = Date.now();
+        swipeBlocked = isSwipeBlockedTarget(event.target);
+    }
+
+    function handleTouchEnd(event) {
+        if (swipeBlocked || !event.changedTouches.length) return;
+
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+        const elapsed = Date.now() - touchStartTime;
+
+        const isHorizontalSwipe =
+            Math.abs(deltaX) >= SWIPE_MIN_DISTANCE &&
+            Math.abs(deltaX) > Math.abs(deltaY) * 1.25 &&
+            Math.abs(deltaY) <= SWIPE_MAX_VERTICAL_DRIFT &&
+            elapsed <= 800;
+
+        if (!isHorizontalSwipe) return;
+
+        const currentTab = getActiveTab();
+        const currentIndex = TAB_ORDER.indexOf(currentTab);
+
+        if (deltaX < 0 && currentIndex < TAB_ORDER.length - 1) {
+            goTo(TAB_ORDER[currentIndex + 1], 'left');
+        } else if (deltaX > 0 && currentIndex > 0) {
+            goTo(TAB_ORDER[currentIndex - 1], 'right');
+        }
     }
 
     function loadTrust() {
@@ -1138,6 +1226,13 @@
             const litCall = e.target.closest('a[href^="tel:+77775567141"]');
             if (litCall) trackEvent('call', 'literature_committee');
         });
+
+        const swipeArea = document.querySelector('.main-container');
+        swipeArea.addEventListener('touchstart', handleTouchStart, { passive: true });
+        swipeArea.addEventListener('touchend', handleTouchEnd, { passive: true });
+        swipeArea.addEventListener('touchcancel', () => {
+            swipeBlocked = true;
+        }, { passive: true });
 
         document.getElementById('tab-groups').addEventListener('click', e => {
             const phoneLink = e.target.closest('[data-track="group_phone"]');
