@@ -1,1 +1,0 @@
-apply minimal library grid with book modal and actions
