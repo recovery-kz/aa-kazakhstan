@@ -1,27 +1,10 @@
 from pathlib import Path
-import base64
 import json
-import os
-import urllib.request
 import zipfile
 
-REPO = os.environ['GITHUB_REPOSITORY']
-TOKEN = os.environ['GITHUB_TOKEN']
-BLOB_SHA = '328ec54747fdd640743ebc8b6f411ca6c7721427'
-
-request = urllib.request.Request(
-    f'https://api.github.com/repos/{REPO}/git/blobs/{BLOB_SHA}',
-    headers={
-        'Authorization': f'Bearer {TOKEN}',
-        'Accept': 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-        'User-Agent': 'aa-kazakhstan-book-cover-migration'
-    }
-)
-with urllib.request.urlopen(request) as response:
-    payload = json.load(response)
-zip_path = Path('/tmp/book-covers.zip')
-zip_path.write_bytes(base64.b64decode(payload['content']))
+zip_path = Path('assets/book-covers.zip')
+if not zip_path.is_file():
+    raise SystemExit('Book cover archive not found')
 cover_dir = Path('book-covers')
 cover_dir.mkdir(exist_ok=True)
 with zipfile.ZipFile(zip_path) as archive:
@@ -114,4 +97,3 @@ for relative in cover_map.values():
         raise SystemExit(f'Invalid cover file: {relative}')
 json.loads(books_path.read_text(encoding='utf-8'))
 print(f'Applied {len(matched)} book covers')
-# Retry trigger 2026-07-30
