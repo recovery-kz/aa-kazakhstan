@@ -27,7 +27,7 @@ jobs:
       - name: Validate JSON and assets
         run: |
           python -m json.tool books.json >/dev/null
-          test "$(find book-covers -name '*.webp' | wc -l)" -eq 15
+          test "$(find book-covers -name '*.svg' | wc -l)" -eq 15
           grep -q 'app.js?v=2.0.3' index.html
       - name: Commit result to PR branch
         run: |
