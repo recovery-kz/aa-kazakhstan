@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aa-kaz-v5';
+const CACHE_NAME = 'aa-kaz-v6';
 const CORE_ASSETS = [
   './',
   'index.html',
