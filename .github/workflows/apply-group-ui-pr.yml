@@ -18,19 +18,10 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: 0
 
-      - name: Run stored update script
+      - name: Run robust migration script
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          workflow = Path('.github/workflows/apply-group-ui.yml').read_text(encoding='utf-8')
-          start_marker = "          python3 - <<'PY'\n"
-          end_marker = "\n          PY\n\n      - name: Commit changes"
-          start = workflow.index(start_marker) + len(start_marker)
-          end = workflow.index(end_marker, start)
-          raw_code = workflow[start:end]
-          code = '\n'.join(line[10:] if line.startswith('          ') else line for line in raw_code.splitlines())
-          exec(compile(code, 'group-ui-update', 'exec'))
-          PY
+          git show origin/main:scripts/apply_group_ui.py > /tmp/apply_group_ui.py
+          python3 /tmp/apply_group_ui.py
 
       - name: Commit changes to PR branch
         run: |
