@@ -1,0 +1,39 @@
+name: Apply priority one UI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'priority-one-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Apply priority one migration
+        run: |
+          git show origin/main:scripts/apply_priority_one.py > /tmp/apply_priority_one.py
+          python3 /tmp/apply_priority_one.py
+      - name: Validate generated application
+        run: |
+          grep -q 'id="today-actions"' index.html
+          grep -q 'id="nearest-meeting-card"' index.html
+          grep -q 'id="city-onboarding"' index.html
+          grep -q 'id="group-quick-filters"' index.html
+          grep -q "if (!g.a || g.online) return '';" index.html
+          ! grep -q '>undefined<' index.html
+      - name: Commit application changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Implement priority one usability improvements"
+          git push origin HEAD:${{ github.head_ref }}
