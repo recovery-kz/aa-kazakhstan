@@ -1,1 +1,1 @@
-apply group card normalization and favorites v3
+apply group card normalization and favorites v4
