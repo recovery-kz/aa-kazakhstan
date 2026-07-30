@@ -2276,7 +2276,7 @@ function closeFirstTimeInfo() {
         });
         document.getElementById('city-onboarding-save').addEventListener('click', () => saveUserCity(document.getElementById('city-onboarding-select').value));
         document.getElementById('city-onboarding-all').addEventListener('click', () => saveUserCity(''));
-        document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); }); });
+        document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); });
 
         document.getElementById('todayFilter').addEventListener('click', toggleToday);
         document.getElementById('notification-button').addEventListener('click', openNotificationCenter);
