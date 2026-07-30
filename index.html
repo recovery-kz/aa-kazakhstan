@@ -613,6 +613,34 @@
         .notification-select { min-height: 38px; border: 1px solid var(--border); border-radius: 10px; background: var(--card-bg); color: var(--text-main); padding: 0 9px; font-weight: 700; }
         body.notifications-open { overflow: hidden; }
 
+        .today-actions { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:0 0 15px; }
+        .today-action { min-height:72px; border:1px solid var(--border); border-radius:16px; background:var(--card-bg); color:var(--text-main); font:inherit; font-size:13px; font-weight:850; line-height:1.25; padding:12px; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; text-align:left; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,.04); }
+        .today-action-icon { font-size:22px; line-height:1; }
+        .nearest-card { padding:17px; text-align:left; }
+        .nearest-label { color:var(--accent); font-size:10px; font-weight:900; letter-spacing:.07em; text-transform:uppercase; margin-bottom:7px; }
+        .nearest-name { color:var(--text-main); font-size:19px; line-height:1.25; font-weight:900; }
+        .nearest-time { color:var(--primary); font-size:15px; font-weight:850; margin-top:7px; }
+        .nearest-remaining { color:var(--text-sub); font-size:12px; margin-top:3px; }
+        .nearest-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:15px; }
+        .nearest-action { min-height:43px; border:1px solid var(--border); border-radius:12px; background:var(--card-bg); color:var(--primary); font:inherit; font-size:12px; font-weight:850; text-decoration:none; display:flex; align-items:center; justify-content:center; text-align:center; cursor:pointer; }
+        .nearest-action.primary { background:var(--primary); border-color:var(--primary); color:white; }
+        .nearest-empty { color:var(--text-sub); font-size:13px; line-height:1.5; }
+        .group-quick-filters { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+        .group-quick-filter { min-height:43px; border:1px solid var(--border); border-radius:12px; background:var(--card-bg); color:var(--text-main); font:inherit; font-size:12px; font-weight:850; cursor:pointer; }
+        .group-quick-filter.active { background:var(--primary); border-color:var(--primary); color:white; }
+        .group-city-row { width:100%; display:flex; gap:8px; margin-bottom:6px; }
+        .group-city-row #citySelect { width:100%; flex:1; }
+        .city-onboarding { position:fixed; inset:0; z-index:5000; background:rgba(0,0,0,.58); display:none; align-items:flex-end; justify-content:center; padding:14px 12px max(14px,env(safe-area-inset-bottom)); }
+        .city-onboarding.open { display:flex; }
+        .city-onboarding-sheet { width:100%; max-width:500px; background:var(--card-bg); border-radius:24px; padding:20px; box-shadow:0 20px 55px rgba(0,0,0,.32); }
+        .city-onboarding-title { font-size:22px; line-height:1.25; font-weight:900; color:var(--text-main); }
+        .city-onboarding-note { font-size:13px; line-height:1.5; color:var(--text-sub); margin:7px 0 16px; }
+        .city-onboarding-select { width:100%; min-height:50px; border:1px solid var(--border); border-radius:13px; background:var(--card-bg); color:var(--text-main); padding:0 12px; font:inherit; font-weight:800; }
+        .city-onboarding-actions { display:grid; gap:9px; margin-top:13px; }
+        .city-onboarding-btn { min-height:48px; border:1px solid var(--primary); border-radius:13px; background:var(--primary); color:white; font:inherit; font-weight:850; cursor:pointer; }
+        .city-onboarding-btn.secondary { background:var(--card-bg); color:var(--primary); }
+        body.city-onboarding-open { overflow:hidden; }
+
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -708,6 +736,13 @@
                 <div id="mot-full-text" class="mot-full-text"></div>
             </div>
         </div>
+        <div class="today-actions" id="today-actions">
+            <button class="today-action" type="button" data-today-action="today"><span class="today-action-icon">📅</span><span id="quick-today-text">Найти собрание сегодня</span></button>
+            <a class="today-action" href="tel:+77072080553" data-today-action="call" style="text-decoration:none;"><span class="today-action-icon">☎</span><span id="quick-call-text">Позвонить в АА</span></a>
+            <button class="today-action" type="button" data-today-action="favorites"><span class="today-action-icon">★</span><span id="quick-favorites-text">Мои группы</span></button>
+            <button class="today-action" type="button" data-today-action="first"><span class="today-action-icon">?</span><span id="quick-first-text">Я впервые в АА</span></button>
+        </div>
+        <div class="card nearest-card" id="nearest-meeting-card"></div>
         <div class="ornament-divider"></div> <div class="card counter-card">
             <div class="complex-sober-row" id="complex-sober-display">
                 <div class="sober-unit"><div class="sober-num">0</div><div class="sober-label">лет</div></div>
@@ -802,13 +837,28 @@
     </div>
 
     <div id="tab-groups" class="content-section">
-        <div class="group-filters">
-            <select id="citySelect"></select>
-            <button id="todayFilter" type="button" class="filter-btn">📅 Сегодня</button>
+        <div class="group-quick-filters" id="group-quick-filters">
+            <button type="button" class="group-quick-filter" data-group-mode="mycity" id="group-filter-mycity">Мой город</button>
+            <button type="button" class="group-quick-filter" data-group-mode="today" id="todayFilter">Сегодня</button>
+            <button type="button" class="group-quick-filter" data-group-mode="favorites" id="group-filter-favorites">Избранные</button>
+            <button type="button" class="group-quick-filter" data-group-mode="online" id="group-filter-online">Онлайн</button>
         </div>
+        <div class="group-city-row"><select id="citySelect"></select></div>
         <div class="ornament-divider"></div> <div id="list-container" style="width:100%;"></div>
     </div>
 </main>
+
+<div class="city-onboarding" id="city-onboarding" aria-hidden="true">
+    <div class="city-onboarding-sheet" role="dialog" aria-modal="true" aria-labelledby="city-onboarding-title">
+        <div class="city-onboarding-title" id="city-onboarding-title">В каком городе вы находитесь?</div>
+        <div class="city-onboarding-note" id="city-onboarding-note">Мы покажем ваши группы и ближайшее собрание.</div>
+        <select class="city-onboarding-select" id="city-onboarding-select"></select>
+        <div class="city-onboarding-actions">
+            <button class="city-onboarding-btn" type="button" id="city-onboarding-save">Сохранить город</button>
+            <button class="city-onboarding-btn secondary" type="button" id="city-onboarding-all">Показать все города</button>
+        </div>
+    </div>
+</div>
 
 <div class="notification-panel" id="notification-panel" aria-hidden="true">
     <div class="notification-sheet" role="dialog" aria-modal="true" aria-labelledby="notification-center-title">
@@ -818,7 +868,7 @@
 </div>
 
 <nav class="bottom-nav">
-    <button class="nav-item active-nav" id="btn-c" type="button" data-tab="counter"><span>⏱</span><span class="nav-txt">Счетчик</span></button>
+    <button class="nav-item active-nav" id="btn-c" type="button" data-tab="counter"><span>⏱</span><span class="nav-txt">Сегодня</span></button>
     <button class="nav-item" id="btn-n" type="button" data-tab="news"><span>📰</span><span class="nav-txt">Новости</span></button>
     <button class="nav-item" id="btn-l" type="button" data-tab="lit"><span>📚</span><span class="nav-txt">Книги</span></button>
     <button class="nav-item" id="btn-g" type="button" data-tab="groups"><span>📍</span><span class="nav-txt">Группы</span></button>
@@ -832,7 +882,7 @@
     const i18n = {
         ru: {
             head: 'АА КАЗАХСТАНА', total: 'Всего:', units: [['год','года','лет'],['мес.','мес.','мес.'],['день','дня','дней']],
-            motLab: 'Ежедневные размышления', kaspi: '❤️ Седьмая Традиция', nav: ['Счетчик','Новости','Книги','Группы'], allCities: 'Все города', favorites: '★ Избранное', noFavorites: 'Добавьте нужные группы в избранное, нажав на звезду в карточке.', addFavorite: 'Добавить в избранное', removeFavorite: 'Убрать из избранного',
+            motLab: 'Ежедневные размышления', kaspi: '❤️ Седьмая Традиция', nav: ['Сегодня','Новости','Книги','Группы'], allCities: 'Все города', favorites: '★ Избранное', noFavorites: 'Добавьте нужные группы в избранное, нажав на звезду в карточке.', addFavorite: 'Добавить в избранное', removeFavorite: 'Убрать из избранного',
             sOpen: 'ОТКРЫТО. ЕЩЕ', sSoon: 'ЧЕРЕЗ', sClosed: 'ЗАКРЫТО', todayBtn: '📅 Сегодня', sosMain: '🚨 НУЖНА ПОМОЩЬ?',
             sosRu: 'РУССКИЙ ЯЗЫК', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Мой путь', trustHead: 'ДОВЕРЕННЫЕ ЛИЦА', prayerHead: 'МОЛИТВА', notesHead: 'ЗАМЕТКИ ПО ДНЮ',
             nextMedal: 'До медали', left: 'Осталось', prayer: 'Боже, дай мне разум и душевный покой принять то, что я не в силах изменить,\nмужество изменить то, что могу,\nи мудрость отличить одно от другого.',
@@ -843,11 +893,11 @@
             notificationsHead: 'УВЕДОМЛЕНИЯ', notificationCenter: 'Уведомления', notificationReadAll: 'Прочитать все', notificationEmpty: 'Здесь появятся новые размышления, новости и напоминания о собраниях.',
             notifMasterTitle: 'Внутренние уведомления', notifMasterNote: 'Показывать новые события в центре уведомлений', notifReflectionTitle: 'Ежедневные размышления', notifReflectionNote: 'Сообщать о новом размышлении при открытии приложения', notifNewsTitle: 'Новости', notifNewsNote: 'Сообщать о новых публикациях', notifTodayTitle: 'Группы сегодня', notifTodayNote: 'Показывать сводку собраний на текущий день', notifFavoritesTitle: 'Избранные группы', notifFavoritesNote: 'Напоминать перед началом собрания, пока приложение открыто', notifBrowserTitle: 'Системное окно при открытом приложении', notifBrowserNote: 'Не работает после полного закрытия приложения', notifBeforeTitle: 'Напоминать заранее',
             notifReflectionNew: 'Новое ежедневное размышление', notifNewsNew: 'Новая публикация', notifTodayNew: 'Собрания сегодня', notifFavoriteNew: 'Скоро начнётся собрание',
-            soberUnitsShort: ['лет', 'мес.', 'дней']
+            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.'
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
-            motLab: 'Күнделікті ойлар', kaspi: '❤️ Жетінші Дәстүр', nav: ['Есептегіш','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар', favorites: '★ Таңдаулылар', noFavorites: 'Қажетті топтарды карточкадағы жұлдызшаны басып таңдаулыларға қосыңыз.', addFavorite: 'Таңдаулыларға қосу', removeFavorite: 'Таңдаулылардан алып тастау',
+            motLab: 'Күнделікті ойлар', kaspi: '❤️ Жетінші Дәстүр', nav: ['Бүгін','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар', favorites: '★ Таңдаулылар', noFavorites: 'Қажетті топтарды карточкадағы жұлдызшаны басып таңдаулыларға қосыңыз.', addFavorite: 'Таңдаулыларға қосу', removeFavorite: 'Таңдаулылардан алып тастау',
             sOpen: 'АШЫҚ. ТАҒЫ', sSoon: 'БАСТАЛАДЫ', sClosed: 'ЖАБЫҚ', todayBtn: '📅 Бүгін', sosMain: '🚨 КӨМЕК КЕРЕК ПЕ?',
             sosRu: 'ОРЫС ТІЛІ', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Менің жолым', trustHead: 'СЕНІМДІ ТҰЛҒАЛАР', prayerHead: 'ДҰҒА', notesHead: 'КҮНДЕЛІКТІ ЖАЗБАЛАР',
             nextMedal: 'Медальға дейін', left: 'Қалды', prayer: 'Уа, Тәңірім, мен өзгерте алмайтын нәрселерді қабылдауға жан тыныштығын,\nөзгерте алатын нәрселерді өзгертуге батылдық,\nжәне олардың айырмашылығын білетін даналық бере гөр.',
@@ -858,7 +908,7 @@
             notificationsHead: 'ХАБАРЛАМАЛАР', notificationCenter: 'Хабарламалар', notificationReadAll: 'Барлығын оқу', notificationEmpty: 'Мұнда жаңа ойлар, жаңалықтар және жиналыстар туралы еске салулар пайда болады.',
             notifMasterTitle: 'Ішкі хабарламалар', notifMasterNote: 'Жаңа оқиғаларды хабарламалар орталығында көрсету', notifReflectionTitle: 'Күнделікті ойлар', notifReflectionNote: 'Қосымша ашылғанда жаңа ой туралы хабарлау', notifNewsTitle: 'Жаңалықтар', notifNewsNote: 'Жаңа жарияланымдар туралы хабарлау', notifTodayTitle: 'Бүгінгі топтар', notifTodayNote: 'Бүгінгі жиналыстардың қорытындысын көрсету', notifFavoritesTitle: 'Таңдаулы топтар', notifFavoritesNote: 'Қосымша ашық кезде жиналыс алдында еске салу', notifBrowserTitle: 'Қосымша ашық кездегі жүйелік терезе', notifBrowserNote: 'Қосымша толық жабылғаннан кейін жұмыс істемейді', notifBeforeTitle: 'Алдын ала еске салу',
             notifReflectionNew: 'Жаңа күнделікті ой', notifNewsNew: 'Жаңа жарияланым', notifTodayNew: 'Бүгінгі жиналыстар', notifFavoriteNew: 'Жиналыс жақында басталады',
-            soberUnitsShort: ['жыл', 'ай', 'күн']
+            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.'
         }
     };
 
@@ -882,6 +932,8 @@
     const NOTIFICATIONS_STORAGE_KEY = 'aa_internal_notifications_v1';
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
+    const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
+    let groupFilterMode = 'all';
     let notificationTimer = null;
 
     let currentReflectionsData = null;
@@ -1004,6 +1056,7 @@
         saveFavoriteGroups(favorites);
         trackEvent(isAdding ? 'group_favorite_add' : 'group_favorite_remove', groupId);
         renderGroups();
+        renderNearestMeeting();
     }
 
     function defaultNotificationSettings() {
@@ -1176,7 +1229,8 @@
         const now = new Date();
         const day = now.getDay();
         const dateKey = now.toISOString().slice(0, 10);
-        const groups = data.filter(group => Array.isArray(group.sc) && group.sc.some(slot => slot.d === day));
+        const userCity = getSavedUserCity();
+        const groups = data.filter(group => Array.isArray(group.sc) && group.sc.some(slot => slot.d === day) && (!userCity || group.c === userCity || group.online));
         if (!groups.length) return;
         const cities = [...new Set(groups.map(group => group.c))];
         const text = curLang === 'kz' ? `${groups.length} жиналыс · ${cities.slice(0, 3).join(', ')}` : `${groups.length} собраний · ${cities.slice(0, 3).join(', ')}`;
@@ -1361,12 +1415,7 @@
         }
     }
 
-    function toggleToday() {
-        onlyToday = !onlyToday;
-        document.getElementById('todayFilter').classList.toggle('active', onlyToday);
-        trackEvent('groups_today_filter', onlyToday ? 'enabled' : 'disabled');
-        renderGroups();
-    }
+    function toggleToday() { setGroupFilterMode(groupFilterMode === 'today' ? 'all' : 'today'); }
 
     function setTrustCallState(id, phone) {
         const link = document.getElementById(`call-${id}`);
@@ -1522,6 +1571,19 @@
         document.getElementById('notif-browser-note').innerText = d.notifBrowserNote;
         document.getElementById('notif-before-title').innerText = d.notifBeforeTitle;
         document.getElementById('notification-button').setAttribute('aria-label', d.notificationCenter);
+        document.getElementById('quick-today-text').innerText = d.quickToday;
+        document.getElementById('quick-call-text').innerText = d.quickCall;
+        document.getElementById('quick-favorites-text').innerText = d.quickFavorites;
+        document.getElementById('quick-first-text').innerText = d.quickFirst;
+        document.getElementById('group-filter-mycity').innerText = d.myCity;
+        document.getElementById('todayFilter').innerText = d.todayBtn.replace('📅 ', '');
+        document.getElementById('group-filter-favorites').innerText = d.favorites.replace('★ ', '');
+        document.getElementById('group-filter-online').innerText = d.onlineFilter;
+        document.getElementById('city-onboarding-title').innerText = d.chooseCityTitle;
+        document.getElementById('city-onboarding-note').innerText = d.chooseCityNote;
+        document.getElementById('city-onboarding-save').innerText = d.saveCity;
+        document.getElementById('city-onboarding-all').innerText = d.showAllCities;
+        renderNearestMeeting();
 
         document.getElementById('prayer-content').innerText = d.prayer;
         document.getElementById('user-notes').placeholder = d.placeholder;
@@ -1753,7 +1815,7 @@ ${book.d}
     }
 
     function renderAddress(g) {
-        if (!g.a) return '';
+        if (!g.a || g.online) return '';
         const mapLink = build2GISLink(g);
         const linkHtml = mapLink ? `<br><a href="${mapLink}" target="_blank" rel="noopener noreferrer" class="inline-link" data-track="map_open" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}">${i18n[curLang].openMap}</a>` : '';
         return `
@@ -1796,17 +1858,38 @@ ${book.d}
         return html;
     }
 
+    function getSavedUserCity() { return localStorage.getItem(USER_CITY_STORAGE_KEY) || ''; }
+
+    function setGroupFilterMode(mode) {
+        groupFilterMode = mode;
+        onlyToday = mode === 'today';
+        document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.toggle('active', button.dataset.groupMode === mode));
+        if (mode === 'mycity') {
+            const city = getSavedUserCity();
+            document.getElementById('citySelect').value = city || 'all';
+        } else if (mode === 'favorites') {
+            document.getElementById('citySelect').value = 'all';
+        } else if (mode === 'online') {
+            document.getElementById('citySelect').value = 'Онлайн';
+        }
+        renderGroups();
+    }
+
     function renderGroups() {
         const selected = document.getElementById('citySelect').value;
         const c = document.getElementById('list-container');
         const currentDay = new Date().getDay();
         const favorites = getFavoriteGroups();
+        const userCity = getSavedUserCity();
         const filtered = data.filter(g => {
-            const matchesLocation = selected === 'all' || g.c === selected || (selected === 'favorites' && favorites.has(getGroupId(g)));
-            const matchesToday = !onlyToday || g.sc.some(s => s.d === currentDay);
+            let matchesLocation = selected === 'all' || g.c === selected;
+            if (groupFilterMode === 'mycity') matchesLocation = userCity ? g.c === userCity : true;
+            if (groupFilterMode === 'favorites') matchesLocation = favorites.has(getGroupId(g));
+            if (groupFilterMode === 'online') matchesLocation = Boolean(g.online);
+            const matchesToday = groupFilterMode !== 'today' || (Array.isArray(g.sc) && g.sc.some(s => s.d === currentDay));
             return matchesLocation && matchesToday;
         });
-        if (selected === 'favorites' && filtered.length === 0) {
+        if (groupFilterMode === 'favorites' && filtered.length === 0) {
             c.innerHTML = `<div class="card groups-empty">${i18n[curLang].noFavorites}</div>`;
             return;
         }
@@ -1837,17 +1920,98 @@ ${book.d}
 
     function rebuildCityOptions() {
         const s = document.getElementById('citySelect');
-        const current = s.value || 'all';
-        const cities = [...new Set(data.map(x => x.c))].sort((a,b) => a.localeCompare(b, 'ru'));
-        const ct = ['all', 'favorites', ...cities];
+        const current = s.value || getSavedUserCity() || 'all';
+        const cities = [...new Set(data.map(x => x.c).filter(city => city !== 'Онлайн'))].sort((a,b) => a.localeCompare(b, 'ru'));
+        const ct = ['all', 'Онлайн', ...cities];
         s.innerHTML = '';
         ct.forEach(city => {
             const o = document.createElement('option');
             o.value = city;
-            o.innerText = city === 'all' ? i18n[curLang].allCities : city === 'favorites' ? i18n[curLang].favorites : city;
+            o.innerText = city === 'all' ? i18n[curLang].allCities : city;
             s.appendChild(o);
         });
         s.value = [...s.options].some(opt => opt.value === current) ? current : 'all';
+        buildCityOnboardingOptions();
+    }
+
+    function buildCityOnboardingOptions() {
+        const select = document.getElementById('city-onboarding-select');
+        if (!select) return;
+        const current = getSavedUserCity();
+        const cities = [...new Set(data.filter(group => !group.online).map(group => group.c))].sort((a,b) => a.localeCompare(b, 'ru'));
+        select.innerHTML = cities.map(city => `<option value="${escapeHtml(city)}">${escapeHtml(city)}</option>`).join('');
+        if (current && cities.includes(current)) select.value = current;
+    }
+
+    function openCityOnboarding() {
+        buildCityOnboardingOptions();
+        const modal = document.getElementById('city-onboarding');
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('city-onboarding-open');
+    }
+
+    function closeCityOnboarding() {
+        const modal = document.getElementById('city-onboarding');
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('city-onboarding-open');
+    }
+
+    function saveUserCity(city) {
+        localStorage.setItem('aa_city_onboarding_done_v1', '1');
+        if (city) localStorage.setItem(USER_CITY_STORAGE_KEY, city);
+        else localStorage.removeItem(USER_CITY_STORAGE_KEY);
+        rebuildCityOptions();
+        setGroupFilterMode(city ? 'mycity' : 'all');
+        renderNearestMeeting();
+        closeCityOnboarding();
+    }
+
+    function getUpcomingMeetings() {
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const favorites = getFavoriteGroups();
+        const userCity = getSavedUserCity();
+        const candidates = [];
+        for (let offset = 0; offset <= 1; offset++) {
+            const day = (now.getDay() + offset) % 7;
+            data.forEach(group => {
+                if (!Array.isArray(group.sc)) return;
+                group.sc.filter(slot => slot.d === day).forEach(slot => {
+                    const start = minutesFromSlot(slot.s);
+                    if (offset === 0 && start <= currentMinutes) return;
+                    const rank = favorites.has(getGroupId(group)) ? 0 : (userCity && group.c === userCity ? 1 : (group.online ? 2 : 3));
+                    candidates.push({ group, slot, offset, rank, minutesAway: offset * 1440 + start - currentMinutes });
+                });
+            });
+            if (candidates.length) break;
+        }
+        return candidates.sort((a,b) => a.rank - b.rank || a.minutesAway - b.minutesAway);
+    }
+
+    function renderNearestMeeting() {
+        const card = document.getElementById('nearest-meeting-card');
+        if (!card) return;
+        const d = i18n[curLang];
+        const meeting = getUpcomingMeetings()[0];
+        if (!meeting) {
+            card.innerHTML = `<div class="nearest-label">${d.nearestMeeting}</div><div class="nearest-empty">${d.nearestEmpty}</div>`;
+            return;
+        }
+        const g = meeting.group;
+        const time = `${String(Math.floor(meeting.slot.s / 100)).padStart(2,'0')}:${String(meeting.slot.s % 100).padStart(2,'0')}`;
+        const when = meeting.offset === 0 ? `${d.todayAt} ${time}` : `${d.tomorrowAt} ${time}`;
+        const map = build2GISLink(g);
+        const phone = g.p && g.p.length ? cleanPhone(g.p[0]) : '';
+        const onlineUrl = g.online ? g.a : g.z;
+        const remaining = formatRemainingMinutes(Math.max(0, meeting.minutesAway));
+        card.innerHTML = `<div class="nearest-label">${d.nearestMeeting}</div><div class="nearest-name">${escapeHtml(g.n)}</div><div class="nearest-time">${escapeHtml(when)}</div><div class="nearest-remaining">${d.sSoon} ${remaining}</div><div class="nearest-actions">${map ? `<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${d.route}</a>` : ''}${phone ? `<a class="nearest-action" href="tel:${phone}">${d.callAction}</a>` : ''}${onlineUrl ? `<a class="nearest-action primary" href="${onlineUrl}" target="_blank" rel="noopener noreferrer">${g.chat ? d.openChat : d.openZoom}</a>` : ''}<button class="nearest-action" type="button" data-nearest-details="${escapeHtml(getGroupId(g))}">${d.details}</button></div>`;
+    }
+
+    function openFirstTimeInfo() {
+        const d = i18n[curLang];
+        alert(`${d.firstTitle}\n\n${d.firstText}`);
     }
 
     function applySavedTheme() {
@@ -2098,6 +2262,28 @@ ${book.d}
         document.getElementById('l-kz').addEventListener('click', () => setLang('kz'));
         document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
         document.getElementById('mot-toggle').addEventListener('click', toggleMotivation);
+        document.getElementById('today-actions').addEventListener('click', event => {
+            const action = event.target.closest('[data-today-action]');
+            if (!action) return;
+            if (action.dataset.todayAction === 'today') { goTo('groups'); setGroupFilterMode('today'); }
+            if (action.dataset.todayAction === 'favorites') { goTo('groups'); setGroupFilterMode('favorites'); }
+            if (action.dataset.todayAction === 'first') openFirstTimeInfo();
+            if (action.dataset.todayAction === 'call') trackEvent('call', 'quick_aa_phone');
+        });
+        document.getElementById('nearest-meeting-card').addEventListener('click', event => {
+            const details = event.target.closest('[data-nearest-details]');
+            if (!details) return;
+            goTo('groups');
+            const group = data.find(item => getGroupId(item) === details.dataset.nearestDetails);
+            if (group) { document.getElementById('citySelect').value = group.c; groupFilterMode = 'all'; renderGroups(); }
+        });
+        document.getElementById('group-quick-filters').addEventListener('click', event => {
+            const button = event.target.closest('[data-group-mode]');
+            if (button) setGroupFilterMode(button.dataset.groupMode);
+        });
+        document.getElementById('city-onboarding-save').addEventListener('click', () => saveUserCity(document.getElementById('city-onboarding-select').value));
+        document.getElementById('city-onboarding-all').addEventListener('click', () => saveUserCity(''));
+
         document.getElementById('todayFilter').addEventListener('click', toggleToday);
         document.getElementById('notification-button').addEventListener('click', openNotificationCenter);
         document.getElementById('notification-close').addEventListener('click', closeNotificationCenter);
@@ -2115,6 +2301,8 @@ ${book.d}
     });
         document.getElementById('citySelect').addEventListener('change', e => {
             trackEvent('city_filter', e.target.value);
+            groupFilterMode = 'all';
+            document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
             renderGroups();
         });
         document.getElementById('date-input').addEventListener('change', e => updateDate(e.target.value));
@@ -2229,6 +2417,11 @@ ${book.d}
         loadNews();
         renderGroups();
         renderLit();
+        renderNearestMeeting();
+        if (!localStorage.getItem('aa_city_onboarding_done_v1')) {
+            localStorage.setItem('aa_city_onboarding_done_v1', '1');
+            setTimeout(openCityOnboarding, 450);
+        }
         setTimeout(runInternalNotificationChecks, 1800);
         notificationTimer = setInterval(runInternalNotificationChecks, 60000);
     }
@@ -2257,7 +2450,7 @@ ${book.d}
 
         window.addEventListener('load', async () => {
             try {
-                const registration = await navigator.serviceWorker.register('sw.js?v=3', { updateViaCache: 'none' });
+                const registration = await navigator.serviceWorker.register('sw.js?v=4', { updateViaCache: 'none' });
                 await registration.update();
                 if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
                 console.log('Service Worker registered and checked for updates');
