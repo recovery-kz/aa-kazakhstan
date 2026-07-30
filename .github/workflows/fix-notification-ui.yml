@@ -1,0 +1,31 @@
+name: Fix notification UI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'notification-ui-fix-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Apply notification UI fix
+        run: |
+          git show origin/main:scripts/fix_notification_ui.py > /tmp/fix_notification_ui.py
+          python3 /tmp/fix_notification_ui.py
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix notification labels and header layout"
+          git push origin HEAD:${{ github.head_ref }}
