@@ -55,7 +55,6 @@ def extract_const_array(text,name):
         i+=1
     raise SystemExit(f'{name} end not found')
 
-# Extract data structures in reverse order to preserve offsets
 items={}
 for name in ('data','books','i18n'):
     value,a,b=extract_const_array(js,name)
@@ -64,18 +63,12 @@ for name,(value,a,b) in sorted(items.items(),key=lambda kv:kv[1][1],reverse=True
     replacement={'data':'let data = [];','books':'let books = [];','i18n':'const i18n = window.AA_I18N;'}[name]
     js=js[:a]+replacement+js[b:]
 
-# Values are JS literals; current data uses JSON-compatible syntax. Normalize through node in workflow later.
 (root/'groups.json').write_text(items['data'][0],encoding='utf-8')
 (root/'books.json').write_text(items['books'][0],encoding='utf-8')
 (root/'i18n.js').write_text('window.AA_I18N = '+items['i18n'][0]+';\n',encoding='utf-8')
 
-# Load external JSON before init uses data/books
 js=js.replace("    function init() {\n        trackEvent('app_loaded', 'initial_load');", "    async function init() {\n        try {\n            const [groupsResponse, booksResponse] = await Promise.all([fetch('groups.json', {cache:'no-store'}), fetch('books.json', {cache:'no-store'})]);\n            if (!groupsResponse.ok || !booksResponse.ok) throw new Error('data_load_failed');\n            data = await groupsResponse.json();\n            books = await booksResponse.json();\n        } catch (error) {\n            console.error('Не удалось загрузить данные приложения:', error);\n            showAppStatus(curLang === 'kz' ? 'Қолданба деректерін жүктеу мүмкін болмады' : 'Не удалось загрузить данные приложения', 4000);\n        }\n        trackEvent('app_loaded', 'initial_load');")
-
-# Remove obsolete city-only onboarding invocation (full first run already exists)
 js=js.replace("        if (!localStorage.getItem('aa_city_onboarding_done_v1')) {\n            localStorage.setItem('aa_city_onboarding_done_v1', '1');\n            setTimeout(openCityOnboarding, 450);\n        }\n","")
-
-# Backup and install helpers as separate IIFE, safe from app private scope
 extra=r'''
 
 (() => {
@@ -116,34 +109,20 @@ extra=r'''
 '''
 js += extra
 (root/'app.js').write_text(js+'\n',encoding='utf-8')
-
-# Replace app script and add i18n before app
 s=s[:app_match.start()]+'<script src="i18n.js?v=1.9"></script>\n<script src="app.js?v=1.9" defer></script>'+s[app_match.end():]
-
-# Add backup controls to settings
 needle='<div class="settings-version">'
 backup='''<div class="backup-tools"><div class="backup-title" id="backup-title">Резервная копия</div><div class="backup-actions"><button class="backup-btn" id="export-data" type="button">Экспортировать мои данные</button><button class="backup-btn" id="restore-data" type="button">Восстановить данные</button></div><input class="backup-file" id="restore-file" type="file" accept="application/json"></div>\n                '''
 if needle not in s: raise SystemExit('settings marker missing')
 s=s.replace(needle,backup+needle,1)
-
-# Add install banner before nav
 nav='<nav class="bottom-nav"'
 banner='''<div class="install-banner" id="install-banner" role="status"><div class="install-banner-text">Установите приложение АА Казахстана на телефон</div><button id="install-app" type="button">Установить</button><button class="install-close" id="install-close" type="button" aria-label="Закрыть">×</button></div>\n'''
 s=s.replace(nav,banner+nav,1)
-
-# Update displayed version
 s=s.replace('id="settings-version-value">1.8<','id="settings-version-value">1.9<')
 idx.write_text(s,encoding='utf-8')
-
-# Manifest improvements
 manifest=json.loads((root/'manifest.json').read_text(encoding='utf-8'))
 manifest.update({'id':'./','start_url':'./?source=pwa','scope':'./','display':'standalone','display_override':['window-controls-overlay','standalone','minimal-ui'],'orientation':'portrait-primary','categories':['health','lifestyle'],'lang':'ru'})
 (root/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-
-# Version marker
 (root/'version.json').write_text(json.dumps({'version':'1.9','build':'2026-07-30-priority5'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-
-# Service worker: deterministic forced refresh and all local assets cached
 sw=r'''const CACHE_NAME = 'aa-kaz-v10';
 const CORE_ASSETS = ['./','index.html','styles.css','app.js','i18n.js','groups.json','books.json','news.json','daily_reflections_full.json','manifest.json','version.json'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE_ASSETS)).then(()=>self.skipWaiting()));});
@@ -162,8 +141,6 @@ self.addEventListener('fetch',event=>{
 });
 '''
 (root/'sw.js').write_text(sw,encoding='utf-8')
-
-# Validator
 validator=r'''import json,re,sys
 from pathlib import Path
 errors=[]
@@ -197,3 +174,4 @@ if errors:
 print(f'OK: {len(groups)} groups, {len(books)} books')
 '''
 (root/'scripts/validate-data.py').write_text(validator,encoding='utf-8')
+# workflow trigger refresh
