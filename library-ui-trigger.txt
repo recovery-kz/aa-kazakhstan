@@ -1,1 +1,1 @@
-apply minimal library grid with book modal and actions
+apply minimal library grid with book modal, purchase, call and share actions v2
