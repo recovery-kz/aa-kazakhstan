@@ -787,6 +787,35 @@
             cursor: pointer;
         }
 
+        /* Приоритет 3: доступность и понятные действия */
+        .text-size-setting { padding: 4px 0 14px; }
+        .text-size-title { font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 9px; }
+        .text-size-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .text-size-btn { min-height: 44px; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); color: var(--primary); font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+        .text-size-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+        .group-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 14px; }
+        .group-action { min-height: 46px; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); color: var(--primary); font: inherit; font-size: 13px; font-weight: 850; text-decoration: none; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; }
+        .group-action.primary { background: var(--primary); border-color: var(--primary); color: white; }
+        .group-action.full { grid-column: 1 / -1; }
+
+        .app-status { position: fixed; left: 50%; bottom: calc(88px + env(safe-area-inset-bottom)); transform: translate(-50%, 18px); width: calc(100% - 30px); max-width: 470px; z-index: 6000; padding: 11px 14px; border-radius: 13px; background: var(--text-main); color: var(--card-bg); font-size: 13px; font-weight: 750; line-height: 1.35; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.2); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+        .app-status.show { opacity: 1; transform: translate(-50%, 0); }
+
+        body.large-text .group-name { font-size: 21px; }
+        body.large-text .info-row { font-size: 16px; line-height: 1.55; }
+        body.large-text .phone-link { font-size: 17px; }
+        body.large-text .group-action { min-height: 52px; font-size: 15px; }
+        body.large-text .notification-item-title,
+        body.large-text .notification-setting-title { font-size: 16px; }
+        body.large-text .notification-item-text,
+        body.large-text .notification-setting-note { font-size: 14px; }
+        body.large-text .nav-txt { font-size: 11px; }
+        body.large-text .nav-icon { width: 26px; height: 26px; }
+        body.large-text .nav-item { min-height: 61px; }
+        body.large-text .bottom-nav { min-height: 84px; }
+        body.large-text .main-container { padding-bottom: 112px; }
+
         /* Разделитель только между крупными смысловыми блоками */
         .ornament-divider {
             width: 100%;
@@ -903,7 +932,14 @@
                     <label class="notification-setting"><span class="notification-setting-main"><span class="notification-setting-title" id="notif-browser-title">Системное окно при открытом приложении</span><span class="notification-setting-note" id="notif-browser-note">Не работает после полного закрытия приложения</span></span><input class="notification-switch" id="notif-browser" type="checkbox"></label>
                     <label class="notification-setting"><span class="notification-setting-main"><span class="notification-setting-title" id="notif-before-title">Напоминать заранее</span></span><select class="notification-select" id="notif-before"><option value="15">15 мин</option><option value="30">30 мин</option><option value="60">1 час</option><option value="120">2 часа</option></select></label>
                 </div>
-                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">1.6</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
+                <div class="text-size-setting">
+                    <div class="text-size-title" id="text-size-title">Размер текста</div>
+                    <div class="text-size-options">
+                        <button type="button" class="text-size-btn active" id="text-size-normal" data-text-size="normal">Обычный</button>
+                        <button type="button" class="text-size-btn" id="text-size-large" data-text-size="large">Крупный</button>
+                    </div>
+                </div>
+                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">1.7</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
             </div>
         </div>
     </div>
@@ -989,6 +1025,7 @@
         <span class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="9" r="3"/><path d="M6.8 18.2c1.1-2.5 2.8-3.7 5.2-3.7s4.1 1.2 5.2 3.7"/></svg></span><span class="nav-txt" id="n-prof">Мой путь</span>
     </button>
 </nav>
+<div class="app-status" id="app-status" role="status" aria-live="polite"></div>
 
 <script>
 (() => {
@@ -1008,7 +1045,7 @@
             notificationsHead: 'УВЕДОМЛЕНИЯ', notificationCenter: 'Уведомления', notificationReadAll: 'Прочитать все', notificationEmpty: 'Здесь появятся новые размышления, новости и напоминания о собраниях.',
             notifMasterTitle: 'Внутренние уведомления', notifMasterNote: 'Показывать новые события в центре уведомлений', notifReflectionTitle: 'Ежедневные размышления', notifReflectionNote: 'Сообщать о новом размышлении при открытии приложения', notifNewsTitle: 'Новости', notifNewsNote: 'Сообщать о новых публикациях', notifTodayTitle: 'Группы сегодня', notifTodayNote: 'Показывать сводку собраний на текущий день', notifFavoritesTitle: 'Избранные группы', notifFavoritesNote: 'Напоминать перед началом собрания, пока приложение открыто', notifBrowserTitle: 'Системное окно при открытом приложении', notifBrowserNote: 'Не работает после полного закрытия приложения', notifBeforeTitle: 'Напоминать заранее',
             notifReflectionNew: 'Новое ежедневное размышление', notifNewsNew: 'Новая публикация', notifTodayNew: 'Собрания сегодня', notifFavoriteNew: 'Скоро начнётся собрание',
-            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.', cityHead: 'МОЙ ГОРОД', citySettingTitle: 'Выберите свой город', citySettingNote: 'Он используется для ближайших собраний и уведомлений', cityChange: 'Изменить', cityNotSelected: 'Город не выбран', settingsHead: 'НАСТРОЙКИ', versionLabel: 'Версия приложения', updateLabel: 'Обновление применяется автоматически при запуске', understood: 'Понятно'
+            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.', cityHead: 'МОЙ ГОРОД', citySettingTitle: 'Выберите свой город', citySettingNote: 'Он используется для ближайших собраний и уведомлений', cityChange: 'Изменить', cityNotSelected: 'Город не выбран', settingsHead: 'НАСТРОЙКИ', versionLabel: 'Версия приложения', updateLabel: 'Обновление применяется автоматически при запуске', textSizeTitle: 'Размер текста', textSizeNormal: 'Обычный', textSizeLarge: 'Крупный', statusUpdating: 'Обновляем данные…', statusUpdated: 'Данные обновлены', statusOffline: 'Нет интернета. Показана сохранённая версия', statusZoomFailed: 'Не удалось открыть Zoom', statusNoPhone: 'Номер телефона не указан', understood: 'Понятно'
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
@@ -1023,7 +1060,7 @@
             notificationsHead: 'ХАБАРЛАМАЛАР', notificationCenter: 'Хабарламалар', notificationReadAll: 'Барлығын оқу', notificationEmpty: 'Мұнда жаңа ойлар, жаңалықтар және жиналыстар туралы еске салулар пайда болады.',
             notifMasterTitle: 'Ішкі хабарламалар', notifMasterNote: 'Жаңа оқиғаларды хабарламалар орталығында көрсету', notifReflectionTitle: 'Күнделікті ойлар', notifReflectionNote: 'Қосымша ашылғанда жаңа ой туралы хабарлау', notifNewsTitle: 'Жаңалықтар', notifNewsNote: 'Жаңа жарияланымдар туралы хабарлау', notifTodayTitle: 'Бүгінгі топтар', notifTodayNote: 'Бүгінгі жиналыстардың қорытындысын көрсету', notifFavoritesTitle: 'Таңдаулы топтар', notifFavoritesNote: 'Қосымша ашық кезде жиналыс алдында еске салу', notifBrowserTitle: 'Қосымша ашық кездегі жүйелік терезе', notifBrowserNote: 'Қосымша толық жабылғаннан кейін жұмыс істемейді', notifBeforeTitle: 'Алдын ала еске салу',
             notifReflectionNew: 'Жаңа күнделікті ой', notifNewsNew: 'Жаңа жарияланым', notifTodayNew: 'Бүгінгі жиналыстар', notifFavoriteNew: 'Жиналыс жақында басталады',
-            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.', cityHead: 'МЕНІҢ ҚАЛАМ', citySettingTitle: 'Қалаңызды таңдаңыз', citySettingNote: 'Ол ең жақын жиналыстар мен хабарламалар үшін қолданылады', cityChange: 'Өзгерту', cityNotSelected: 'Қала таңдалмаған', settingsHead: 'БАПТАУЛАР', versionLabel: 'Қосымша нұсқасы', updateLabel: 'Жаңарту қосымша іске қосылғанда автоматты түрде қолданылады', understood: 'Түсінікті'
+            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.', cityHead: 'МЕНІҢ ҚАЛАМ', citySettingTitle: 'Қалаңызды таңдаңыз', citySettingNote: 'Ол ең жақын жиналыстар мен хабарламалар үшін қолданылады', cityChange: 'Өзгерту', cityNotSelected: 'Қала таңдалмаған', settingsHead: 'БАПТАУЛАР', versionLabel: 'Қосымша нұсқасы', updateLabel: 'Жаңарту қосымша іске қосылғанда автоматты түрде қолданылады', textSizeTitle: 'Мәтін өлшемі', textSizeNormal: 'Қалыпты', textSizeLarge: 'Үлкен', statusUpdating: 'Деректер жаңартылуда…', statusUpdated: 'Деректер жаңартылды', statusOffline: 'Интернет жоқ. Сақталған нұсқа көрсетілді', statusZoomFailed: 'Zoom ашылмады', statusNoPhone: 'Телефон нөмірі көрсетілмеген', understood: 'Түсінікті'
         }
     };
 
@@ -1704,6 +1741,9 @@
         document.getElementById('city-onboarding-note').innerText = d.chooseCityNote;
         document.getElementById('city-onboarding-save').innerText = d.saveCity;
         document.getElementById('city-onboarding-all').innerText = d.showAllCities;
+        document.getElementById('text-size-title').innerText = d.textSizeTitle;
+        document.getElementById('text-size-normal').innerText = d.textSizeNormal;
+        document.getElementById('text-size-large').innerText = d.textSizeLarge;
 
         document.getElementById('prayer-content').innerText = d.prayer;
         document.getElementById('user-notes').placeholder = d.placeholder;
@@ -1726,6 +1766,44 @@
         if (currentNewsData) renderNews(currentNewsData);
         if (document.getElementById('tab-lit').classList.contains('active')) renderLit();
         if (document.getElementById('tab-groups').classList.contains('active')) renderGroups();
+    }
+
+    let appStatusTimer = null;
+
+    function showAppStatus(message, duration = 2600) {
+        const el = document.getElementById('app-status');
+        if (!el || !message) return;
+        clearTimeout(appStatusTimer);
+        el.textContent = message;
+        el.classList.add('show');
+        appStatusTimer = setTimeout(() => el.classList.remove('show'), duration);
+    }
+
+    function applyTextSize(size) {
+        const large = size === 'large';
+        document.body.classList.toggle('large-text', large);
+        localStorage.setItem('aa_text_size', large ? 'large' : 'normal');
+        document.querySelectorAll('[data-text-size]').forEach(button => {
+            button.classList.toggle('active', button.dataset.textSize === (large ? 'large' : 'normal'));
+            button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false');
+        });
+    }
+
+    function getPrimaryPhone(g) {
+        return g && Array.isArray(g.p) && g.p.length ? g.p[0] : '';
+    }
+
+    function buildGroupActions(g) {
+        const d = i18n[curLang];
+        const phone = getPrimaryPhone(g);
+        const map = (!g.online && g.a) ? build2GISLink(g) : '';
+        const online = g.online && g.a ? g.a : (g.z || '');
+        const actions = [];
+        if (phone) actions.push(`<a href="tel:${cleanPhone(phone)}" class="group-action primary" data-track="group_phone" data-phone="${escapeHtml(phone)}">${d.callAction}</a>`);
+        if (map) actions.push(`<a href="${map}" target="_blank" rel="noopener noreferrer" class="group-action" data-track="map_open" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}">${d.route}</a>`);
+        if (online) actions.push(`<a href="${escapeHtml(online)}" target="_blank" rel="noopener noreferrer" class="group-action${actions.length % 2 === 0 ? ' full' : ''}" data-online-action="true" data-track="open_online" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}">${g.chat ? d.openChat : d.openZoom}</a>`);
+        if (!actions.length) return `<button type="button" class="group-action full" data-no-phone="true">${d.statusNoPhone}</button>`;
+        return actions.join('');
     }
 
     function goTo(tab, direction = null) {
@@ -2036,10 +2114,10 @@ ${book.d}
                     </div>
                     <div class="group-info">
                         ${renderAddress(g)}
-                        ${renderOnlineLinks(g)}
                         <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(g.t || i18n[curLang].noSchedule)}</div></div></div>
                         ${g.p && g.p.length ? renderPhones(g.p) : ''}
                     </div>
+                    <div class="group-actions">${buildGroupActions(g)}</div>
                 </div>`;
         }).join('');
     }
@@ -2287,6 +2365,7 @@ function closeFirstTimeInfo() {
         if (!container) return;
 
         if (!currentNewsData) {
+            showAppStatus(i18n[curLang].statusUpdating);
             container.innerHTML = `
                 <div class="card news-loading">
                     ${curLang === 'kz' ? 'Жаңалықтар жүктелуде...' : 'Загрузка новостей...'}
@@ -2297,6 +2376,7 @@ function closeFirstTimeInfo() {
         const cachedNews = getCachedNews();
 
         if (!navigator.onLine && cachedNews) {
+            showAppStatus(i18n[curLang].statusOffline, 3200);
             newsLoaded = true;
             renderNews(cachedNews);
             return;
@@ -2308,6 +2388,7 @@ function closeFirstTimeInfo() {
 
             const posts = await response.json();
             saveCachedNews(posts);
+            showAppStatus(i18n[curLang].statusUpdated);
             newsLoaded = true;
             renderNews(posts);
         } catch (error) {
@@ -2500,7 +2581,29 @@ function closeFirstTimeInfo() {
 
     function init() {
         trackEvent('app_loaded', 'initial_load');
-        applySavedTheme();
+        document.querySelectorAll('[data-text-size]').forEach(button => {
+        button.addEventListener('click', () => applyTextSize(button.dataset.textSize));
+    });
+
+    document.addEventListener('click', event => {
+        const noPhone = event.target.closest('[data-no-phone="true"]');
+        if (noPhone) {
+            event.preventDefault();
+            showAppStatus(i18n[curLang].statusNoPhone);
+            return;
+        }
+        const onlineAction = event.target.closest('[data-online-action="true"]');
+        if (onlineAction && !onlineAction.getAttribute('href')) {
+            event.preventDefault();
+            showAppStatus(i18n[curLang].statusZoomFailed);
+        }
+    });
+
+    window.addEventListener('offline', () => showAppStatus(i18n[curLang].statusOffline, 3200));
+    window.addEventListener('online', () => showAppStatus(i18n[curLang].statusUpdated));
+
+    applyTextSize(localStorage.getItem('aa_text_size') || 'normal');
+    applySavedTheme();
         attachEvents();
         rebuildCityOptions();
         const storedDate = getSavedSoberDate() || new Date().toISOString().split('T')[0];
