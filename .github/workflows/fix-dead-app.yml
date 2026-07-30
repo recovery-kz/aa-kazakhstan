@@ -1,0 +1,47 @@
+name: Fix dead app syntax
+
+on:
+  push:
+    paths:
+      - 'fix-dead-app-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fix JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          broken = "document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); }); });"
+          fixed = "document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); });"
+          if broken not in text:
+              raise SystemExit('Expected broken line not found')
+          path.write_text(text.replace(broken, fixed, 1), encoding='utf-8')
+          PY
+      - name: Validate embedded JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('index.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', html, flags=re.S|re.I)
+          inline = '\n'.join(s for s in scripts if s.strip() and 'googletagmanager' not in s)
+          Path('/tmp/app.js').write_text(inline, encoding='utf-8')
+          PY
+          node --check /tmp/app.js
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Fix JavaScript syntax after home cleanup"
+          git push
