@@ -816,6 +816,28 @@
         body.large-text .bottom-nav { min-height: 84px; }
         body.large-text .main-container { padding-bottom: 112px; }
 
+
+        /* Приоритет 4: доверие и первый запуск */
+        .data-freshness { margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--border); color: var(--text-sub); font-size: 12px; line-height: 1.7; }
+        .data-freshness strong { color: var(--text-main); }
+        .report-error { grid-column: 1 / -1; min-height: 40px; border: 0; background: transparent; color: var(--text-sub); font: inherit; font-size: 12px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+        .first-run { position: fixed; inset: 0; z-index: 7000; display: none; align-items: flex-end; justify-content: center; background: rgba(0,0,0,.58); padding: 14px 12px max(14px,env(safe-area-inset-bottom)); }
+        .first-run.open { display: flex; }
+        .first-run-sheet { width: 100%; max-width: 500px; background: var(--card-bg); border-radius: 24px; padding: 22px; box-shadow: 0 20px 55px rgba(0,0,0,.34); }
+        .first-run-progress { color: var(--accent); font-size: 11px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+        .first-run-title { color: var(--text-main); font-size: 23px; line-height: 1.25; font-weight: 900; }
+        .first-run-note { color: var(--text-sub); font-size: 13px; line-height: 1.5; margin: 7px 0 17px; }
+        .first-run-step { display: none; }
+        .first-run-step.active { display: block; }
+        .first-run-options { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+        .first-run-option { min-height: 50px; border: 1px solid var(--border); border-radius: 13px; background: var(--card-bg); color: var(--primary); font: inherit; font-weight: 850; cursor: pointer; }
+        .first-run-option.active { background: var(--primary); border-color: var(--primary); color: white; }
+        .first-run-select { width: 100%; min-height: 52px; border: 1px solid var(--border); border-radius: 13px; background: var(--card-bg); color: var(--text-main); padding: 0 12px; font: inherit; font-weight: 800; }
+        .first-run-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 9px; margin-top: 17px; }
+        .first-run-btn { min-height: 48px; border: 1px solid var(--border); border-radius: 13px; background: var(--card-bg); color: var(--primary); font: inherit; font-weight: 850; cursor: pointer; }
+        .first-run-btn.primary { background: var(--primary); border-color: var(--primary); color: white; }
+        body.first-run-open { overflow: hidden; }
+
         /* Разделитель только между крупными смысловыми блоками */
         .ornament-divider {
             width: 100%;
@@ -939,7 +961,11 @@
                         <button type="button" class="text-size-btn" id="text-size-large" data-text-size="large">Крупный</button>
                     </div>
                 </div>
-                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">1.7</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
+                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">1.8</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
+                <div class="data-freshness">
+                    <div><span id="schedule-updated-label">Расписание обновлено</span>: <strong id="schedule-updated-value">30 июля 2026</strong></div>
+                    <div><span id="news-checked-label">Новости проверены</span>: <strong id="news-checked-value">—</strong></div>
+                </div>
             </div>
         </div>
     </div>
@@ -988,6 +1014,29 @@
         <div id="list-container" style="width:100%;"></div>
     </div>
 </main>
+
+
+<div class="first-run" id="first-run" aria-hidden="true">
+  <div class="first-run-sheet" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
+    <div class="first-run-progress" id="first-run-progress">Шаг 1 из 3</div>
+    <div class="first-run-step active" data-first-step="1">
+      <div class="first-run-title" id="first-run-title">Выберите язык</div>
+      <div class="first-run-note" id="first-run-note-1">Язык можно изменить позже в верхней части экрана.</div>
+      <div class="first-run-options"><button class="first-run-option active" type="button" data-first-lang="ru">Русский</button><button class="first-run-option" type="button" data-first-lang="kz">Қазақша</button></div>
+    </div>
+    <div class="first-run-step" data-first-step="2">
+      <div class="first-run-title" id="first-run-city-title">Выберите город</div>
+      <div class="first-run-note" id="first-run-note-2">Покажем ближайшие собрания.</div>
+      <select class="first-run-select" id="first-run-city"></select>
+    </div>
+    <div class="first-run-step" data-first-step="3">
+      <div class="first-run-title" id="first-run-group-title">Добавьте группу в избранное</div>
+      <div class="first-run-note" id="first-run-note-3">Этот шаг можно пропустить.</div>
+      <select class="first-run-select" id="first-run-group"><option value="">Не выбирать сейчас</option></select>
+    </div>
+    <div class="first-run-actions"><button class="first-run-btn" type="button" id="first-run-back">Назад</button><button class="first-run-btn primary" type="button" id="first-run-next">Далее</button></div>
+  </div>
+</div>
 
 <div class="city-onboarding" id="city-onboarding" aria-hidden="true">
     <div class="city-onboarding-sheet" role="dialog" aria-modal="true" aria-labelledby="city-onboarding-title">
@@ -1045,7 +1094,7 @@
             notificationsHead: 'УВЕДОМЛЕНИЯ', notificationCenter: 'Уведомления', notificationReadAll: 'Прочитать все', notificationEmpty: 'Здесь появятся новые размышления, новости и напоминания о собраниях.',
             notifMasterTitle: 'Внутренние уведомления', notifMasterNote: 'Показывать новые события в центре уведомлений', notifReflectionTitle: 'Ежедневные размышления', notifReflectionNote: 'Сообщать о новом размышлении при открытии приложения', notifNewsTitle: 'Новости', notifNewsNote: 'Сообщать о новых публикациях', notifTodayTitle: 'Группы сегодня', notifTodayNote: 'Показывать сводку собраний на текущий день', notifFavoritesTitle: 'Избранные группы', notifFavoritesNote: 'Напоминать перед началом собрания, пока приложение открыто', notifBrowserTitle: 'Системное окно при открытом приложении', notifBrowserNote: 'Не работает после полного закрытия приложения', notifBeforeTitle: 'Напоминать заранее',
             notifReflectionNew: 'Новое ежедневное размышление', notifNewsNew: 'Новая публикация', notifTodayNew: 'Собрания сегодня', notifFavoriteNew: 'Скоро начнётся собрание',
-            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.', cityHead: 'МОЙ ГОРОД', citySettingTitle: 'Выберите свой город', citySettingNote: 'Он используется для ближайших собраний и уведомлений', cityChange: 'Изменить', cityNotSelected: 'Город не выбран', settingsHead: 'НАСТРОЙКИ', versionLabel: 'Версия приложения', updateLabel: 'Обновление применяется автоматически при запуске', textSizeTitle: 'Размер текста', textSizeNormal: 'Обычный', textSizeLarge: 'Крупный', statusUpdating: 'Обновляем данные…', statusUpdated: 'Данные обновлены', statusOffline: 'Нет интернета. Показана сохранённая версия', statusZoomFailed: 'Не удалось открыть Zoom', statusNoPhone: 'Номер телефона не указан', understood: 'Понятно'
+            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.', cityHead: 'МОЙ ГОРОД', citySettingTitle: 'Выберите свой город', citySettingNote: 'Он используется для ближайших собраний и уведомлений', cityChange: 'Изменить', cityNotSelected: 'Город не выбран', settingsHead: 'НАСТРОЙКИ', versionLabel: 'Версия приложения', updateLabel: 'Обновление применяется автоматически при запуске', textSizeTitle: 'Размер текста', textSizeNormal: 'Обычный', textSizeLarge: 'Крупный', statusUpdating: 'Обновляем данные…', statusUpdated: 'Данные обновлены', statusOffline: 'Нет интернета. Показана сохранённая версия', statusZoomFailed: 'Не удалось открыть Zoom', statusNoPhone: 'Номер телефона не указан', understood: 'Понятно', reportError: 'Сообщить об ошибке', scheduleUpdated: 'Расписание обновлено', newsChecked: 'Новости проверены'
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
@@ -1060,7 +1109,7 @@
             notificationsHead: 'ХАБАРЛАМАЛАР', notificationCenter: 'Хабарламалар', notificationReadAll: 'Барлығын оқу', notificationEmpty: 'Мұнда жаңа ойлар, жаңалықтар және жиналыстар туралы еске салулар пайда болады.',
             notifMasterTitle: 'Ішкі хабарламалар', notifMasterNote: 'Жаңа оқиғаларды хабарламалар орталығында көрсету', notifReflectionTitle: 'Күнделікті ойлар', notifReflectionNote: 'Қосымша ашылғанда жаңа ой туралы хабарлау', notifNewsTitle: 'Жаңалықтар', notifNewsNote: 'Жаңа жарияланымдар туралы хабарлау', notifTodayTitle: 'Бүгінгі топтар', notifTodayNote: 'Бүгінгі жиналыстардың қорытындысын көрсету', notifFavoritesTitle: 'Таңдаулы топтар', notifFavoritesNote: 'Қосымша ашық кезде жиналыс алдында еске салу', notifBrowserTitle: 'Қосымша ашық кездегі жүйелік терезе', notifBrowserNote: 'Қосымша толық жабылғаннан кейін жұмыс істемейді', notifBeforeTitle: 'Алдын ала еске салу',
             notifReflectionNew: 'Жаңа күнделікті ой', notifNewsNew: 'Жаңа жарияланым', notifTodayNew: 'Бүгінгі жиналыстар', notifFavoriteNew: 'Жиналыс жақында басталады',
-            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.', cityHead: 'МЕНІҢ ҚАЛАМ', citySettingTitle: 'Қалаңызды таңдаңыз', citySettingNote: 'Ол ең жақын жиналыстар мен хабарламалар үшін қолданылады', cityChange: 'Өзгерту', cityNotSelected: 'Қала таңдалмаған', settingsHead: 'БАПТАУЛАР', versionLabel: 'Қосымша нұсқасы', updateLabel: 'Жаңарту қосымша іске қосылғанда автоматты түрде қолданылады', textSizeTitle: 'Мәтін өлшемі', textSizeNormal: 'Қалыпты', textSizeLarge: 'Үлкен', statusUpdating: 'Деректер жаңартылуда…', statusUpdated: 'Деректер жаңартылды', statusOffline: 'Интернет жоқ. Сақталған нұсқа көрсетілді', statusZoomFailed: 'Zoom ашылмады', statusNoPhone: 'Телефон нөмірі көрсетілмеген', understood: 'Түсінікті'
+            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.', cityHead: 'МЕНІҢ ҚАЛАМ', citySettingTitle: 'Қалаңызды таңдаңыз', citySettingNote: 'Ол ең жақын жиналыстар мен хабарламалар үшін қолданылады', cityChange: 'Өзгерту', cityNotSelected: 'Қала таңдалмаған', settingsHead: 'БАПТАУЛАР', versionLabel: 'Қосымша нұсқасы', updateLabel: 'Жаңарту қосымша іске қосылғанда автоматты түрде қолданылады', textSizeTitle: 'Мәтін өлшемі', textSizeNormal: 'Қалыпты', textSizeLarge: 'Үлкен', statusUpdating: 'Деректер жаңартылуда…', statusUpdated: 'Деректер жаңартылды', statusOffline: 'Интернет жоқ. Сақталған нұсқа көрсетілді', statusZoomFailed: 'Zoom ашылмады', statusNoPhone: 'Телефон нөмірі көрсетілмеген', understood: 'Түсінікті', reportError: 'Қате туралы хабарлау', scheduleUpdated: 'Кесте жаңартылды', newsChecked: 'Жаңалықтар тексерілді'
         }
     };
 
@@ -1698,6 +1747,7 @@
         document.getElementById('t-mot-lab').innerText = d.motLab;
         document.getElementById('t-kaspi').innerText = d.kaspi;
         document.getElementById('t-kaspi-note').innerText = d.kaspiNote;
+        updateFreshnessDisplay();
         document.getElementById('todayFilter').innerText = d.todayBtn;
         document.getElementById('btn-sos-main').innerText = d.sosMain;
         document.getElementById('sos-ru-text').innerText = d.sosRu;
@@ -2056,6 +2106,61 @@ ${book.d}
         return html;
     }
 
+    function buildReportLink(g) {
+        const text = curLang === 'kz'
+            ? `Сәлеметсіз бе. Қазақстан АА қосымшасында «${g.n}» тобы туралы деректерден қате таптым.\n\nНақты емес ақпарат: `
+            : `Здравствуйте. В приложении АА Казахстана обнаружена неточность в данных группы «${g.n}».\n\nЧто именно неверно: `;
+        return `https://wa.me/77072080553?text=${encodeURIComponent(text)}`;
+    }
+
+    function formatCheckedTime(value) {
+        if (!value) return '—';
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return '—';
+        const today = new Date();
+        const sameDay = d.toDateString() === today.toDateString();
+        const time = d.toLocaleTimeString(curLang === 'kz' ? 'kk-KZ' : 'ru-RU', {hour:'2-digit', minute:'2-digit'});
+        return sameDay ? `${curLang === 'kz' ? 'бүгін' : 'сегодня'}, ${time}` : d.toLocaleString(curLang === 'kz' ? 'kk-KZ' : 'ru-RU', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'});
+    }
+
+    function updateFreshnessDisplay() {
+        const d=i18n[curLang];
+        document.getElementById('schedule-updated-label').innerText=d.scheduleUpdated;
+        document.getElementById('news-checked-label').innerText=d.newsChecked;
+        document.getElementById('news-checked-value').innerText=formatCheckedTime(localStorage.getItem('aa_news_checked_at'));
+    }
+
+    let firstRunStep=1;
+    function fillFirstRunGroups() {
+        const city=document.getElementById('first-run-city').value;
+        const select=document.getElementById('first-run-group');
+        const empty=curLang==='kz'?'Қазір таңдамау':'Не выбирать сейчас';
+        select.innerHTML=`<option value="">${empty}</option>`+data.filter(g=>!g.online&&g.c===city).map(g=>`<option value="${escapeHtml(getGroupId(g))}">${escapeHtml(g.n)}</option>`).join('');
+    }
+    function renderFirstRun() {
+        document.querySelectorAll('[data-first-step]').forEach(el=>el.classList.toggle('active',Number(el.dataset.firstStep)===firstRunStep));
+        document.getElementById('first-run-progress').innerText=curLang==='kz'?`${firstRunStep}/3 қадам`:`Шаг ${firstRunStep} из 3`;
+        document.getElementById('first-run-back').style.visibility=firstRunStep===1?'hidden':'visible';
+        document.getElementById('first-run-next').innerText=firstRunStep===3?(curLang==='kz'?'Дайын':'Готово'):(curLang==='kz'?'Әрі қарай':'Далее');
+    }
+    function openFirstRun() {
+        const cities=[...new Set(data.filter(g=>!g.online).map(g=>g.c))].sort((a,b)=>a.localeCompare(b,'ru'));
+        const city=document.getElementById('first-run-city');
+        city.innerHTML=cities.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+        const saved=getSavedUserCity(); if(saved&&cities.includes(saved)) city.value=saved;
+        fillFirstRunGroups(); firstRunStep=1; renderFirstRun();
+        document.getElementById('first-run').classList.add('open'); document.getElementById('first-run').setAttribute('aria-hidden','false'); document.body.classList.add('first-run-open');
+    }
+    function finishFirstRun() {
+        const city=document.getElementById('first-run-city').value;
+        if(city) localStorage.setItem(USER_CITY_STORAGE_KEY,city);
+        const groupId=document.getElementById('first-run-group').value;
+        if(groupId){const fav=getFavoriteGroups();fav.add(groupId);saveFavoriteGroups(fav);}
+        localStorage.setItem('aa_first_run_done_v1','1'); localStorage.setItem('aa_city_onboarding_done_v1','1');
+        document.getElementById('first-run').classList.remove('open'); document.getElementById('first-run').setAttribute('aria-hidden','true'); document.body.classList.remove('first-run-open');
+        rebuildCityOptions(); updateCitySettingDisplay(); renderGroups();
+    }
+
     function getSavedUserCity() { return localStorage.getItem(USER_CITY_STORAGE_KEY) || ''; }
 
     function setGroupFilterMode(mode) {
@@ -2117,7 +2222,7 @@ ${book.d}
                         <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(g.t || i18n[curLang].noSchedule)}</div></div></div>
                         ${g.p && g.p.length ? renderPhones(g.p) : ''}
                     </div>
-                    <div class="group-actions">${buildGroupActions(g)}</div>
+                    <div class="group-actions">${buildGroupActions(g)}<a class="report-error" href="${buildReportLink(g)}" target="_blank" rel="noopener noreferrer" data-track="report_error" data-group="${escapeHtml(g.n)}">${i18n[curLang].reportError}</a></div>
                 </div>`;
         }).join('');
     }
@@ -2388,6 +2493,8 @@ function closeFirstTimeInfo() {
 
             const posts = await response.json();
             saveCachedNews(posts);
+            localStorage.setItem('aa_news_checked_at', new Date().toISOString());
+            updateFreshnessDisplay();
             showAppStatus(i18n[curLang].statusUpdated);
             newsLoaded = true;
             renderNews(posts);
@@ -2439,6 +2546,10 @@ function closeFirstTimeInfo() {
     }
 
     function attachEvents() {
+        document.querySelectorAll('[data-first-lang]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-first-lang]').forEach(b=>b.classList.remove('active'));button.classList.add('active');setLang(button.dataset.firstLang);renderFirstRun();}));
+        document.getElementById('first-run-city').addEventListener('change',fillFirstRunGroups);
+        document.getElementById('first-run-back').addEventListener('click',()=>{if(firstRunStep>1){firstRunStep--;renderFirstRun();}});
+        document.getElementById('first-run-next').addEventListener('click',()=>{if(firstRunStep<3){firstRunStep++;if(firstRunStep===3)fillFirstRunGroups();renderFirstRun();}else finishFirstRun();});
         document.getElementById('theme-icon').addEventListener('click', () => {
             toggleTheme();
             trackEvent('theme_toggle', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
@@ -2569,6 +2680,9 @@ function closeFirstTimeInfo() {
                 return;
             }
 
+            const reportLink = e.target.closest('[data-track="report_error"]');
+            if (reportLink) { trackEvent('report_group_error', reportLink.getAttribute('data-group') || 'group'); return; }
+
             const onlineLink = e.target.closest('[data-track="open_online"]');
             if (onlineLink) {
                 trackEvent('open_online', onlineLink.getAttribute('data-group') || 'online_group', {
@@ -2617,10 +2731,8 @@ function closeFirstTimeInfo() {
         loadNews();
         renderGroups();
         renderLit();
-        if (!localStorage.getItem('aa_city_onboarding_done_v1')) {
-            localStorage.setItem('aa_city_onboarding_done_v1', '1');
-            setTimeout(openCityOnboarding, 450);
-        }
+        updateFreshnessDisplay();
+        if (!localStorage.getItem('aa_first_run_done_v1')) setTimeout(openFirstRun, 450);
         setTimeout(runInternalNotificationChecks, 1800);
         notificationTimer = setInterval(runInternalNotificationChecks, 60000);
     }
@@ -2649,7 +2761,7 @@ function closeFirstTimeInfo() {
 
         window.addEventListener('load', async () => {
             try {
-                const registration = await navigator.serviceWorker.register('sw.js?v=5', { updateViaCache: 'none' });
+                const registration = await navigator.serviceWorker.register('sw.js?v=8', { updateViaCache: 'none' });
                 await registration.update();
                 if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
                 console.log('Service Worker registered and checked for updates');
