@@ -1,0 +1,89 @@
+name: Promote Seventh Tradition donation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/promote-seventh-tradition.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Move and explain donation card
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          donation_start_marker = '        <div class="ornament-divider"></div> <a href="https://kaspi.kz/pay/FOAAK?started_from=share"'
+          donation_start = text.find(donation_start_marker)
+          if donation_start == -1:
+              raise SystemExit('Existing donation block not found')
+          donation_end_marker = '        </a>'
+          donation_end = text.find(donation_end_marker, donation_start)
+          if donation_end == -1:
+              raise SystemExit('Donation block end not found')
+          donation_end += len(donation_end_marker)
+          if donation_end < len(text) and text[donation_end] == '\n':
+              donation_end += 1
+          text = text[:donation_start] + text[donation_end:]
+
+          actions_start = text.find('        <div class="today-actions" id="today-actions">')
+          if actions_start == -1:
+              raise SystemExit('Today actions block not found')
+          counter_marker = '        </div> <div class="card counter-card">'
+          counter_pos = text.find(counter_marker, actions_start)
+          if counter_pos == -1:
+              raise SystemExit('Counter insertion marker not found')
+
+          donation_block = '''        </div>
+          <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" rel="noopener noreferrer" style="text-decoration:none; width:100%; display:block; margin:0 0 15px;">
+              <div class="card" style="padding:16px; display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:0; border:2px solid var(--accent);">
+                  <span style="min-width:0; flex:1; text-align:left;">
+                      <span style="display:block; font-weight:850; color:var(--primary); font-size:15px; line-height:1.3;" id="t-kaspi">❤️ Седьмая Традиция</span>
+                      <span style="display:block; margin-top:4px; color:var(--text-sub); font-size:11px; line-height:1.4;" id="t-kaspi-note">Добровольное пожертвование в фонд АА Казахстана</span>
+                  </span>
+                  <span style="background:var(--kaspi); color:white; padding:7px 12px; border-radius:9px; font-weight:850; font-size:12px; flex-shrink:0;">KASPI</span>
+              </div>
+          </a>
+          <div class="card counter-card">'''
+          text = text[:counter_pos] + donation_block + text[counter_pos + len(counter_marker):]
+
+          ru_old = "kaspi: '❤️ Седьмая Традиция', nav:"
+          ru_new = "kaspi: '❤️ Седьмая Традиция', kaspiNote: 'Добровольное пожертвование в фонд АА Казахстана', nav:"
+          kz_old = "kaspi: '❤️ Жетінші Дәстүр', nav:"
+          kz_new = "kaspi: '❤️ Жетінші Дәстүр', kaspiNote: 'Қазақстан АА қорына ерікті қайырымдылық', nav:"
+          if ru_old not in text or kz_old not in text:
+              raise SystemExit('Donation translations anchor not found')
+          text = text.replace(ru_old, ru_new, 1).replace(kz_old, kz_new, 1)
+
+          lang_old = "        document.getElementById('t-kaspi').innerText = d.kaspi;"
+          lang_new = "        document.getElementById('t-kaspi').innerText = d.kaspi;\n        document.getElementById('t-kaspi-note').innerText = d.kaspiNote;"
+          if lang_old not in text:
+              raise SystemExit('Language update anchor not found')
+          text = text.replace(lang_old, lang_new, 1)
+
+          path.write_text(text, encoding='utf-8')
+
+          sw = Path('sw.js')
+          sw_text = sw.read_text(encoding='utf-8')
+          if "const CACHE_NAME = 'aa-kaz-v4';" not in sw_text:
+              raise SystemExit('Expected cache version not found')
+          sw.write_text(sw_text.replace("const CACHE_NAME = 'aa-kaz-v4';", "const CACHE_NAME = 'aa-kaz-v5';", 1), encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Promote Seventh Tradition donation"
+          git push
