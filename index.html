@@ -204,18 +204,35 @@
 
         /* Ежедневные размышления */
         .motivation-card {
-            border: 2px solid var(--accent); /* Тонкая орнаментальная рамка */
-            padding: 15px;
+            border: 2px solid var(--accent);
             position: relative;
         }
 
-        .motivation-card::before {
-            content: '●'; /* Маленький символ слева */
-            color: var(--accent);
+        .mot-toggle {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: var(--text-main);
+            padding: 16px 46px 16px 18px;
+            text-align: left;
+            cursor: pointer;
+            position: relative;
+            font-family: inherit;
+        }
+
+        .mot-toggle::after {
+            content: '▼';
             position: absolute;
-            left: 10px;
-            top: 15px;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
             font-size: 12px;
+            transition: transform 0.25s ease;
+        }
+
+        .mot-toggle.open::after {
+            transform: translateY(-50%) rotate(180deg);
         }
 
         .mot-label {
@@ -224,16 +241,50 @@
             font-weight: 800;
             text-transform: uppercase;
             margin-bottom: 5px;
-            padding-left: 20px; /* Отступ для символа */
         }
 
-        .mot-text {
+        .mot-title {
+            color: var(--text-main);
+            font-size: 15px;
+            line-height: 1.35;
+            font-weight: 800;
+        }
+
+        .mot-content {
+            display: none;
+            padding: 0 18px 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .mot-content.open {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .mot-quote {
             color: var(--text-main);
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.55;
             font-weight: 600;
             font-style: italic;
-            padding-left: 20px; /* Отступ для символа */
+            padding: 16px 0 10px;
+        }
+
+        .mot-source {
+            color: var(--text-sub);
+            font-size: 12px;
+            line-height: 1.4;
+            text-align: right;
+            padding-bottom: 14px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .mot-full-text {
+            color: var(--text-main);
+            font-size: 15px;
+            line-height: 1.6;
+            padding-top: 14px;
+            white-space: pre-line;
         }
 
         /* Счетчик трезвости */
@@ -431,8 +482,21 @@
 <main class="main-container">
     <div id="tab-counter" class="content-section active">
         <div class="card motivation-card">
-            <div class="mot-label" id="t-mot-lab">Ежедневные размышления</div>
-            <div id="mot-text" class="mot-text">Загрузка...</div>
+            <button
+                class="mot-toggle"
+                id="mot-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="mot-content"
+            >
+                <div class="mot-label" id="t-mot-lab">Ежедневные размышления</div>
+                <div id="mot-title" class="mot-title">Загрузка...</div>
+            </button>
+            <div id="mot-content" class="mot-content">
+                <div id="mot-quote" class="mot-quote"></div>
+                <div id="mot-source" class="mot-source"></div>
+                <div id="mot-full-text" class="mot-full-text"></div>
+            </div>
         </div>
         <div class="ornament-divider"></div> <div class="card counter-card">
             <div class="complex-sober-row" id="complex-sober-display">
@@ -556,7 +620,8 @@
     let touchStartTime = 0;
     let swipeBlocked = false;
 
-    const REFLECTIONS_STORAGE_KEY = 'aa_daily_reflections_cache_v1';
+    const REFLECTIONS_STORAGE_KEY = 'aa_daily_reflections_full_cache_v1';
+    let currentReflectionsData = null;
 
     const books = [
         {n:'Анонимные Алкоголики (с историями) твердый', l:'рус', d:'Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма. Книга помогает понять природу болезни и предлагает четкий план действий для обретения свободы. Это фундамент, на котором строится жизнь миллионов людей по всему миру.'},
@@ -679,31 +744,77 @@
         }
     }
 
+    function formatReflectionTitle(value) {
+        const raw = String(value || '').trim().replace(/\s+-\s+/g, ' — ');
+        if (!raw) return '';
+
+        const lower = raw.toLocaleLowerCase('ru-RU');
+        const sentenceCase = lower.replace(/[а-яёa-z]/i, letter => letter.toLocaleUpperCase('ru-RU'));
+
+        return sentenceCase
+            .replace(/\bаа\b/gi, 'АА')
+            .replace(/\bа\.\s*а\.\b/gi, 'А.А.');
+    }
+
     function getReflectionLine(today, item) {
         const monthNames = {
             ru: ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'],
             kz: ['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан']
         };
-        const monthName = monthNames[curLang]?.[today.getMonth()] || monthNames.ru[today.getMonth()];
-        return `${String(today.getDate()).padStart(2, '0')} ${monthName}. ${String(item.title || '').toUpperCase()}`;
+
+        const fallbackMonth = monthNames[curLang]?.[today.getMonth()] || monthNames.ru[today.getMonth()];
+        const fallbackDate = `${today.getDate()} ${fallbackMonth}`;
+        const dateText = curLang === 'ru' && item.date_ru ? item.date_ru : fallbackDate;
+        const titleText = formatReflectionTitle(item.title);
+
+        return titleText ? `${dateText}. ${titleText}` : dateText;
     }
 
     function renderMotivationFromData(reflections) {
-        const motEl = document.getElementById('mot-text');
-        if (!motEl || !reflections) return false;
+        const titleEl = document.getElementById('mot-title');
+        const quoteEl = document.getElementById('mot-quote');
+        const sourceEl = document.getElementById('mot-source');
+        const fullTextEl = document.getElementById('mot-full-text');
+
+        if (!titleEl || !quoteEl || !sourceEl || !fullTextEl || !reflections) return false;
+
+        currentReflectionsData = reflections;
 
         const today = new Date();
         const key = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
         const item = reflections[key];
 
         if (!item) {
-            motEl.innerText = curLang === 'kz' ? 'Бүгінге мәтін табылмады.' : 'Размышление на сегодня не найдено.';
+            titleEl.innerText = curLang === 'kz'
+                ? 'Бүгінге мәтін табылмады'
+                : 'Размышление на сегодня не найдено';
+            quoteEl.innerText = '';
+            sourceEl.innerText = '';
+            fullTextEl.innerText = '';
             return false;
         }
 
-        const line = getReflectionLine(today, item);
-        motEl.innerHTML = `<strong>${escapeHtml(line)}</strong><br>${escapeHtml(item.quote || '')}`;
+        titleEl.innerText = getReflectionLine(today, item);
+        quoteEl.innerText = item.quote || '';
+        sourceEl.innerText = item.source || '';
+        fullTextEl.innerText = item.text || '';
         return true;
+    }
+
+    function toggleMotivation() {
+        const toggle = document.getElementById('mot-toggle');
+        const content = document.getElementById('mot-content');
+        if (!toggle || !content) return;
+
+        const isOpening = !content.classList.contains('open');
+        content.classList.toggle('open', isOpening);
+        toggle.classList.toggle('open', isOpening);
+        toggle.setAttribute('aria-expanded', String(isOpening));
+
+        trackEvent(
+            isOpening ? 'reflection_open' : 'reflection_close',
+            document.getElementById('mot-title')?.innerText || 'daily_reflection'
+        );
     }
 
     function formatRemainingMinutes(minutes) {
@@ -904,6 +1015,7 @@
         }
         rebuildCityOptions();
         updateDate(document.getElementById('date-input').value);
+        if (currentReflectionsData) renderMotivationFromData(currentReflectionsData);
         if (document.getElementById('tab-lit').classList.contains('active')) renderLit();
         if (document.getElementById('tab-groups').classList.contains('active')) renderGroups();
     }
@@ -1141,27 +1253,31 @@
     }
 
     async function setMotivation() {
-        const motEl = document.getElementById('mot-text');
-        if (!motEl) return;
-        motEl.innerText = 'Загрузка...';
+        const titleEl = document.getElementById('mot-title');
+        if (!titleEl) return;
+        titleEl.innerText = curLang === 'kz' ? 'Жүктелуде...' : 'Загрузка...';
 
         const cachedReflections = getCachedReflections();
+
         if (!navigator.onLine && cachedReflections) {
             if (renderMotivationFromData(cachedReflections)) return;
         }
 
         try {
-            const response = await fetch('https://cdn.jsdelivr.net/gh/recovery-kz/aa-kazakhstan@main/daily_reflections_short.json');
+            const response = await fetch('daily_reflections_full.json', { cache: 'no-cache' });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
             const reflections = await response.json();
             saveCachedReflections(reflections);
             renderMotivationFromData(reflections);
         } catch (error) {
-            console.error('Не удалось загрузить ежедневные размышления:', error);
+            console.error('Не удалось загрузить полные ежедневные размышления:', error);
+
             if (cachedReflections && renderMotivationFromData(cachedReflections)) return;
-            motEl.innerText = curLang === 'kz'
-                ? 'Күнделікті ойларды жүктеу мүмкін болмады.'
-                : 'Не удалось загрузить ежедневные размышления.';
+
+            titleEl.innerText = curLang === 'kz'
+                ? 'Күнделікті ойларды жүктеу мүмкін болмады'
+                : 'Не удалось загрузить ежедневные размышления';
         }
     }
 
@@ -1173,6 +1289,7 @@
         document.getElementById('l-ru').addEventListener('click', () => setLang('ru'));
         document.getElementById('l-kz').addEventListener('click', () => setLang('kz'));
         document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
+        document.getElementById('mot-toggle').addEventListener('click', toggleMotivation);
         document.getElementById('todayFilter').addEventListener('click', toggleToday);
         document.getElementById('citySelect').addEventListener('change', e => {
             trackEvent('city_filter', e.target.value);
