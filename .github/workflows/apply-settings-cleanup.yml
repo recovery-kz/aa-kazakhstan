@@ -20,6 +20,37 @@ jobs:
       - name: Apply migration
         run: |
           git show origin/main:scripts/apply_settings_cleanup.py > /tmp/apply_settings_cleanup.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('/tmp/apply_settings_cleanup.py')
+          s = p.read_text(encoding='utf-8')
+          replacement = '''# Replace system alert with internal modal.
+          pattern = re.compile(r"    function openFirstTimeInfo\\(\\) \\{.*?^    \\}", re.S | re.M)
+          new = """    function openFirstTimeInfo() {
+              const d = i18n[curLang];
+              document.getElementById('first-time-modal-title').innerText = d.firstTitle;
+              document.getElementById('first-time-modal-text').innerText = d.firstText;
+              const modal = document.getElementById('first-time-modal');
+              modal.classList.add('open');
+              modal.setAttribute('aria-hidden', 'false');
+              document.body.classList.add('modal-open');
+          }
+
+          function closeFirstTimeInfo() {
+              const modal = document.getElementById('first-time-modal');
+              modal.classList.remove('open');
+              modal.setAttribute('aria-hidden', 'true');
+              document.body.classList.remove('modal-open');
+          }"""
+          text, count = pattern.subn(new, text, count=1)
+          if count != 1:
+              raise SystemExit('first time function not found')
+
+          '''
+          s = re.sub(r'# Replace system alert with internal modal\..*?# Fix missing city change listener and modal listeners\.', replacement + '# Fix missing city change listener and modal listeners.', s, flags=re.S)
+          p.write_text(s, encoding='utf-8')
+          PY
           python3 /tmp/apply_settings_cleanup.py
       - name: Validate
         run: |
