@@ -746,12 +746,8 @@
         </div>
         <div class="today-actions" id="today-actions">
             <button class="today-action" type="button" data-today-action="today"><span class="today-action-icon">📅</span><span id="quick-today-text">Найти собрание сегодня</span></button>
-            <a class="today-action" href="tel:+77072080553" data-today-action="call" style="text-decoration:none;"><span class="today-action-icon">☎</span><span id="quick-call-text">Позвонить в АА</span></a>
             <button class="today-action" type="button" data-today-action="favorites"><span class="today-action-icon">★</span><span id="quick-favorites-text">Мои группы</span></button>
-            <button class="today-action" type="button" data-today-action="first"><span class="today-action-icon">?</span><span id="quick-first-text">Я впервые в АА</span></button>
-        </div>
-        <div class="card nearest-card" id="nearest-meeting-card"></div>
-        <div class="ornament-divider"></div> <div class="card counter-card">
+        </div> <div class="card counter-card">
             <div class="complex-sober-row" id="complex-sober-display">
                 <div class="sober-unit"><div class="sober-num">0</div><div class="sober-label">лет</div></div>
                 <div class="sober-unit"><div class="sober-num">0</div><div class="sober-label">мес.</div></div>
@@ -865,14 +861,6 @@
         <div class="ornament-divider"></div> <div id="list-container" style="width:100%;"></div>
     </div>
 </main>
-
-<div class="info-modal" id="first-time-modal" aria-hidden="true">
-    <div class="info-modal-sheet" role="dialog" aria-modal="true" aria-labelledby="first-time-modal-title">
-        <div class="info-modal-title" id="first-time-modal-title">Первый раз в АА</div>
-        <div class="info-modal-text" id="first-time-modal-text"></div>
-        <button class="info-modal-close" type="button" id="first-time-modal-close">Понятно</button>
-    </div>
-</div>
 
 <div class="city-onboarding" id="city-onboarding" aria-hidden="true">
     <div class="city-onboarding-sheet" role="dialog" aria-modal="true" aria-labelledby="city-onboarding-title">
@@ -1082,7 +1070,6 @@
         saveFavoriteGroups(favorites);
         trackEvent(isAdding ? 'group_favorite_add' : 'group_favorite_remove', groupId);
         renderGroups();
-        renderNearestMeeting();
     }
 
     function defaultNotificationSettings() {
@@ -1603,13 +1590,10 @@
         document.getElementById('settings-head-text').innerText = d.settingsHead;
         document.getElementById('settings-version-label').innerText = d.versionLabel;
         document.getElementById('settings-update-label').innerText = d.updateLabel;
-        document.getElementById('first-time-modal-close').innerText = d.understood;
         updateCitySettingDisplay();
 
         document.getElementById('quick-today-text').innerText = d.quickToday;
-        document.getElementById('quick-call-text').innerText = d.quickCall;
         document.getElementById('quick-favorites-text').innerText = d.quickFavorites;
-        document.getElementById('quick-first-text').innerText = d.quickFirst;
         document.getElementById('group-filter-mycity').innerText = d.myCity;
         document.getElementById('todayFilter').innerText = d.todayBtn.replace('📅 ', '');
         document.getElementById('group-filter-favorites').innerText = d.favorites.replace('★ ', '');
@@ -1618,7 +1602,6 @@
         document.getElementById('city-onboarding-note').innerText = d.chooseCityNote;
         document.getElementById('city-onboarding-save').innerText = d.saveCity;
         document.getElementById('city-onboarding-all').innerText = d.showAllCities;
-        renderNearestMeeting();
 
         document.getElementById('prayer-content').innerText = d.prayer;
         document.getElementById('user-notes').placeholder = d.placeholder;
@@ -2011,51 +1994,10 @@ ${book.d}
         else localStorage.removeItem(USER_CITY_STORAGE_KEY);
         rebuildCityOptions();
         setGroupFilterMode(city ? 'mycity' : 'all');
-        renderNearestMeeting();
         updateCitySettingDisplay();
         closeCityOnboarding();
     }
 
-    function getUpcomingMeetings() {
-        const now = new Date();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-        const favorites = getFavoriteGroups();
-        const userCity = getSavedUserCity();
-        const candidates = [];
-        for (let offset = 0; offset <= 1; offset++) {
-            const day = (now.getDay() + offset) % 7;
-            data.forEach(group => {
-                if (!Array.isArray(group.sc)) return;
-                group.sc.filter(slot => slot.d === day).forEach(slot => {
-                    const start = minutesFromSlot(slot.s);
-                    if (offset === 0 && start <= currentMinutes) return;
-                    const rank = favorites.has(getGroupId(group)) ? 0 : (userCity && group.c === userCity ? 1 : (group.online ? 2 : 3));
-                    candidates.push({ group, slot, offset, rank, minutesAway: offset * 1440 + start - currentMinutes });
-                });
-            });
-            if (candidates.length) break;
-        }
-        return candidates.sort((a,b) => a.rank - b.rank || a.minutesAway - b.minutesAway);
-    }
-
-    function renderNearestMeeting() {
-        const card = document.getElementById('nearest-meeting-card');
-        if (!card) return;
-        const d = i18n[curLang];
-        const meeting = getUpcomingMeetings()[0];
-        if (!meeting) {
-            card.innerHTML = `<div class="nearest-label">${d.nearestMeeting}</div><div class="nearest-empty">${d.nearestEmpty}</div>`;
-            return;
-        }
-        const g = meeting.group;
-        const time = `${String(Math.floor(meeting.slot.s / 100)).padStart(2,'0')}:${String(meeting.slot.s % 100).padStart(2,'0')}`;
-        const when = meeting.offset === 0 ? `${d.todayAt} ${time}` : `${d.tomorrowAt} ${time}`;
-        const map = build2GISLink(g);
-        const phone = g.p && g.p.length ? cleanPhone(g.p[0]) : '';
-        const onlineUrl = g.online ? g.a : g.z;
-        const remaining = formatRemainingMinutes(Math.max(0, meeting.minutesAway));
-        card.innerHTML = `<div class="nearest-label">${d.nearestMeeting}</div><div class="nearest-name">${escapeHtml(g.n)}</div><div class="nearest-time">${escapeHtml(when)}</div><div class="nearest-remaining">${d.sSoon} ${remaining}</div><div class="nearest-actions">${map ? `<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${d.route}</a>` : ''}${phone ? `<a class="nearest-action" href="tel:${phone}">${d.callAction}</a>` : ''}${onlineUrl ? `<a class="nearest-action primary" href="${onlineUrl}" target="_blank" rel="noopener noreferrer">${g.chat ? d.openChat : d.openZoom}</a>` : ''}<button class="nearest-action" type="button" data-nearest-details="${escapeHtml(getGroupId(g))}">${d.details}</button></div>`;
-    }
 
     function openFirstTimeInfo() {
     const d = i18n[curLang];
@@ -2327,15 +2269,6 @@ function closeFirstTimeInfo() {
             if (!action) return;
             if (action.dataset.todayAction === 'today') { goTo('groups'); setGroupFilterMode('today'); }
             if (action.dataset.todayAction === 'favorites') { goTo('groups'); setGroupFilterMode('favorites'); }
-            if (action.dataset.todayAction === 'first') openFirstTimeInfo();
-            if (action.dataset.todayAction === 'call') trackEvent('call', 'quick_aa_phone');
-        });
-        document.getElementById('nearest-meeting-card').addEventListener('click', event => {
-            const details = event.target.closest('[data-nearest-details]');
-            if (!details) return;
-            goTo('groups');
-            const group = data.find(item => getGroupId(item) === details.dataset.nearestDetails);
-            if (group) { document.getElementById('citySelect').value = group.c; groupFilterMode = 'all'; renderGroups(); }
         });
         document.getElementById('group-quick-filters').addEventListener('click', event => {
             const button = event.target.closest('[data-group-mode]');
@@ -2343,9 +2276,7 @@ function closeFirstTimeInfo() {
         });
         document.getElementById('city-onboarding-save').addEventListener('click', () => saveUserCity(document.getElementById('city-onboarding-select').value));
         document.getElementById('city-onboarding-all').addEventListener('click', () => saveUserCity(''));
-        document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); });
-        document.getElementById('first-time-modal-close').addEventListener('click', closeFirstTimeInfo);
-        document.getElementById('first-time-modal').addEventListener('click', event => { if (event.target.id === 'first-time-modal') closeFirstTimeInfo(); });
+        document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); }); });
 
         document.getElementById('todayFilter').addEventListener('click', toggleToday);
         document.getElementById('notification-button').addEventListener('click', openNotificationCenter);
@@ -2355,7 +2286,7 @@ function closeFirstTimeInfo() {
         document.getElementById('notification-list').addEventListener('click', event => { const item = event.target.closest('[data-notification-id]'); if (item) openInternalNotification(item.dataset.notificationId); });
         ['master','reflection','news','today','favorites','browser'].forEach(key => document.getElementById(`notif-${key}`).addEventListener('change', event => updateNotificationSetting(key, event.target.checked)));
         document.getElementById('notif-before').addEventListener('change', event => updateNotificationSetting('before', Number(event.target.value)));
-        document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeNotificationCenter(); closeFirstTimeInfo(); } });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') closeNotificationCenter(); });
 
     document.getElementById('list-container').addEventListener('click', event => {
         const button = event.target.closest('[data-favorite-id]');
@@ -2481,7 +2412,6 @@ function closeFirstTimeInfo() {
         loadNews();
         renderGroups();
         renderLit();
-        renderNearestMeeting();
         if (!localStorage.getItem('aa_city_onboarding_done_v1')) {
             localStorage.setItem('aa_city_onboarding_done_v1', '1');
             setTimeout(openCityOnboarding, 450);
