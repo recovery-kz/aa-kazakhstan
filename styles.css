@@ -828,3 +828,7 @@
 .install-banner.show{display:flex}.install-banner-text{flex:1;min-width:0;font-size:13px;line-height:1.4;color:var(--text-main);font-weight:750}.install-banner button{min-height:42px;border:0;border-radius:11px;padding:0 14px;background:var(--primary);color:#fff;font:inherit;font-weight:850;cursor:pointer}.install-banner .install-close{width:36px;min-width:36px;padding:0;background:transparent;color:var(--text-sub);font-size:20px}
 .backup-tools{padding:14px 0 2px;border-top:1px solid var(--border);margin-top:14px}.backup-title{font-size:14px;font-weight:850;margin-bottom:9px}.backup-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.backup-btn{min-height:46px;border:1px solid var(--border);border-radius:12px;background:var(--card-bg);color:var(--primary);font:inherit;font-size:12px;font-weight:850;cursor:pointer}.backup-file{display:none}
 body.large-text .backup-btn{min-height:52px;font-size:14px}
+
+/* Emergency hotfix: disable unstable first-run overlay */
+#first-run { display: none !important; }
+body.first-run-open { overflow: auto !important; }

@@ -1544,7 +1544,13 @@ function closeFirstTimeInfo() {
         renderGroups();
         renderLit();
         updateFreshnessDisplay();
-        if (!localStorage.getItem('aa_first_run_done_v1')) setTimeout(openFirstRun, 450);
+        localStorage.setItem('aa_first_run_done_v1', '1');
+        const firstRunModal = document.getElementById('first-run');
+        if (firstRunModal) {
+            firstRunModal.classList.remove('open');
+            firstRunModal.setAttribute('aria-hidden', 'true');
+        }
+        document.body.classList.remove('first-run-open');
         setTimeout(runInternalNotificationChecks, 1800);
         notificationTimer = setInterval(runInternalNotificationChecks, 60000);
     }
