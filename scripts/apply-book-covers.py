@@ -1,13 +1,20 @@
 from pathlib import Path
+import base64
 import json
 import zipfile
 
 zip_path = Path('assets/book-covers.zip')
 if not zip_path.is_file():
     raise SystemExit('Book cover archive not found')
+archive_path = zip_path
+if not zipfile.is_zipfile(zip_path):
+    archive_path = Path('/tmp/book-covers-decoded.zip')
+    archive_path.write_bytes(base64.b64decode(zip_path.read_text(encoding='utf-8').strip()))
+if not zipfile.is_zipfile(archive_path):
+    raise SystemExit('Prepared book cover archive is invalid')
 cover_dir = Path('book-covers')
 cover_dir.mkdir(exist_ok=True)
-with zipfile.ZipFile(zip_path) as archive:
+with zipfile.ZipFile(archive_path) as archive:
     archive.extractall(cover_dir)
 
 cover_map = {
