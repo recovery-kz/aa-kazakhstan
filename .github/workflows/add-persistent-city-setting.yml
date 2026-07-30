@@ -1,0 +1,36 @@
+name: Add persistent city setting
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - 'persistent-city-setting-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+      - name: Apply city setting migration
+        run: |
+          git show origin/main:scripts/add_persistent_city_setting.py > /tmp/add_persistent_city_setting.py
+          python3 /tmp/add_persistent_city_setting.py
+      - name: Validate
+        run: |
+          grep -q 'id="acc-city"' index.html
+          grep -q 'id="city-setting-open"' index.html
+          grep -q 'function updateCitySettingDisplay' index.html
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Add persistent city selector"
+          git push origin HEAD:${{ github.head_ref }}
