@@ -1,0 +1,1 @@
+apply internal notification center and settings
