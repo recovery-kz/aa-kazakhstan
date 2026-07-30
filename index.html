@@ -560,21 +560,31 @@
         .filter-btn.active { background: var(--primary); color: white; }
         #citySelect { flex: 2; min-height: 50px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--primary); background: var(--card-bg); color: var(--text-main); font-weight: 800; }
 
-        .group-card { border-left: 6px solid var(--primary); padding: 15px; text-align: left; }
-        .status-badge { font-size: 10px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+        .group-card { border-left: 5px solid var(--primary); padding: 16px; text-align: left; position: relative; }
+        .group-card.favorite { border-left-color: var(--accent); }
+        .group-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+        .group-card-main { min-width: 0; flex: 1; }
+        .favorite-btn { width: 38px; height: 38px; flex-shrink: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--card-bg); color: var(--nav-inactive); font-size: 20px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .favorite-btn.active { color: var(--accent); border-color: var(--accent); background: var(--card-bg); }
+        .status-badge { font-size: 9px; line-height: 1.2; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
         .s-open { color: var(--open); } .s-open .status-dot { background: var(--open); }
         .s-soon { color: var(--soon); } .s-soon .status-dot { background: var(--soon); }
         .s-closed { color: var(--closed); } .s-closed .status-dot { background: var(--closed); }
-
-        .group-name { font-size: 16px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; line-height: 1.3; }
-        .city-tag { font-size: 11px; color: var(--text-sub); font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-        .group-icons { font-size: 14px; margin-left: 6px; }
-        .info-row { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; line-height: 1.45; color: var(--text-main); }
-        .info-row-icon { width: 18px; flex-shrink: 0; text-align: center; color: var(--accent); }
-        .group-phones { display: flex; flex-direction: column; gap: 6px; }
+        .group-name { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 5px; line-height: 1.28; letter-spacing: -0.01em; }
+        .city-tag { font-size: 10px; color: var(--text-sub); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+        .group-icons { font-size: 13px; margin-left: 5px; letter-spacing: 0; }
+        .group-info { margin-top: 12px; border-top: 1px solid var(--border); }
+        .info-row { display: flex; gap: 10px; align-items: flex-start; padding: 11px 0; margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-main); border-bottom: 1px solid var(--border); }
+        .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .info-row-icon { width: 20px; flex-shrink: 0; text-align: center; color: var(--accent); padding-top: 1px; }
+        .info-row > div { min-width: 0; flex: 1; }
+        .group-phones { display: flex; flex-direction: column; gap: 7px; margin-top: 3px; }
         .phone-link, .inline-link { color: var(--link); text-decoration: none; font-weight: 700; }
-        .muted { color: var(--text-sub); }
+        .phone-link { font-size: 14px; }
+        .inline-link { display: inline-block; margin-top: 4px; }
+        .muted { color: var(--text-sub); font-size: 9px; line-height: 1.2; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 3px; }
+        .groups-empty { padding: 24px 18px; text-align: center; color: var(--text-sub); font-size: 14px; line-height: 1.5; }
 
         /* Тонкие орнаментальные разделители */
         .ornament-divider {
@@ -707,7 +717,7 @@
     const i18n = {
         ru: {
             head: 'АА КАЗАХСТАНА', total: 'Всего:', units: [['год','года','лет'],['мес.','мес.','мес.'],['день','дня','дней']],
-            motLab: 'Ежедневные размышления', kaspi: '❤️ Седьмая Традиция', nav: ['Счетчик','Новости','Книги','Группы'], allCities: 'Все города',
+            motLab: 'Ежедневные размышления', kaspi: '❤️ Седьмая Традиция', nav: ['Счетчик','Новости','Книги','Группы'], allCities: 'Все города', favorites: '★ Избранное', noFavorites: 'Добавьте нужные группы в избранное, нажав на звезду в карточке.', addFavorite: 'Добавить в избранное', removeFavorite: 'Убрать из избранного',
             sOpen: 'ОТКРЫТО. ЕЩЕ', sSoon: 'ЧЕРЕЗ', sClosed: 'ЗАКРЫТО', todayBtn: '📅 Сегодня', sosMain: '🚨 НУЖНА ПОМОЩЬ?',
             sosRu: 'РУССКИЙ ЯЗЫК', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Мой путь', trustHead: 'ДОВЕРЕННЫЕ ЛИЦА', prayerHead: 'МОЛИТВА', notesHead: 'ЗАМЕТКИ ПО ДНЮ',
             nextMedal: 'До медали', left: 'Осталось', prayer: 'Боже, дай мне разум и душевный покой принять то, что я не в силах изменить,\nмужество изменить то, что могу,\nи мудрость отличить одно от другого.',
@@ -719,7 +729,7 @@
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
-            motLab: 'Күнделікті ойлар', kaspi: '❤️ Жетінші Дәстүр', nav: ['Есептегіш','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар',
+            motLab: 'Күнделікті ойлар', kaspi: '❤️ Жетінші Дәстүр', nav: ['Есептегіш','Жаңалықтар','Кітаптар','Топтар'], allCities: 'Барлық қалалар', favorites: '★ Таңдаулылар', noFavorites: 'Қажетті топтарды карточкадағы жұлдызшаны басып таңдаулыларға қосыңыз.', addFavorite: 'Таңдаулыларға қосу', removeFavorite: 'Таңдаулылардан алып тастау',
             sOpen: 'АШЫҚ. ТАҒЫ', sSoon: 'БАСТАЛАДЫ', sClosed: 'ЖАБЫҚ', todayBtn: '📅 Бүгін', sosMain: '🚨 КӨМЕК КЕРЕК ПЕ?',
             sosRu: 'ОРЫС ТІЛІ', sosKz: 'ҚАЗАҚ ТІЛІ', nProf: 'Менің жолым', trustHead: 'СЕНІМДІ ТҰЛҒАЛАР', prayerHead: 'ДҰҒА', notesHead: 'КҮНДЕЛІКТІ ЖАЗБАЛАР',
             nextMedal: 'Медальға дейін', left: 'Қалды', prayer: 'Уа, Тәңірім, мен өзгерте алмайтын нәрселерді қабылдауға жан тыныштығын,\nөзгерте алатын нәрселерді өзгертуге батылдық,\nжәне олардың айырмашылығын білетін даналық бере гөр.',
@@ -745,6 +755,7 @@
 
     const REFLECTIONS_STORAGE_KEY = 'aa_daily_reflections_full_cache_v1';
     const NEWS_STORAGE_KEY = 'aa_news_cache_v1';
+    const FAVORITES_STORAGE_KEY = 'aa_group_favorites_v1';
     let currentReflectionsData = null;
     let currentNewsData = null;
     let newsLoaded = false;
@@ -782,12 +793,12 @@
     const data = [
     {c:'Онлайн',n:'АА «Пробуждение»',a:'https://us06web.zoom.us/j/82036099070',t:'Вт, Чт, Сб: 21:00-22:30',p:['+7 775 456 5358'],online:true,o:true,sc:[{d:2,s:2100,e:2230},{d:4,s:2100,e:2230},{d:6,s:2100,e:2230}]},
     {c:'Онлайн',n:'АА «Бірлік» (каз)',a:'https://us02web.zoom.us/j/5204364841',t:'Чт: 21:00-22:30',p:['+7 707 433 7408'],online:true,k:true,o:true,sc:[{d:3,s:2100,e:2230}]},
-    {c:'Онлайн',n:'АА «ШАГ ЗА ШАГОМ»',a:'https://t.me/+JqgMpZCz_fY1OTVi',t:'Вт (откр): 19:00-20:30',p:[],online:true,o:true,chat:true,sc:[{d:2,s:1900,e:2030}]},
+    {c:'Онлайн',n:'АА «Шаг за шагом»',a:'https://t.me/+JqgMpZCz_fY1OTVi',t:'Вт (откр): 19:00-20:30',p:[],online:true,o:true,chat:true,sc:[{d:2,s:1900,e:2030}]},
 
     {c:'Алматы',n:'АА «Виктория»',a:'ул. Жубанова 3а, 301 каб.',t:'Вт (откр), Чт: 19:30-21:00; Сб: 19:00-20:30',p:['+7 705 990 7938'],z:'https://zoom.us/j/5290200881',o:true,sc:[{d:2,s:1930,e:2100},{d:4,s:1930,e:2100},{d:6,s:1900,e:2030}]},
-    {c:'Алматы',n:'АА «8 марта»',a:'ул. Зенкова 24',t:'Ежедневно: 19:00-20:30; Вт, Чт: 12:00',p:['+7 701 121 8501'],o:true,sc:[{d:1,s:1900,e:2030},{d:2,s:1900,e:2030},{d:3,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030},{d:0,s:1900,e:2030},{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
+    {c:'Алматы',n:'АА «8 Марта»',a:'ул. Зенкова 24',t:'Ежедневно: 19:00-20:30; Вт, Чт: 12:00',p:['+7 701 121 8501'],o:true,sc:[{d:1,s:1900,e:2030},{d:2,s:1900,e:2030},{d:3,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030},{d:0,s:1900,e:2030},{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
     {c:'Алматы',n:'АА «Турксиб»',a:'уточнять по номеру',t:'Вт, Чт: 19:00-20:30; Вс (откр): 17:00-18:30',p:['+7 747 860 1105'],o:true,map:'https://2gis.kz/almaty/geo/9430047374991567',sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1700,e:1830}]},
-    {c:'Алматы',n:'АА «АлмА» (женская)',a:'ул. Зенкова 24',t:'Сб: 12:00-13:30',p:['+7 775 500 6846'],f:true,o:true,sc:[{d:6,s:1200,e:1330}]},
+    {c:'Алматы',n:'АА «Алма» (женская)',a:'ул. Зенкова 24',t:'Сб: 12:00-13:30',p:['+7 775 500 6846'],f:true,o:true,sc:[{d:6,s:1200,e:1330}]},
     {c:'Алматы',n:'АА «Шапагат» (каз)',a:'ул. Жубанова 3а',t:'Пн, Ср: 19:00-20:30; Сб (откр): 17:00-18:30',p:['+7 747 165 2435'],k:true,o:true,sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:6,s:1700,e:1830}]},
 
     {c:'Алматы',n:'АА «Друзья Билла»',a:'ул. Тимирязева 42, корпус 23, Азия-Мост, кабинет 102',t:'Вт, Чт (все группы открытые): 12:00-13:30',p:['+7 747 563 7587'],o:true,map:'https://2gis.kz/almaty/directions/points/%7C76.904347%2C43.217837%3B9430047374971407?m=76.905722%2C43.217588%2F16',sc:[{d:2,s:1200,e:1330},{d:4,s:1200,e:1330}]},
@@ -795,50 +806,77 @@
     {c:'Алматы',n:'АА «Чайхана» (новички)',a:'ул. Жубанова 3а',t:'Вс (откр): 11:00-12:30',p:['+7 705 990 7938'],z:'https://zoom.us/j/5290200881',o:true,sc:[{d:0,s:1100,e:1230}]},
     {c:'Алматы',n:'АА «Аксай»',a:'пр. Райымбека 493',t:'Вс: 13:00-14:15',p:['+7 776 453 3418'],o:true,sc:[{d:0,s:1300,e:1415}]},
     {c:'Алматы',n:'АА «Наурыз»',a:'ул. Тимирязева 42 к23, каб. 102',t:'Вт, Чт, Пт, Сб (откр): 19:00-20:30; Вс: 15:00-16:30 (Интервью с алкоголиком)',p:['+7 708 317 1769'],o:true,sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:5,s:1900,e:2030},{d:6,s:1900,e:2030},{d:0,s:1500,e:1630}]},
-    {c:'Алматы',n:'АА «НОВЫЕ ОЧКИ»',a:'ул. Жибек Жолы 64/47, оф. 215',t:'Пн, Ср, Пт: 19:00-20:15; Сб: 14:00',p:['+7 707 308 4757'],o:true,sc:[{d:1,s:1900,e:2015},{d:3,s:1900,e:2015},{d:5,s:1900,e:2015},{d:6,s:1400,e:1515}]},
-    {c:'Алматы',n:'АА «боралдай»',a:'ул. Курчатова 13а',t:'Сб: 17:00',p:['+7 777 281 9098'],sc:[{d:6,s:1700,e:1830}]},
+    {c:'Алматы',n:'АА «Новые очки»',a:'ул. Жибек Жолы 64/47, оф. 215',t:'Пн, Ср, Пт: 19:00-20:15; Сб: 14:00',p:['+7 707 308 4757'],o:true,sc:[{d:1,s:1900,e:2015},{d:3,s:1900,e:2015},{d:5,s:1900,e:2015},{d:6,s:1400,e:1515}]},
+    {c:'Алматы',n:'АА «Боралдай»',a:'ул. Курчатова 13а',t:'Сб: 17:00',p:['+7 777 281 9098'],sc:[{d:6,s:1700,e:1830}]},
     {c:'Алматы',n:'Мужская группа «ААА»',a:'ул. Зенкова 24',t:'Сб: 17:00-18:15',p:['+7 771 370 9966'],sc:[{d:6,s:1700,e:1815}]},
 
     {c:'Астана',n:'АА «51 параллель»',a:'ул. Петрова 14/3',t:'Ср: 19:00-20:15; Сб: 15:00-16:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:3,s:1900,e:2015},{d:6,s:1500,e:1615}]},
     {c:'Астана',n:'АА «Свобода»',a:'ул. Петрова 14/3',t:'Пн, Чт, Пт: 19:00-20:00',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:1,s:1900,e:2000},{d:4,s:1900,e:2000},{d:5,s:1900,e:2000}]},
     {c:'Астана',n:'АА «Есиль» (каз)',a:'ул. Петрова 14/3',t:'Вс: 17:00-18:30',p:['+7 775 360 1528','+7 707 123 4699','+7 771 899 3679'],k:true,sc:[{d:0,s:1700,e:1830}]},
-    {c:'Астана',n:'АА «большая перемена»',a:'ул. Дукенулы 26',t:'Пн, Пт: 19:00-20:00',p:['+7 707 123 4699'],sc:[{d:1,s:1900,e:2000},{d:5,s:1900,e:2000}]},
+    {c:'Астана',n:'АА «Большая перемена»',a:'ул. Дукенулы 26',t:'Пн, Пт: 19:00-20:00',p:['+7 707 123 4699'],sc:[{d:1,s:1900,e:2000},{d:5,s:1900,e:2000}]},
     {c:'Астана',n:'АА «Сана»',a:'пр. Кабанбай Батыра 58А',t:'Вт, Чт: 20:00-21:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:2,s:2000,e:2115},{d:4,s:2000,e:2115}]},
-    {c:'Астана',n:'АА «ПУТЬ»',a:'ул. Ташенова 26',t:'Вт, Ср, Чт: 19:00-20:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:2,s:1900,e:2015},{d:3,s:1900,e:2015},{d:4,s:1900,e:2015}]},
-    {c:'Астана',n:'АА «ВОЗРОЖДЕНИЕ»',a:'ул. Куйши Дина 27',t:'Вт: 19:00-20:15',p:['+7 707 565 0586','+7 701 642 3838'],sc:[{d:2,s:1900,e:2015}]},
+    {c:'Астана',n:'АА «Путь»',a:'ул. Ташенова 26',t:'Вт, Ср, Чт: 19:00-20:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],sc:[{d:2,s:1900,e:2015},{d:3,s:1900,e:2015},{d:4,s:1900,e:2015}]},
+    {c:'Астана',n:'АА «Возрождение»',a:'ул. Куйши Дина 27',t:'Вт: 19:00-20:15',p:['+7 707 565 0586','+7 701 642 3838'],sc:[{d:2,s:1900,e:2015}]},
 
     {c:'Астана',n:'АА «Венера» (женская)',a:'ул. Куйши Дина 27/1 (на территории Собора)',t:'Сб: 15:00-16:15',p:['+7 771 899 3679','+7 707 123 4699','+7 775 360 1528'],f:true,sc:[{d:6,s:1500,e:1615}]},
 
-    {c:'Астана',n:'АА «гармония»',a:'ул. Арасан 2/2',t:'Пн, Пт: 19:15',p:['+7 775 360 1528','+7 707 123 4699','+7 771 899 3679'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
-    {c:'Астана',n:'АА «үміт» (каз)',a:'ул. Ш. Кудайбердиулы 94',t:'Ср: 19:00-20:15',p:['+7 707 433 7408'],k:true,sc:[{d:3,s:1900,e:2015}]},
+    {c:'Астана',n:'АА «Гармония»',a:'ул. Арасан 2/2',t:'Пн, Пт: 19:15',p:['+7 775 360 1528','+7 707 123 4699','+7 771 899 3679'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
+    {c:'Астана',n:'АА «Үміт» (каз)',a:'ул. Ш. Кудайбердиулы 94',t:'Ср: 19:00-20:15',p:['+7 707 433 7408'],k:true,sc:[{d:3,s:1900,e:2015}]},
 
     {c:'Актау',n:'АА «Парус»',a:'29-й мкр, дом 218',t:'Пн, Пт: 19:15-20:30',p:['+7 777 065 5797','+7 708 840 6295'],sc:[{d:1,s:1915,e:2030},{d:5,s:1915,e:2030}]},
-    {c:'Актобе',n:'АА «ОАЗИС»',a:'ул. Абулхаир-Хана 1, оф. 228',t:'Вт, Чт: 19:00-20:15; Сб: 14:00-15:15',p:['+7 747 684 5424'],o:true,sc:[{d:2,s:1900,e:2015},{d:4,s:1900,e:2015},{d:6,s:1400,e:1515}]},
-    {c:'Атырау',n:'АА «НАЧАЛО»',a:'мкр. Авангард-3, 34а',t:'Вт, Чт: 19:00-20:30; Сб: 12:00-13:30',p:['+7 705 449 2468'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:6,s:1200,e:1330}]},
-    {c:'Караганда',n:'АА «решение есть»',a:'ул. Ерубаева 34',t:'Суббота: 15:45',p:['+7 700 765 6935'],sc:[{d:6,s:1545,e:1715}]},
+    {c:'Актобе',n:'АА «Оазис»',a:'ул. Абулхаир-Хана 1, оф. 228',t:'Вт, Чт: 19:00-20:15; Сб: 14:00-15:15',p:['+7 747 684 5424'],o:true,sc:[{d:2,s:1900,e:2015},{d:4,s:1900,e:2015},{d:6,s:1400,e:1515}]},
+    {c:'Атырау',n:'АА «Начало»',a:'мкр. Авангард-3, 34а',t:'Вт, Чт: 19:00-20:30; Сб: 12:00-13:30',p:['+7 705 449 2468'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:6,s:1200,e:1330}]},
+    {c:'Караганда',n:'АА «Решение есть»',a:'ул. Ерубаева 34',t:'Суббота: 15:45',p:['+7 700 765 6935'],sc:[{d:6,s:1545,e:1715}]},
     {c:'Кокшетау',n:'АА «Синегорье»',a:'ул. Ауельбекова 127',t:'Вт, Пт: 19:30-20:30',p:['+7 771 363 0302'],sc:[{d:2,s:1930,e:2030},{d:5,s:1930,e:2030}]},
-    {c:'Конаев',n:'АА «НАДЕЖДА»',a:'ул. Курылысшы 8а',t:'Ср: 19:00-20:00',p:['+7 778 166 1081'],sc:[{d:3,s:1900,e:2000}]},
-    {c:'Костанай',n:'АА «ДОСТАР»',a:'ул. 5 апреля 67, подъезд 3',t:'Пн, Ср, Пт: 19:00-20:30',p:['+7 777 743 5620','+7 747 743 5620'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
+    {c:'Конаев',n:'АА «Надежда»',a:'ул. Курылысшы 8а',t:'Ср: 19:00-20:00',p:['+7 778 166 1081'],sc:[{d:3,s:1900,e:2000}]},
+    {c:'Костанай',n:'АА «Достар»',a:'ул. 5 апреля 67, подъезд 3',t:'Пн, Ср, Пт: 19:00-20:30',p:['+7 777 743 5620','+7 747 743 5620'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
     {c:'Костанай',n:'АА «12 Шаг»',a:'ул. Г. Арыстанбекова 23',t:'Вт, Чт, Вс: 19:00-20:30',p:['+7 777 743 5620','+7 771 429 0869'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1900,e:2030}]},
     {c:'Павлодар',n:'АА «Крепость»',a:'ул. Торайгырова 10/1, каб. 4',t:'Пн, Ср, Пт: 19:00-20:00',p:['+7 708 636 1510'],sc:[{d:1,s:1900,e:2000},{d:3,s:1900,e:2000},{d:5,s:1900,e:2000}]},
     {c:'Петропавловск',n:'АА «Последняя капля»',a:'ул. Букетова 4',t:'Сб: 20:00',p:['+7 775 827 2514'],sc:[{d:6,s:2000,e:2130}]},
     {c:'Рудный',n:'АА «Новая свобода»',a:'ул. Парковая 55',t:'Ср, Вс: 19:30-20:45',p:['+7 775 494 7917'],sc:[{d:3,s:1930,e:2045},{d:0,s:1930,e:2045}]},
-    {c:'Семей',n:'АА «СЕМЁРОЧКА»',a:'инфо по тел.',t:'По запросу',p:['+7 707 640 0913'],sc:[]},
+    {c:'Семей',n:'АА «Семёрочка»',a:'инфо по тел.',t:'По запросу',p:['+7 707 640 0913'],sc:[]},
     {c:'Талгар',n:'АА «Талхиз»',a:'г. Талгар, ул. Муратбаева 26',t:'Пн, Чт, Пт: 19:00-20:15',p:['+7 747 420 5862'],map:'https://2gis.kz/almaty/geo/70000001045475756/77.234246,43.317702',sc:[{d:1,s:1900,e:2015},{d:4,s:1900,e:2015},{d:5,s:1900,e:2015}]},
 
-    {c:'Талдыкурган',n:'АА «жетысу»',a:'ул. Шевченко 100',t:'Пн, Ср, Пт: 19:00',p:['+7 747 629 3041'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
+    {c:'Талдыкурган',n:'АА «Жетысу»',a:'ул. Шевченко 100',t:'Пн, Ср, Пт: 19:00',p:['+7 747 629 3041'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
 
-    {c:'Усть-Каменогорск',n:'АА «УСТЬЕ»',a:'ул. Казахстан 99',t:'Пн, Ср, Пт: 18:00-19:30',p:['+7 777 246 7979','+7 705 508 3033'],sc:[{d:1,s:1800,e:1930},{d:3,s:1800,e:1930},{d:5,s:1800,e:1930}]},
+    {c:'Усть-Каменогорск',n:'АА «Устье»',a:'ул. Казахстан 99',t:'Пн, Ср, Пт: 18:00-19:30',p:['+7 777 246 7979','+7 705 508 3033'],sc:[{d:1,s:1800,e:1930},{d:3,s:1800,e:1930},{d:5,s:1800,e:1930}]},
 
-    {c:'Кызылорда',n:'АА «сырдарья»',a:'ул. Айтеке би 27А, 2 этаж, кабинет 13',t:'Вт, Чт: 19:00; Вс: 11:00',p:['+7 707 433 7408'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1100,e:1230}]},
+    {c:'Кызылорда',n:'АА «Сырдарья»',a:'ул. Айтеке би 27А, 2 этаж, кабинет 13',t:'Вт, Чт: 19:00; Вс: 11:00',p:['+7 707 433 7408'],sc:[{d:2,s:1900,e:2030},{d:4,s:1900,e:2030},{d:0,s:1100,e:1230}]},
 
     {c:'Шымкент',n:'АА «Юг»',a:'Шаяхметова 14/1, каб. 12а',t:'Пн, Ср, Пт: 19:00-20:30',p:['+7 701 674 9853'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]},
     {c:'Шымкент',n:'АА «Шым»',a:'ул. Мангельдина 33',t:'Вт, Чт: 19:00-20:00; Сб: 12:00-13:00',p:['+7 702 637 2329'],sc:[{d:2,s:1900,e:2000},{d:4,s:1900,e:2000},{d:6,s:1200,e:1300}]},
-    {c:'Шымкент',n:'АА «СВОБОДА»',a:'ул. Московская 9а',t:'Вс: 13:00-14:30',p:['+7 705 990 6737'],sc:[{d:0,s:1300,e:1430}]},
-    {c:'Шымкент',n:'АА «ПАНА» (каз)',a:'ул. Шаяхметова 14/1, каб. 12а',t:'Вс: 13:00-14:00',p:['+7 702 637 2329'],k:true,sc:[{d:0,s:1300,e:1400}]},
+    {c:'Шымкент',n:'АА «Свобода»',a:'ул. Московская 9а',t:'Вс: 13:00-14:30',p:['+7 705 990 6737'],sc:[{d:0,s:1300,e:1430}]},
+    {c:'Шымкент',n:'АА «Пана» (каз)',a:'ул. Шаяхметова 14/1, каб. 12а',t:'Вс: 13:00-14:00',p:['+7 702 637 2329'],k:true,sc:[{d:0,s:1300,e:1400}]},
     {c:'Экибастуз',n:'АА «Чистое Небо»',a:'инфо по тел.',t:'По запросу',p:['+7 775 350 0562'],sc:[]},
-    {c:'Жетысай',n:'АА «куат»',a:'ул. Ауэзова, каб. 12',t:'Пн, Ср, Пт: 19:00',p:['+7 707 318 3839'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
+    {c:'Жетысай',n:'АА «Куат»',a:'ул. Ауэзова, каб. 12',t:'Пн, Ср, Пт: 19:00',p:['+7 707 318 3839'],sc:[{d:1,s:1900,e:2030},{d:3,s:1900,e:2030},{d:5,s:1900,e:2030}]}
 ];
+
+    function getGroupId(g) {
+        return [g.c, g.n, g.a || '', g.t || ''].join('|');
+    }
+
+    function getFavoriteGroups() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY) || '[]');
+            return new Set(Array.isArray(saved) ? saved : []);
+        } catch (error) {
+            return new Set();
+        }
+    }
+
+    function saveFavoriteGroups(favorites) {
+        localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify([...favorites]));
+    }
+
+    function toggleFavorite(groupId) {
+        const favorites = getFavoriteGroups();
+        const isAdding = !favorites.has(groupId);
+        if (isAdding) favorites.add(groupId);
+        else favorites.delete(groupId);
+        saveFavoriteGroups(favorites);
+        trackEvent(isAdding ? 'group_favorite_add' : 'group_favorite_remove', groupId);
+        renderGroups();
+    }
 
     function cleanPhone(phone) { return String(phone || '').replace(/[^\d+]/g, ''); }
     function escapeHtml(value) { return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
@@ -1330,38 +1368,51 @@
         const selected = document.getElementById('citySelect').value;
         const c = document.getElementById('list-container');
         const currentDay = new Date().getDay();
-        const filtered = data.filter(g => (selected === 'all' || g.c === selected) && (!onlyToday || g.sc.some(s => s.d === currentDay)));
+        const favorites = getFavoriteGroups();
+        const filtered = data.filter(g => {
+            const matchesLocation = selected === 'all' || g.c === selected || (selected === 'favorites' && favorites.has(getGroupId(g)));
+            const matchesToday = !onlyToday || g.sc.some(s => s.d === currentDay);
+            return matchesLocation && matchesToday;
+        });
+        if (selected === 'favorites' && filtered.length === 0) {
+            c.innerHTML = `<div class="card groups-empty">${i18n[curLang].noFavorites}</div>`;
+            return;
+        }
         c.innerHTML = filtered.map(g => {
             const icons = `${g.online ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`.trim();
+            const groupId = getGroupId(g);
+            const isFavorite = favorites.has(groupId);
+            const favoriteLabel = isFavorite ? i18n[curLang].removeFavorite : i18n[curLang].addFavorite;
             return `
-                <div class="card group-card">
-                    ${getGroupStatus(g)}
-                    <div class="city-tag">${escapeHtml(g.c)}</div>
-                    <div class="group-name">${escapeHtml(g.n)} ${icons ? `<span class="group-icons">${icons}</span>` : ''}</div>
-                    ${renderAddress(g)}
-                    ${renderOnlineLinks(g)}
-                    <div class="info-row">
-                        <span class="info-row-icon">⏰</span>
-                        <div>
-                            <div class="muted">${i18n[curLang].scheduleLabel}</div>
-                            <div>${escapeHtml(g.t || i18n[curLang].noSchedule)}</div>
+                <div class="card group-card${isFavorite ? ' favorite' : ''}">
+                    <div class="group-card-head">
+                        <div class="group-card-main">
+                            ${getGroupStatus(g)}
+                            <div class="city-tag">${escapeHtml(g.c)}</div>
+                            <div class="group-name">${escapeHtml(g.n)} ${icons ? `<span class="group-icons">${icons}</span>` : ''}</div>
                         </div>
+                        <button type="button" class="favorite-btn${isFavorite ? ' active' : ''}" data-favorite-id="${escapeHtml(groupId)}" aria-label="${escapeHtml(favoriteLabel)}" title="${escapeHtml(favoriteLabel)}">${isFavorite ? '★' : '☆'}</button>
                     </div>
-                    ${g.p && g.p.length ? renderPhones(g.p) : ''}
-                </div>
-            `;
+                    <div class="group-info">
+                        ${renderAddress(g)}
+                        ${renderOnlineLinks(g)}
+                        <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(g.t || i18n[curLang].noSchedule)}</div></div></div>
+                        ${g.p && g.p.length ? renderPhones(g.p) : ''}
+                    </div>
+                </div>`;
         }).join('');
     }
 
     function rebuildCityOptions() {
         const s = document.getElementById('citySelect');
         const current = s.value || 'all';
-        const ct = ['all', ...new Set(data.map(x => x.c))].sort((a,b) => a.localeCompare(b, 'ru'));
+        const cities = [...new Set(data.map(x => x.c))].sort((a,b) => a.localeCompare(b, 'ru'));
+        const ct = ['all', 'favorites', ...cities];
         s.innerHTML = '';
         ct.forEach(city => {
             const o = document.createElement('option');
             o.value = city;
-            o.innerText = city === 'all' ? i18n[curLang].allCities : city;
+            o.innerText = city === 'all' ? i18n[curLang].allCities : city === 'favorites' ? i18n[curLang].favorites : city;
             s.appendChild(o);
         });
         s.value = [...s.options].some(opt => opt.value === current) ? current : 'all';
@@ -1616,6 +1667,11 @@
         document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
         document.getElementById('mot-toggle').addEventListener('click', toggleMotivation);
         document.getElementById('todayFilter').addEventListener('click', toggleToday);
+    document.getElementById('list-container').addEventListener('click', event => {
+        const button = event.target.closest('[data-favorite-id]');
+        if (!button) return;
+        toggleFavorite(button.dataset.favoriteId);
+    });
         document.getElementById('citySelect').addEventListener('change', e => {
             trackEvent('city_filter', e.target.value);
             renderGroups();

@@ -1,0 +1,1 @@
+apply group card normalization and favorites v5
