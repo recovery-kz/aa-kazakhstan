@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="920" viewBox="0 0 600 920">
+<rect width="600" height="920" fill="#07073f"/>
+<g fill="none" stroke="#d4a62a" stroke-width="4">
+<rect x="24" y="24" width="552" height="872"/>
+<rect x="38" y="38" width="524" height="844"/>
+<path d="M24 92h74L130 58h340l32 34h74M24 828h74l32 34h340l32-34h74"/>
+</g>
+<g fill="#d4a62a" font-family="Georgia,serif" font-size="116" font-weight="700">
+<text x="205" y="540">A</text><text x="318" y="540">A</text>
+</g>
+<g fill="#fff" font-family="Arial,sans-serif">
+<text x="300" y="170" text-anchor="middle" class="title" font-size="42">ЖИТЬ</text><text x="300" y="228" text-anchor="middle" class="title" font-size="42">ТРЕЗВЫМИ</text>
+<text x="300" y="650" text-anchor="middle" font-size="23">НЕКОТОРЫЕ МЕТОДЫ СОХРАНЕНИЯ ТРЕЗВОСТИ</text>
+<text x="300" y="790" text-anchor="middle" font-size="25">ЛИТЕРАТУРНЫЙ КОМИТЕТ</text>
+<text x="300" y="826" text-anchor="middle" font-size="22">АНОНИМНЫХ АЛКОГОЛИКОВ В КАЗАХСТАНЕ</text>
+<text x="300" y="866" text-anchor="middle" font-size="22">АЛМАТЫ · 2025</text>
+</g>
+</svg>
