@@ -1,0 +1,87 @@
+name: Apply priority 5
+
+on:
+  push:
+    paths:
+      - 'scripts/apply-priority-5.py'
+      - '.github/workflows/apply-priority-5.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Apply final refactor
+        run: python scripts/apply-priority-5.py
+      - name: Normalize JSON
+        run: |
+          node -e "const fs=require('fs'); for(const f of ['groups.json','books.json']){const value=Function('return ('+fs.readFileSync(f,'utf8')+')')(); fs.writeFileSync(f,JSON.stringify(value,null,2)+'\n')}"
+      - name: Add permanent validation workflow
+        run: |
+          cat > .github/workflows/validate.yml <<'YAML'
+          name: Validate application
+
+          on:
+            push:
+              paths:
+                - 'index.html'
+                - 'styles.css'
+                - 'app.js'
+                - 'i18n.js'
+                - 'groups.json'
+                - 'books.json'
+                - 'manifest.json'
+                - 'sw.js'
+                - 'scripts/validate-data.py'
+            pull_request:
+
+          jobs:
+            validate:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - uses: actions/setup-python@v5
+                  with:
+                    python-version: '3.12'
+                - uses: actions/setup-node@v4
+                  with:
+                    node-version: '22'
+                - run: python scripts/validate-data.py
+                - run: node --check app.js && node --check i18n.js && node --check sw.js
+                - run: python -m json.tool groups.json >/dev/null && python -m json.tool books.json >/dev/null && python -m json.tool manifest.json >/dev/null
+                - run: |
+                    grep -q 'styles.css' index.html
+                    grep -q 'app.js' index.html
+                    grep -q 'i18n.js' index.html
+                    grep -q 'aa-kaz-v10' sw.js
+                    grep -q '77051871335' app.js
+          YAML
+      - name: Validate migrated application
+        run: |
+          python scripts/validate-data.py
+          node --check app.js
+          node --check i18n.js
+          node --check sw.js
+          python -m json.tool groups.json >/dev/null
+          python -m json.tool books.json >/dev/null
+          python -m json.tool manifest.json >/dev/null
+          grep -q 'id="install-banner"' index.html
+          grep -q 'id="export-data"' index.html
+          grep -q 'version.json' sw.js
+          grep -q 'aa-kaz-v10' sw.js
+      - name: Commit final structure
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html styles.css app.js i18n.js groups.json books.json manifest.json version.json sw.js scripts/validate-data.py .github/workflows/validate.yml
+          git diff --cached --quiet || git commit -m "Apply reliability priority 5"
+          git push
