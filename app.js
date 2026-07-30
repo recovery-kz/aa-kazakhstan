@@ -1544,6 +1544,33 @@ function closeFirstTimeInfo() {
         renderGroups();
         renderLit();
         updateFreshnessDisplay();
+
+        const releaseNotificationKey = 'release:2.0';
+        if (!notificationSeen(releaseNotificationKey)) {
+            const releaseTitle = curLang === 'kz'
+                ? 'Қазақстан АА қолданбасының 2.0 нұсқасы шықты'
+                : 'Вышла версия приложения АА Казахстана 2.0';
+            const releaseText = curLang === 'kz'
+                ? 'Жаңа навигация, ірі мәтін, топтардың жаңа түймелері, хабарламалар, сақтық көшірме және басқа өзгерістер.'
+                : 'Новая навигация, крупный текст, новые кнопки групп, уведомления, резервная копия и другие изменения.';
+            const releaseItems = getInternalNotifications();
+            releaseItems.unshift({
+                key: releaseNotificationKey,
+                id: releaseNotificationKey,
+                type: 'news',
+                icon: '🎉',
+                title: releaseTitle,
+                text: releaseText,
+                tab: 'news',
+                createdAt: Date.now(),
+                read: false
+            });
+            saveInternalNotifications(releaseItems);
+            markNotificationSeen(releaseNotificationKey);
+            localStorage.setItem('aa_last_news_identity', 'release-2-0-ru');
+            updateNotificationBadge();
+        }
+
         localStorage.setItem('aa_first_run_done_v1', '1');
         const firstRunModal = document.getElementById('first-run');
         if (firstRunModal) {
