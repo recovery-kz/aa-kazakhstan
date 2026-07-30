@@ -29,12 +29,15 @@ cover_map = {
 }
 books_path = Path('books.json')
 books = json.loads(books_path.read_text(encoding='utf-8'))
+original_count = len(books)
 matched = []
 for book in books:
     key = (book.get('n'), book.get('l'))
     if key in cover_map:
         book['img'] = cover_map[key]
         matched.append(key)
+if len(books) != original_count:
+    raise SystemExit('Book list size changed unexpectedly')
 if len(matched) != len(cover_map):
     missing = sorted(set(cover_map) - set(matched))
     raise SystemExit(f'Not all covers matched: {missing}')
@@ -96,4 +99,4 @@ for relative in cover_map.values():
     if not Path(relative).is_file() or Path(relative).stat().st_size < 10000:
         raise SystemExit(f'Invalid cover file: {relative}')
 json.loads(books_path.read_text(encoding='utf-8'))
-print(f'Applied {len(matched)} book covers')
+print(f'Applied {len(matched)} book covers; retained all {original_count} books')
