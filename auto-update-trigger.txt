@@ -1,0 +1,1 @@
+enable automatic update on app launch
