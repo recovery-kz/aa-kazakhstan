@@ -744,6 +744,13 @@
     }
 
     function getBookCover(index, book, compact = false) {
+        if (book.img) {
+            return `
+                <div class="book-cover book-cover-real">
+                    <img class="book-cover-image" src="${escapeHtml(book.img)}" alt="${escapeHtml(book.n)}" loading="lazy" decoding="async">
+                </div>
+            `;
+        }
         const language = book.l === 'рус' ? 'RU' : 'ҚАЗ';
         return `
             <div class="book-cover book-cover-${index % 25}">

@@ -832,3 +832,8 @@ body.large-text .backup-btn{min-height:52px;font-size:14px}
 /* Emergency hotfix: disable unstable first-run overlay */
 #first-run { display: none !important; }
 body.first-run-open { overflow: auto !important; }
+
+        .book-cover.book-cover-real { padding: 0; background: #08083f; }
+        .book-cover.book-cover-real::before,
+        .book-cover.book-cover-real::after { display: none; }
+        .book-cover-image { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; }
