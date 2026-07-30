@@ -1,0 +1,35 @@
+name: Apply first-run hotfix
+
+on:
+  push:
+    paths:
+      - 'scripts/hotfix-first-run.py'
+      - '.github/workflows/apply-first-run-hotfix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Disable unstable first-run overlay
+        run: python scripts/hotfix-first-run.py
+      - name: Validate JavaScript and cache version
+        run: |
+          node --check app.js
+          node --check sw.js
+          grep -q "aa_first_run_done_v1', '1'" app.js
+          grep -q '#first-run { display: none !important; }' styles.css
+          grep -q 'aa-kaz-v11' sw.js
+      - name: Commit hotfix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.js styles.css sw.js version.json
+          git diff --cached --quiet || git commit -m "Disable unstable first-run overlay"
+          git push
