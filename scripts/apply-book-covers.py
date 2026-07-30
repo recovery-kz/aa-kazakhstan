@@ -114,3 +114,4 @@ for relative in cover_map.values():
         raise SystemExit(f'Invalid cover file: {relative}')
 json.loads(books_path.read_text(encoding='utf-8'))
 print(f'Applied {len(matched)} book covers')
+# Retry trigger 2026-07-30
