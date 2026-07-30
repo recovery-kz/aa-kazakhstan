@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aa-kaz-v11';
+const CACHE_NAME = 'aa-kaz-v12';
 const CORE_ASSETS = ['./','index.html','styles.css','app.js','i18n.js','groups.json','books.json','news.json','daily_reflections_full.json','manifest.json','version.json'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE_ASSETS)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});

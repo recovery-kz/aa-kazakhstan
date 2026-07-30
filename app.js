@@ -1569,17 +1569,13 @@ function closeFirstTimeInfo() {
     window.addEventListener('load', init);
 
     if ('serviceWorker' in navigator) {
-        let serviceWorkerRefreshing = false;
-
         navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (serviceWorkerRefreshing) return;
-            serviceWorkerRefreshing = true;
-            window.location.reload();
+            console.log('Service Worker updated without automatic reload');
         });
 
         window.addEventListener('load', async () => {
             try {
-                const registration = await navigator.serviceWorker.register('sw.js?v=8', { updateViaCache: 'none' });
+                const registration = await navigator.serviceWorker.register('sw.js?v=12', { updateViaCache: 'none' });
                 await registration.update();
                 if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
                 console.log('Service Worker registered and checked for updates');
@@ -1616,11 +1612,11 @@ function closeFirstTimeInfo() {
     async function forceUpdate(){
         if(!('serviceWorker' in navigator))return;
         try{
-            const registration=await navigator.serviceWorker.register('sw.js?v=10',{updateViaCache:'none'});
+            const registration=await navigator.serviceWorker.register('sw.js?v=12',{updateViaCache:'none'});
             await registration.update();
             if(registration.waiting) registration.waiting.postMessage({type:'SKIP_WAITING'});
             const response=await fetch('version.json?ts='+Date.now(),{cache:'no-store'});
-            if(response.ok){const info=await response.json();const previous=localStorage.getItem('aa_app_build');if(previous&&previous!==info.build&&!sessionStorage.getItem('aa_update_reloaded')){localStorage.setItem('aa_app_build',info.build);sessionStorage.setItem('aa_update_reloaded','1');location.reload();return;}localStorage.setItem('aa_app_build',info.build);}
+            if(response.ok){const info=await response.json();localStorage.setItem('aa_app_build',info.build);}
         }catch(e){console.warn('Update check failed',e);}
     }
     window.addEventListener('load',forceUpdate);
