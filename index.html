@@ -21,7 +21,19 @@
     <meta name="theme-color" content="#FAF0E6"> <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
-    <link rel="stylesheet" href="styles.css?v=1.9">
+    <link rel="stylesheet" href="styles.css?v=2.0.1">
+<script>
+    // Emergency recovery from a stale service-worker reload loop.
+    window.__AA_DISABLE_SERVICE_WORKER__ = true;
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations =>
+            Promise.all(registrations.map(registration => registration.unregister()))
+        ).catch(() => {});
+    }
+    if ('caches' in window) {
+        caches.keys().then(keys => Promise.all(keys.map(key => caches.delete(key)))).catch(() => {});
+    }
+</script>
 </head>
 <body>
 <header>
@@ -252,7 +264,7 @@
 </nav>
 <div class="app-status" id="app-status" role="status" aria-live="polite"></div>
 
-<script src="i18n.js?v=1.9"></script>
-<script src="app.js?v=1.9" defer></script>
+<script src="i18n.js?v=2.0.1"></script>
+<script src="app.js?v=2.0.1" defer></script>
 </body>
 </html>
