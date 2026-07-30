@@ -783,6 +783,14 @@
                 <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-3"><input type="tel" class="profile-input" id="tr-p-3"></div><a href="#" id="call-3" class="call-btn disabled">📞</a></div>
                 <div class="trust-item"><div class="trust-fields"><input type="text" class="profile-input" id="tr-n-4"><input type="tel" class="profile-input" id="tr-p-4"></div><a href="#" id="call-4" class="call-btn disabled">📞</a></div>
             </div>
+            <div class="ornament-divider"></div> <button class="acc-btn" type="button" data-acc-target="acc-city" id="btn-city-head"><span class="acc-btn-left"><span class="acc-btn-title" id="city-head-text">МОЙ ГОРОД</span></span></button>
+            <div class="acc-content" id="acc-city">
+                <div class="notification-setting" style="border-bottom:none;">
+                    <span class="notification-setting-main"><span class="notification-setting-title" id="city-setting-title">Выберите свой город</span><span class="notification-setting-note" id="city-setting-note">Он используется для ближайших собраний и уведомлений</span></span>
+                    <button type="button" class="notification-small-btn" id="city-setting-open">Изменить</button>
+                </div>
+                <div id="city-setting-current" style="padding:0 0 14px;color:var(--primary);font-weight:850;"></div>
+            </div>
             <div class="ornament-divider"></div> <button class="acc-btn" type="button" data-acc-target="acc-notifications" id="btn-notifications-head"><span class="acc-btn-left"><span class="acc-btn-title" id="notifications-head-text">УВЕДОМЛЕНИЯ</span></span></button>
             <div class="acc-content" id="acc-notifications">
                 <div class="notification-settings">
@@ -893,7 +901,7 @@
             notificationsHead: 'УВЕДОМЛЕНИЯ', notificationCenter: 'Уведомления', notificationReadAll: 'Прочитать все', notificationEmpty: 'Здесь появятся новые размышления, новости и напоминания о собраниях.',
             notifMasterTitle: 'Внутренние уведомления', notifMasterNote: 'Показывать новые события в центре уведомлений', notifReflectionTitle: 'Ежедневные размышления', notifReflectionNote: 'Сообщать о новом размышлении при открытии приложения', notifNewsTitle: 'Новости', notifNewsNote: 'Сообщать о новых публикациях', notifTodayTitle: 'Группы сегодня', notifTodayNote: 'Показывать сводку собраний на текущий день', notifFavoritesTitle: 'Избранные группы', notifFavoritesNote: 'Напоминать перед началом собрания, пока приложение открыто', notifBrowserTitle: 'Системное окно при открытом приложении', notifBrowserNote: 'Не работает после полного закрытия приложения', notifBeforeTitle: 'Напоминать заранее',
             notifReflectionNew: 'Новое ежедневное размышление', notifNewsNew: 'Новая публикация', notifTodayNew: 'Собрания сегодня', notifFavoriteNew: 'Скоро начнётся собрание',
-            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.'
+            soberUnitsShort: ['лет', 'мес.', 'дней'], quickToday: 'Найти собрание сегодня', quickCall: 'Позвонить в АА', quickFavorites: 'Мои группы', quickFirst: 'Я впервые в АА', nearestMeeting: 'Ближайшее собрание', nearestEmpty: 'Сегодня подходящих предстоящих собраний не найдено.', todayAt: 'Сегодня в', tomorrowAt: 'Завтра в', route: 'Маршрут', callAction: 'Позвонить', details: 'Подробнее', myCity: 'Мой город', onlineFilter: 'Онлайн', chooseCityTitle: 'В каком городе вы находитесь?', chooseCityNote: 'Мы покажем ваши группы и ближайшее собрание.', saveCity: 'Сохранить город', showAllCities: 'Показать все города', firstTitle: 'Первый раз в АА', firstText: 'Собрания бесплатные. Записываться не нужно. Можно ничего не говорить и просто слушать. Фамилию называть необязательно.', cityHead: 'МОЙ ГОРОД', citySettingTitle: 'Выберите свой город', citySettingNote: 'Он используется для ближайших собраний и уведомлений', cityChange: 'Изменить', cityNotSelected: 'Город не выбран'
         },
         kz: {
             head: 'ҚАЗАҚСТАН АА', total: 'Барлығы:', units: [['жыл','жыл','жыл'],['ай','ай','ай'],['күн','күн','күн']],
@@ -908,7 +916,7 @@
             notificationsHead: 'ХАБАРЛАМАЛАР', notificationCenter: 'Хабарламалар', notificationReadAll: 'Барлығын оқу', notificationEmpty: 'Мұнда жаңа ойлар, жаңалықтар және жиналыстар туралы еске салулар пайда болады.',
             notifMasterTitle: 'Ішкі хабарламалар', notifMasterNote: 'Жаңа оқиғаларды хабарламалар орталығында көрсету', notifReflectionTitle: 'Күнделікті ойлар', notifReflectionNote: 'Қосымша ашылғанда жаңа ой туралы хабарлау', notifNewsTitle: 'Жаңалықтар', notifNewsNote: 'Жаңа жарияланымдар туралы хабарлау', notifTodayTitle: 'Бүгінгі топтар', notifTodayNote: 'Бүгінгі жиналыстардың қорытындысын көрсету', notifFavoritesTitle: 'Таңдаулы топтар', notifFavoritesNote: 'Қосымша ашық кезде жиналыс алдында еске салу', notifBrowserTitle: 'Қосымша ашық кездегі жүйелік терезе', notifBrowserNote: 'Қосымша толық жабылғаннан кейін жұмыс істемейді', notifBeforeTitle: 'Алдын ала еске салу',
             notifReflectionNew: 'Жаңа күнделікті ой', notifNewsNew: 'Жаңа жарияланым', notifTodayNew: 'Бүгінгі жиналыстар', notifFavoriteNew: 'Жиналыс жақында басталады',
-            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.'
+            soberUnitsShort: ['жыл', 'ай', 'күн'], quickToday: 'Бүгінгі жиналысты табу', quickCall: 'АА-ға қоңырау шалу', quickFavorites: 'Менің топтарым', quickFirst: 'Мен АА-ға алғаш рет келдім', nearestMeeting: 'Ең жақын жиналыс', nearestEmpty: 'Жақын уақытта қолайлы жиналыс табылмады.', todayAt: 'Бүгін', tomorrowAt: 'Ертең', route: 'Бағыт', callAction: 'Қоңырау шалу', details: 'Толығырақ', myCity: 'Менің қалам', onlineFilter: 'Онлайн', chooseCityTitle: 'Сіз қай қаладасыз?', chooseCityNote: 'Сіздің топтарыңыз бен ең жақын жиналысты көрсетеміз.', saveCity: 'Қаланы сақтау', showAllCities: 'Барлық қалаларды көрсету', firstTitle: 'АА-ға алғаш рет', firstText: 'Жиналыстар тегін. Алдын ала жазылудың қажеті жоқ. Ештеңе айтпай, жай ғана тыңдауға болады. Тегіңізді айту міндетті емес.', cityHead: 'МЕНІҢ ҚАЛАМ', citySettingTitle: 'Қалаңызды таңдаңыз', citySettingNote: 'Ол ең жақын жиналыстар мен хабарламалар үшін қолданылады', cityChange: 'Өзгерту', cityNotSelected: 'Қала таңдалмаған'
         }
     };
 
@@ -1571,6 +1579,12 @@
         document.getElementById('notif-browser-note').innerText = d.notifBrowserNote;
         document.getElementById('notif-before-title').innerText = d.notifBeforeTitle;
         document.getElementById('notification-button').setAttribute('aria-label', d.notificationCenter);
+        document.getElementById('city-head-text').innerText = d.cityHead;
+        document.getElementById('city-setting-title').innerText = d.citySettingTitle;
+        document.getElementById('city-setting-note').innerText = d.citySettingNote;
+        document.getElementById('city-setting-open').innerText = d.cityChange;
+        updateCitySettingDisplay();
+
         document.getElementById('quick-today-text').innerText = d.quickToday;
         document.getElementById('quick-call-text').innerText = d.quickCall;
         document.getElementById('quick-favorites-text').innerText = d.quickFavorites;
@@ -1866,7 +1880,13 @@ ${book.d}
         document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.toggle('active', button.dataset.groupMode === mode));
         if (mode === 'mycity') {
             const city = getSavedUserCity();
-            document.getElementById('citySelect').value = city || 'all';
+            if (!city) {
+                openCityOnboarding();
+                groupFilterMode = 'all';
+                document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
+                return;
+            }
+            document.getElementById('citySelect').value = city;
         } else if (mode === 'favorites') {
             document.getElementById('citySelect').value = 'all';
         } else if (mode === 'online') {
@@ -1943,6 +1963,12 @@ ${book.d}
         if (current && cities.includes(current)) select.value = current;
     }
 
+    function updateCitySettingDisplay() {
+        const el = document.getElementById('city-setting-current');
+        if (!el) return;
+        el.innerText = getSavedUserCity() || i18n[curLang].cityNotSelected;
+    }
+
     function openCityOnboarding() {
         buildCityOnboardingOptions();
         const modal = document.getElementById('city-onboarding');
@@ -1965,6 +1991,7 @@ ${book.d}
         rebuildCityOptions();
         setGroupFilterMode(city ? 'mycity' : 'all');
         renderNearestMeeting();
+        updateCitySettingDisplay();
         closeCityOnboarding();
     }
 
@@ -2411,6 +2438,7 @@ ${book.d}
         document.getElementById('date-input').value = storedDate;
         loadTrust();
         syncNotificationSettingsUI();
+        updateCitySettingDisplay();
         updateNotificationBadge();
         setLang(curLang);
         setMotivation();
@@ -2450,7 +2478,7 @@ ${book.d}
 
         window.addEventListener('load', async () => {
             try {
-                const registration = await navigator.serviceWorker.register('sw.js?v=4', { updateViaCache: 'none' });
+                const registration = await navigator.serviceWorker.register('sw.js?v=5', { updateViaCache: 'none' });
                 await registration.update();
                 if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
                 console.log('Service Worker registered and checked for updates');
