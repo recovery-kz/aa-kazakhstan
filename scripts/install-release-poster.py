@@ -1,6 +1,7 @@
 from pathlib import Path
 import base64
 
+# Decode the original uploaded release poster into the news image.
 source = Path('tmp/release-poster/chunk1.txt')
 target = Path('news/2026-07-31-aa-kazakhstan-2-0/poster.jpg')
 encoded = ''.join(source.read_text(encoding='utf-8').split())
