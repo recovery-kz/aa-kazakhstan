@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#050607"> <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
-    <link rel="stylesheet" href="styles.css?v=2.0.8">
+    <link rel="stylesheet" href="styles.css?v=2.0.9">
 <script>
     // Emergency recovery from a stale service-worker reload loop.
     window.__AA_DISABLE_SERVICE_WORKER__ = true;
@@ -233,11 +233,29 @@
                     </div>
                 </div>
                 <div class="backup-tools"><div class="backup-title" id="backup-title">Резервная копия</div><div class="backup-actions"><button class="backup-btn" id="export-data" type="button">Экспортировать мои данные</button><button class="backup-btn" id="restore-data" type="button">Восстановить данные</button></div><input class="backup-file" id="restore-file" type="file" accept="application/json"></div>
-                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">2.0</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
                 <div class="data-freshness">
                     <div><span id="schedule-updated-label">Расписание обновлено</span>: <strong id="schedule-updated-value">30 июля 2026</strong></div>
                     <div><span id="news-checked-label">Новости проверены</span>: <strong id="news-checked-value">—</strong></div>
                 </div>
+                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">2.0</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
+                <section class="visit-stats" aria-labelledby="visit-stats-title" aria-live="polite">
+                    <div class="visit-stats-title" id="visit-stats-title">Статистика посещений</div>
+                    <div class="visit-stats-note" id="visit-stats-note">Одно устройство учитывается один раз в сутки. Данные обезличены.</div>
+                    <div class="visit-stats-grid" role="table" aria-label="Статистика посещений">
+                        <div class="visit-stats-cell visit-stats-corner" role="columnheader"></div>
+                        <div class="visit-stats-cell visit-stats-column" id="visit-stats-app-label" role="columnheader">Приложение</div>
+                        <div class="visit-stats-cell visit-stats-column" id="visit-stats-site-label" role="columnheader">Сайт</div>
+                        <div class="visit-stats-cell visit-stats-period" id="visit-stats-day-label" role="rowheader">Сегодня</div>
+                        <div class="visit-stats-cell visit-stats-value" id="visit-stats-app-day" role="cell">—</div>
+                        <div class="visit-stats-cell visit-stats-value" id="visit-stats-web-day" role="cell">—</div>
+                        <div class="visit-stats-cell visit-stats-period" id="visit-stats-month-label" role="rowheader">За месяц</div>
+                        <div class="visit-stats-cell visit-stats-value" id="visit-stats-app-month" role="cell">—</div>
+                        <div class="visit-stats-cell visit-stats-value" id="visit-stats-web-month" role="cell">—</div>
+                        <div class="visit-stats-cell visit-stats-period" id="visit-stats-year-label" role="rowheader">За год</div>
+                        <div class="visit-stats-cell visit-stats-value" id="visit-stats-app-year" role="cell">—</div>
+                        <div class="visit-stats-cell visit-stats-value" id="visit-stats-web-year" role="cell">—</div>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -356,8 +374,8 @@
 </nav>
 <div class="app-status" id="app-status" role="status" aria-live="polite"></div>
 
-<script src="i18n.js?v=2.0.2"></script>
-<script src="app.js?v=2.0.7" defer></script>
+<script src="i18n.js?v=2.0.3"></script>
+<script src="app.js?v=2.0.8" defer></script>
 <script>
     (() => {
         const splash = document.getElementById('app-splash');
