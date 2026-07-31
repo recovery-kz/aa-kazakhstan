@@ -2,6 +2,7 @@
     'use strict';
 
     const i18n = window.AA_I18N;
+    const principles = window.AA_PRINCIPLES;
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
     let onlyToday = false;
@@ -703,6 +704,7 @@
 
     function setLang(lang) {
         curLang = lang;
+        document.documentElement.lang = lang === 'kz' ? 'kk' : 'ru';
         trackEvent('language_switch', lang);
         localStorage.setItem('aa_lang', lang);
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -744,6 +746,7 @@
         document.getElementById('settings-head-text').innerText = d.settingsHead;
         document.getElementById('settings-version-label').innerText = d.versionLabel;
         document.getElementById('settings-update-label').innerText = d.updateLabel;
+        renderPrinciples(lang);
         renderVisitStatsLabels();
         updateCitySettingDisplay();
 
@@ -782,6 +785,26 @@
         if (currentNewsData) renderNews(currentNewsData);
         if (document.getElementById('tab-lit').classList.contains('active')) renderLit();
         if (document.getElementById('tab-groups').classList.contains('active')) renderGroups();
+    }
+
+    function renderPrinciples(lang) {
+        const content = principles && principles[lang];
+        if (!content) return;
+
+        ['steps', 'traditions', 'concepts'].forEach(sectionName => {
+            const section = content[sectionName];
+            const title = document.getElementById(`${sectionName}-title`);
+            const container = document.getElementById(`${sectionName}-content`);
+            if (!section || !title || !container) return;
+
+            title.innerText = section.title;
+            container.innerHTML = `
+                <p class="principles-intro">${escapeHtml(section.intro)}</p>
+                <ol class="principles-list">
+                    ${section.items.map(item => `<li class="principles-item"><span class="principles-text">${escapeHtml(item)}</span></li>`).join('')}
+                </ol>
+            `;
+        });
     }
 
     let appStatusTimer = null;
