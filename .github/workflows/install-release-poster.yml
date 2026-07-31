@@ -1,0 +1,29 @@
+name: Install release poster
+
+on:
+  push:
+    paths:
+      - 'scripts/install-release-poster.py'
+      - 'tmp/release-poster/chunk1.txt'
+      - '.github/workflows/install-release-poster.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original JPEG
+        run: python scripts/install-release-poster.py
+      - name: Commit image
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add news/2026-07-31-aa-kazakhstan-2-0/poster.jpg
+          git diff --cached --quiet || git commit -m "Install original AA Kazakhstan 2.0 poster"
+          git push
