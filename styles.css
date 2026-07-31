@@ -1076,6 +1076,19 @@ body.large-text .committee-btn .acc-btn-title { font-size: 16px; }
 body.large-text .committee-content p, body.large-text .committee-phone { font-size: 17px; }
 @media (max-width: 420px) { .committee-contact { align-items: stretch; flex-direction: column; } .committee-whatsapp { width: 100%; } }
 
+/* 12 Steps, 12 Traditions and 12 Concepts */
+.principles-main-btn .acc-btn-title { letter-spacing: .025em; }
+.principles-content { padding: 0; background: var(--bg); }
+.principles-intro { margin: 0; padding: 16px; border-bottom: 1px solid var(--border); color: var(--text-sub); font-size: 13px; line-height: 1.55; }
+.principles-list { list-style: none; counter-reset: aa-principle; display: flex; flex-direction: column; gap: 9px; margin: 0; padding: 14px; }
+.principles-item { counter-increment: aa-principle; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 11px; align-items: start; padding: 14px; border: 1px solid var(--border); border-radius: 13px; background: var(--card-bg); color: var(--text-main); font-size: 14px; line-height: 1.58; }
+.principles-item::before { content: counter(aa-principle); width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--accent); color: #111317; font-size: 13px; font-weight: 900; line-height: 1; }
+.principles-text { min-width: 0; padding-top: 5px; }
+body.dark-mode .principles-content { background: #0D1014; }
+body.dark-mode .principles-item { background: var(--card-raised); border-color: rgba(185, 229, 242, .15); }
+body.large-text .principles-intro { font-size: 15px; }
+body.large-text .principles-item { font-size: 17px; line-height: 1.62; }
+
 /* Dark visual system shared with the animated splash */
 body.dark-mode header::before {
     opacity: .22;
