@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#050607"> <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
-    <link rel="stylesheet" href="styles.css?v=2.0.7">
+    <link rel="stylesheet" href="styles.css?v=2.0.8">
 <script>
     // Emergency recovery from a stale service-worker reload loop.
     window.__AA_DISABLE_SERVICE_WORKER__ = true;
@@ -87,6 +87,13 @@
             <button class="today-action" type="button" data-today-action="today"><span class="today-action-icon">📅</span><span id="quick-today-text">Найти собрание сегодня</span></button>
             <button class="today-action" type="button" data-today-action="favorites"><span class="today-action-icon">★</span><span id="quick-favorites-text">Мои группы</span></button>
         </div>
+<div class="sos-wrapper sos-priority-block">
+    <button class="sos-main-btn" id="btn-sos-main" type="button">🚨 НУЖНА ПОМОЩЬ?</button>
+    <div class="sos-options" id="sos-box">
+        <a href="tel:+77051871335" class="sos-opt-link"><span id="sos-ru-text">РУССКИЙ ЯЗЫК</span><span>📞</span></a>
+        <a href="tel:+77074337408" class="sos-opt-link" style="background:#2c3e50;"><span id="sos-kz-text">ҚАЗАҚ ТІЛІ</span><span>📞</span></a>
+    </div>
+</div>
 <a href="https://kaspi.kz/pay/FOAAK?started_from=share" target="_blank" rel="noopener noreferrer" style="text-decoration:none; width:100%; display:block; margin:0 0 15px;">
     <div class="card" style="padding:16px; display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:0; border:2px solid var(--accent);">
         <span style="min-width:0; flex:1; text-align:left;">
@@ -109,13 +116,7 @@
             </div>
             <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:15px;">
                 <input type="date" id="date-input">
-                <div class="sos-wrapper">
-                    <button class="sos-main-btn" id="btn-sos-main" type="button">🚨 НУЖНА ПОМОЩЬ?</button>
-                    <div class="sos-options" id="sos-box">
-                        <a href="tel:+77051871335" class="sos-opt-link"><span id="sos-ru-text">РУССКИЙ ЯЗЫК</span><span>📞</span></a>
-                        <a href="tel:+77074337408" class="sos-opt-link" style="background:#2c3e50;"><span id="sos-kz-text">ҚАЗАҚ ТІЛІ</span><span>📞</span></a>
-                    </div>
-                </div>
+
             </div>
         </div>
     </div>
