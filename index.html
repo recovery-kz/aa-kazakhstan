@@ -21,7 +21,7 @@
     <meta name="theme-color" content="#050607"> <link rel="apple-touch-icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
     <link rel="icon" href="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png">
 
-    <link rel="stylesheet" href="styles.css?v=2.0.9">
+    <link rel="stylesheet" href="styles.css?v=2.1.0">
 <script>
     // Emergency recovery from a stale service-worker reload loop.
     window.__AA_DISABLE_SERVICE_WORKER__ = true;
@@ -58,6 +58,7 @@
         <div class="lang-switch">
             <button class="lang-btn active" id="l-ru" type="button">RU</button>
             <button class="lang-btn" id="l-kz" type="button">KZ</button>
+            <button class="lang-btn" id="l-en" type="button">EN</button>
         </div>
     </div>
     <img src="https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png" alt="Лого" class="header-logo">
@@ -267,6 +268,7 @@
     </div>
 
     <div id="tab-news" class="content-section">
+        <div class="news-language-note" id="news-language-note" hidden>News is published in its original language.</div>
         <div id="news-list" style="width:100%;">
             <div class="card news-loading">Загрузка новостей...</div>
         </div>
@@ -318,7 +320,7 @@
     <div class="first-run-step active" data-first-step="1">
       <div class="first-run-title" id="first-run-title">Выберите язык</div>
       <div class="first-run-note" id="first-run-note-1">Язык можно изменить позже в верхней части экрана.</div>
-      <div class="first-run-options"><button class="first-run-option active" type="button" data-first-lang="ru">Русский</button><button class="first-run-option" type="button" data-first-lang="kz">Қазақша</button></div>
+      <div class="first-run-options"><button class="first-run-option active" type="button" data-first-lang="ru">Русский</button><button class="first-run-option" type="button" data-first-lang="kz">Қазақша</button><button class="first-run-option" type="button" data-first-lang="en">English</button></div>
     </div>
     <div class="first-run-step" data-first-step="2">
       <div class="first-run-title" id="first-run-city-title">Выберите город</div>
@@ -360,7 +362,7 @@
     </div>
 </div>
 
-<div class="install-banner" id="install-banner" role="status"><div class="install-banner-text">Установите приложение АА Казахстана на телефон</div><button id="install-app" type="button">Установить</button><button class="install-close" id="install-close" type="button" aria-label="Закрыть">×</button></div>
+<div class="install-banner" id="install-banner" role="status"><div class="install-banner-text" id="install-banner-text">Установите приложение АА Казахстана на телефон</div><button id="install-app" type="button">Установить</button><button class="install-close" id="install-close" type="button" aria-label="Закрыть">×</button></div>
 <nav class="bottom-nav" aria-label="Основная навигация">
     <button class="nav-item active-nav" id="btn-c" type="button" data-tab="counter" aria-label="Сегодня">
         <span class="nav-icon-wrap"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/><circle cx="12" cy="15" r="2"/></svg></span><span class="nav-txt">Сегодня</span>
@@ -380,9 +382,9 @@
 </nav>
 <div class="app-status" id="app-status" role="status" aria-live="polite"></div>
 
-<script src="i18n.js?v=2.0.4"></script>
-<script src="principles.js?v=1.0.0"></script>
-<script src="app.js?v=2.0.9" defer></script>
+<script src="i18n.js?v=2.1.0"></script>
+<script src="principles.js?v=1.1.0"></script>
+<script src="app.js?v=2.1.0" defer></script>
 <script>
     (() => {
         const splash = document.getElementById('app-splash');
