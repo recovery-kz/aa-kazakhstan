@@ -837,3 +837,22 @@ body.first-run-open { overflow: auto !important; }
         .book-cover.book-cover-real::before,
         .book-cover.book-cover-real::after { display: none; }
         .book-cover-image { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; }
+
+/* Структура АА Казахстана */
+.structure-main-btn { border-top: none; }
+.structure-content { padding: 14px; background: var(--bg); }
+.structure-image-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: #f7f8fb; margin-bottom: 14px; -webkit-overflow-scrolling: touch; }
+.structure-image { display: block; width: 100%; min-width: 760px; height: auto; }
+.committee-list { display: flex; flex-direction: column; gap: 9px; }
+.committee-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 13px; overflow: hidden; }
+.committee-btn { min-height: 58px; padding: 13px 42px 13px 14px; border: none; }
+.committee-btn .acc-btn-title { font-size: 13px; line-height: 1.35; text-transform: none; }
+.committee-content { padding: 0 14px 14px; border-top: 1px solid var(--border); }
+.committee-content p { margin: 13px 0; color: var(--text-main); font-size: 14px; line-height: 1.58; }
+.committee-contact { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+.committee-contact strong { display: block; color: var(--primary); font-size: 13px; line-height: 1.35; }
+.committee-phone { display: block; margin-top: 5px; color: var(--text-main); font-size: 14px; font-weight: 800; text-decoration: none; }
+.committee-whatsapp { flex-shrink: 0; min-height: 42px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 11px; background: #128c4e; color: #fff; font-size: 13px; font-weight: 850; text-decoration: none; }
+body.large-text .committee-btn .acc-btn-title { font-size: 16px; }
+body.large-text .committee-content p, body.large-text .committee-phone { font-size: 17px; }
+@media (max-width: 420px) { .committee-contact { align-items: stretch; flex-direction: column; } .committee-whatsapp { width: 100%; } }
