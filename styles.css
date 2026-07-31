@@ -18,16 +18,21 @@
         }
 
         body.dark-mode {
-            --primary: #ADD8E6; /* Light Blue */
-            --bg: #1A1A1A;
-            --card-bg: #262626;
-            --text-main: #F0F0F0;
-            --text-sub: #C0C0C0;
-            --border: #404040;
-            --nav-bg: #262626;
-            --nav-inactive: #606060;
-            --link: #87CEFA;
-            --ornament: #333333; /* Бледный узор для темной темы */
+            --primary: #B9E5F2;
+            --accent: #F2BE2D;
+            --bg: #080A0D;
+            --card-bg: #15191E;
+            --card-raised: #1B2026;
+            --text-main: #F5F7FA;
+            --text-sub: #A9B2BD;
+            --border: #2D343D;
+            --nav-bg: #101419;
+            --nav-inactive: #727C87;
+            --open: #61D29C;
+            --soon: #F0B85B;
+            --closed: #7C8793;
+            --link: #9EDCEC;
+            --ornament: #202832;
         }
 
         * {
@@ -221,6 +226,14 @@
             transition: background 0.3s, color 0.3s;
         }
 
+        body.dark-mode {
+            background:
+                radial-gradient(circle at 100% 0, rgba(242, 190, 45, .075), transparent 28rem),
+                radial-gradient(circle at 0 75%, rgba(89, 174, 226, .07), transparent 30rem),
+                var(--bg);
+            background-attachment: fixed;
+        }
+
         header {
             background: var(--card-bg);
             color: var(--primary);
@@ -236,6 +249,13 @@
             flex-direction: column;
             align-items: center;
             border-bottom: 2px solid var(--accent); /* Песочно-золотая плашка */
+        }
+
+        body.dark-mode header {
+            background: linear-gradient(180deg, rgba(21, 25, 30, .98), rgba(12, 15, 19, .96));
+            border-bottom-width: 1px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .34), 0 1px 0 rgba(242, 190, 45, .18);
+            backdrop-filter: blur(18px);
         }
 
         header::before {
@@ -352,6 +372,12 @@
             width: 100%;
             overflow: hidden;
             border: 1px solid var(--border);
+        }
+
+        body.dark-mode .card {
+            background: linear-gradient(145deg, rgba(27, 32, 38, .98), rgba(18, 22, 27, .98));
+            border-color: rgba(185, 229, 242, .12);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255, 255, 255, .025);
         }
 
         .news-img {
@@ -1038,3 +1064,156 @@ body.structure-image-open { overflow: hidden; }
 body.large-text .committee-btn .acc-btn-title { font-size: 16px; }
 body.large-text .committee-content p, body.large-text .committee-phone { font-size: 17px; }
 @media (max-width: 420px) { .committee-contact { align-items: stretch; flex-direction: column; } .committee-whatsapp { width: 100%; } }
+
+/* Dark visual system shared with the animated splash */
+body.dark-mode header::before {
+    opacity: .22;
+    background-image: radial-gradient(rgba(185, 229, 242, .22) .55px, transparent .55px);
+    background-size: 6px 6px;
+    mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+}
+body.dark-mode .header-title {
+    color: var(--text-main);
+    letter-spacing: .13em;
+}
+body.dark-mode .theme-toggle,
+body.dark-mode .notification-button,
+body.dark-mode .lang-switch {
+    background: rgba(255, 255, 255, .045);
+    border: 1px solid rgba(185, 229, 242, .12);
+}
+body.dark-mode .theme-toggle,
+body.dark-mode .lang-btn {
+    color: var(--text-sub);
+}
+body.dark-mode .lang-btn.active {
+    background: var(--accent);
+    color: #111317;
+    box-shadow: 0 0 18px rgba(242, 190, 45, .16);
+}
+body.dark-mode .notification-button { color: var(--accent); }
+
+body.dark-mode .motivation-card {
+    border-color: rgba(242, 190, 45, .62);
+    box-shadow: 0 12px 34px rgba(0, 0, 0, .25), 0 0 22px rgba(242, 190, 45, .045);
+}
+body.dark-mode .today-action,
+body.dark-mode .sober-unit,
+body.dark-mode input[type="date"],
+body.dark-mode .profile-input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .committee-item {
+    background: var(--card-raised);
+}
+body.dark-mode .today-action {
+    border-color: rgba(185, 229, 242, .13);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025);
+}
+body.dark-mode .today-action-icon { filter: saturate(.85); }
+body.dark-mode .sober-unit {
+    border-color: rgba(242, 190, 45, .42);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .025), 0 7px 18px rgba(0, 0, 0, .18);
+}
+body.dark-mode .medal-bar-bg { background: #272D34; }
+
+body.dark-mode .btn-primary,
+body.dark-mode .city-onboarding-btn,
+body.dark-mode .book-action.primary,
+body.dark-mode .group-action.primary,
+body.dark-mode .filter-btn.active,
+body.dark-mode .group-quick-filter.active,
+body.dark-mode .book-filter.active,
+body.dark-mode .text-size-btn.active,
+body.dark-mode .first-run-option.active,
+body.dark-mode .first-run-btn.primary,
+body.dark-mode .info-modal-close,
+body.dark-mode .install-banner button {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #111317;
+    box-shadow: 0 6px 18px rgba(242, 190, 45, .13);
+}
+body.dark-mode .sos-main-btn {
+    border-color: rgba(255, 255, 255, .1);
+    box-shadow: 0 8px 22px rgba(210, 43, 43, .17);
+}
+body.dark-mode .call-btn,
+body.dark-mode .library-call {
+    background: color-mix(in srgb, var(--primary) 12%, var(--card-raised));
+    border-color: rgba(185, 229, 242, .28);
+    color: var(--primary);
+}
+body.dark-mode .filter-btn,
+body.dark-mode #citySelect {
+    border-color: rgba(185, 229, 242, .35);
+}
+
+body.dark-mode .group-card {
+    border-left-color: var(--primary);
+}
+body.dark-mode .group-card.favorite {
+    border-left-color: var(--accent);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .24), 0 0 20px rgba(242, 190, 45, .035);
+}
+body.dark-mode .group-action,
+body.dark-mode .favorite-btn,
+body.dark-mode .book-action,
+body.dark-mode .book-filter,
+body.dark-mode .group-quick-filter,
+body.dark-mode .notification-small-btn,
+body.dark-mode .text-size-btn,
+body.dark-mode .backup-btn {
+    background: var(--card-raised);
+    border-color: rgba(185, 229, 242, .15);
+}
+body.dark-mode .favorite-btn.active {
+    color: var(--accent);
+    border-color: rgba(242, 190, 45, .55);
+    background: rgba(242, 190, 45, .07);
+}
+
+body.dark-mode .acc-btn,
+body.dark-mode .acc-content,
+body.dark-mode .notification-sheet,
+body.dark-mode .book-modal-panel,
+body.dark-mode .info-modal-sheet,
+body.dark-mode .city-onboarding-sheet,
+body.dark-mode .first-run-sheet {
+    background: var(--card-bg);
+}
+body.dark-mode .structure-content { background: #0D1014; }
+body.dark-mode .structure-image-wrap { border-color: rgba(185, 229, 242, .2); }
+
+body.dark-mode .bottom-nav {
+    background: rgba(12, 16, 20, .94);
+    border-top-color: rgba(185, 229, 242, .13);
+    box-shadow: 0 -14px 34px rgba(0, 0, 0, .32);
+}
+body.dark-mode .nav-item.active-nav {
+    color: var(--accent);
+}
+body.dark-mode .nav-item.active-nav .nav-icon-wrap {
+    background: rgba(242, 190, 45, .12);
+    box-shadow: 0 0 18px rgba(242, 190, 45, .08);
+}
+body.dark-mode .notification-switch:checked {
+    background: var(--accent);
+}
+body.dark-mode .notification-switch:checked::after { background: #14171B; }
+body.dark-mode .news-slide { background: var(--card-bg); }
+body.dark-mode .news-img,
+body.dark-mode .news-slide img { background: #090B0E; }
+body.dark-mode .app-status {
+    background: #E9EFF3;
+    color: #111317;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    body.dark-mode .card,
+    body.dark-mode .today-action,
+    body.dark-mode .group-action,
+    body.dark-mode .nav-item {
+        transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+}
