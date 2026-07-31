@@ -4,8 +4,8 @@
   "description": "Мобильное приложение сообщества АА Казахстана",
   "start_url": "./?source=pwa",
   "display": "standalone",
-  "background_color": "#2B4F60",
-  "theme_color": "#2B4F60",
+  "background_color": "#050607",
+  "theme_color": "#050607",
   "icons": [
     {
       "src": "https://aaorg.kz/wp-content/uploads/2020/02/%D0%BB%D0%BE%D0%B3%D0%BE.png",
