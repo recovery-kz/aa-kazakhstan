@@ -1217,3 +1217,22 @@ body.dark-mode .app-status {
         transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
     }
 }
+
+/* Priority help action above the Seventh Tradition */
+.sos-priority-block {
+    margin: 0 0 15px;
+}
+.sos-priority-block .sos-main-btn {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #111317;
+    box-shadow: 0 8px 22px rgba(242, 190, 45, .18);
+}
+.sos-priority-block .sos-main-btn:active {
+    transform: translateY(1px);
+}
+.sos-priority-block .sos-main-btn:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 36%, transparent);
+    outline-offset: 3px;
+}
+
