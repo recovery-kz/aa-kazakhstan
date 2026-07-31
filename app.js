@@ -409,13 +409,44 @@
 
     function toggleAcc(id, btn) {
         const el = document.getElementById(id);
+        if (!el || !btn) return;
         const isOpen = el.style.display === 'block';
-        document.querySelectorAll('.acc-content').forEach(c => c.style.display = 'none');
-        document.querySelectorAll('.acc-btn').forEach(b => b.classList.remove('open'));
+
+        // Вложенные комитеты раскрываются независимо и не закрывают общий раздел.
+        if (btn.classList.contains('committee-btn')) {
+            el.style.display = isOpen ? 'none' : 'block';
+            btn.classList.toggle('open', !isOpen);
+            btn.setAttribute('aria-expanded', String(!isOpen));
+            return;
+        }
+
+        // Для верхнего уровня сохраняем поведение обычного аккордеона.
+        document.querySelectorAll('.acc-content:not(.committee-content)').forEach(c => c.style.display = 'none');
+        document.querySelectorAll('.acc-btn:not(.committee-btn)').forEach(b => {
+            b.classList.remove('open');
+            b.setAttribute('aria-expanded', 'false');
+        });
         if (!isOpen) {
             el.style.display = 'block';
             btn.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
         }
+    }
+
+    function openStructureImage() {
+        const modal = document.getElementById('structure-image-modal');
+        if (!modal) return;
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('structure-image-open');
+    }
+
+    function closeStructureImage() {
+        const modal = document.getElementById('structure-image-modal');
+        if (!modal) return;
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('structure-image-open');
     }
 
     function toggleToday() { setGroupFilterMode(groupFilterMode === 'today' ? 'all' : 'today'); }
@@ -1368,6 +1399,11 @@ function closeFirstTimeInfo() {
         document.getElementById('l-kz').addEventListener('click', () => setLang('kz'));
         document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
         document.getElementById('mot-toggle').addEventListener('click', toggleMotivation);
+        document.getElementById('structure-image-trigger')?.addEventListener('click', openStructureImage);
+        document.getElementById('structure-image-close')?.addEventListener('click', closeStructureImage);
+        document.getElementById('structure-image-modal')?.addEventListener('click', event => {
+            if (event.target.id === 'structure-image-modal') closeStructureImage();
+        });
         document.getElementById('today-actions').addEventListener('click', event => {
             const action = event.target.closest('[data-today-action]');
             if (!action) return;
@@ -1390,7 +1426,7 @@ function closeFirstTimeInfo() {
         document.getElementById('notification-list').addEventListener('click', event => { const item = event.target.closest('[data-notification-id]'); if (item) openInternalNotification(item.dataset.notificationId); });
         ['master','reflection','news','today','favorites','browser'].forEach(key => document.getElementById(`notif-${key}`).addEventListener('change', event => updateNotificationSetting(key, event.target.checked)));
         document.getElementById('notif-before').addEventListener('change', event => updateNotificationSetting('before', Number(event.target.value)));
-        document.addEventListener('keydown', event => { if (event.key === 'Escape') closeNotificationCenter(); });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeNotificationCenter(); closeStructureImage(); } });
 
     document.getElementById('list-container').addEventListener('click', event => {
         const button = event.target.closest('[data-favorite-id]');

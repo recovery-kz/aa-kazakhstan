@@ -841,8 +841,15 @@ body.first-run-open { overflow: auto !important; }
 /* Структура АА Казахстана */
 .structure-main-btn { border-top: none; }
 .structure-content { padding: 14px; background: var(--bg); }
-.structure-image-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: #f7f8fb; margin-bottom: 14px; -webkit-overflow-scrolling: touch; }
-.structure-image { display: block; width: 100%; min-width: 760px; height: auto; }
+.structure-image-wrap { width: 100%; display: block; position: relative; overflow: hidden; padding: 0; border: 1px solid var(--border); border-radius: 14px; background: #f7f8fb; margin-bottom: 14px; cursor: zoom-in; font: inherit; }
+.structure-image { display: block; width: 100%; min-width: 0; height: auto; object-fit: contain; }
+.structure-image-hint { position: absolute; right: 8px; bottom: 8px; padding: 6px 9px; border-radius: 999px; background: rgba(0,0,0,.7); color: #fff; font-size: 10px; line-height: 1; font-weight: 800; }
+.structure-image-modal { position: fixed; inset: 0; z-index: 9000; display: none; align-items: center; justify-content: center; padding: 18px; background: rgba(0,0,0,.88); }
+.structure-image-modal.open { display: flex; }
+.structure-image-modal-panel { position: relative; width: 100%; max-width: 1200px; max-height: 94vh; overflow: auto; border-radius: 14px; background: #fff; }
+.structure-image-modal-panel img { display: block; width: 100%; height: auto; min-width: 760px; }
+.structure-image-close { position: sticky; float: right; top: 10px; right: 10px; z-index: 2; width: 42px; height: 42px; margin: 10px 10px -52px 0; border: 0; border-radius: 50%; background: rgba(0,0,0,.75); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }
+body.structure-image-open { overflow: hidden; }
 .committee-list { display: flex; flex-direction: column; gap: 9px; }
 .committee-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 13px; overflow: hidden; }
 .committee-btn { min-height: 58px; padding: 13px 42px 13px 14px; border: none; }

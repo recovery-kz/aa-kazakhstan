@@ -111,7 +111,7 @@
         <div class="card" style="width:100%;">
             <button class="acc-btn structure-main-btn" type="button" data-acc-target="acc-aa-structure" id="btn-aa-structure"><span class="acc-btn-left"><span class="acc-btn-title">СТРУКТУРА АА КАЗАХСТАНА</span></span></button>
             <div class="acc-content structure-content" id="acc-aa-structure">
-                <div class="structure-image-wrap"><img class="structure-image" src="assets/aa-kazakhstan-structure.svg" alt="Структура Сообщества АА в Республике Казахстан" loading="lazy"></div>
+                <button class="structure-image-wrap" id="structure-image-trigger" type="button" aria-label="Увеличить схему структуры АА Казахстана"><img class="structure-image" src="assets/aa-kazakhstan-structure.svg" alt="Структура Сообщества АА в Республике Казахстан" loading="lazy"><span class="structure-image-hint">Нажмите, чтобы увеличить</span></button>
                 <div class="committee-list"><div class="committee-item">
         <button class="acc-btn committee-btn" type="button" data-acc-target="acc-committee-1"><span class="acc-btn-left"><span class="acc-btn-title">Комитет по взаимодействию с государственными органами</span></span></button>
         <div class="acc-content committee-content" id="acc-committee-1">
@@ -308,6 +308,13 @@
     </div>
 </div>
 
+<div class="structure-image-modal" id="structure-image-modal" aria-hidden="true">
+    <div class="structure-image-modal-panel" role="dialog" aria-modal="true" aria-label="Структура АА Казахстана">
+        <button class="structure-image-close" id="structure-image-close" type="button" aria-label="Закрыть">×</button>
+        <img src="assets/aa-kazakhstan-structure.svg" alt="Структура Сообщества АА в Республике Казахстан">
+    </div>
+</div>
+
 <div class="notification-panel" id="notification-panel" aria-hidden="true">
     <div class="notification-sheet" role="dialog" aria-modal="true" aria-labelledby="notification-center-title">
         <div class="notification-head"><div class="notification-title" id="notification-center-title">Уведомления</div><div class="notification-head-actions"><button class="notification-small-btn" id="notification-read-all" type="button">Прочитать все</button><button class="notification-small-btn notification-close" id="notification-close" type="button">×</button></div></div>
@@ -336,6 +343,6 @@
 <div class="app-status" id="app-status" role="status" aria-live="polite"></div>
 
 <script src="i18n.js?v=2.0.2"></script>
-<script src="app.js?v=2.0.3" defer></script>
+<script src="app.js?v=2.0.4" defer></script>
 </body>
 </html>
