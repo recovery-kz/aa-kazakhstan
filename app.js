@@ -403,7 +403,7 @@
         const isDark = document.body.classList.toggle('dark-mode');
         localStorage.setItem('aa_theme', isDark ? 'dark' : 'light');
         document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
-        const themeColor = isDark ? '#1A1A1A' : '#FAF0E6';
+        const themeColor = isDark ? '#080A0D' : '#FAF0E6';
         document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
     }
 
@@ -1144,13 +1144,14 @@ function closeFirstTimeInfo() {
 
     function applySavedTheme() {
         const savedTheme = localStorage.getItem('aa_theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const shouldDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+        const shouldDark = savedTheme !== 'light';
         if (shouldDark) {
             document.body.classList.add('dark-mode');
             document.getElementById('theme-icon').innerText = '☀️';
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1A1A1A');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', '#080A0D');
         } else {
+            document.body.classList.remove('dark-mode');
+            document.getElementById('theme-icon').innerText = '🌙';
             document.querySelector('meta[name="theme-color"]').setAttribute('content', '#FAF0E6');
         }
     }
