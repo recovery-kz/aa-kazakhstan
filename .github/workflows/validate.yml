@@ -33,7 +33,7 @@ jobs:
           grep -q 'styles.css' index.html
           grep -q 'app.js' index.html
           grep -q 'i18n.js' index.html
-          grep -q 'aa-kaz-v10' sw.js
+          grep -q 'aa-kaz-disabled-v13' sw.js
           grep -q '77051871335' app.js
           grep -q 'id="install-banner"' index.html
           grep -q 'id="export-data"' index.html
