@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1020" viewBox="0 0 1400 1020" role="img" aria-labelledby="title desc">
+  <title id="title">Структура Сообщества АА в Республике Казахстан</title>
+  <desc id="desc">Схема групп, интергрупп, Совета обслуживания, комитетов и Фонда обслуживания АА Казахстана.</desc>
+  <rect width="1400" height="1020" fill="#f7f8fb"/>
+  <g font-family="Arial, sans-serif" fill="#173b78" text-anchor="middle">
+    <text x="700" y="54" font-size="39" font-weight="700">Структура Сообщества АА в Республике Казахстан</text>
+  </g>
+  <g stroke="#173b78" stroke-width="4" fill="none">
+    <path d="M700 136V174M700 236V280M700 236L250 280M700 236L1150 280M700 342V386M700 448V500M700 448L230 500M700 448L1170 500M700 562V606M700 562L220 606M700 562L470 606M700 562L930 606M700 562L1180 606M700 740V790M700 852V900M700 852L260 900M700 852L1140 900"/>
+  </g>
+  <g fill="#244787" stroke="#173b78" stroke-width="3">
+    <rect x="535" y="78" width="330" height="58" rx="16"/>
+    <rect x="535" y="176" width="330" height="60" rx="16"/>
+    <rect x="70" y="280" width="360" height="62" rx="16"/>
+    <rect x="520" y="280" width="360" height="62" rx="16"/>
+    <rect x="970" y="280" width="360" height="62" rx="16"/>
+    <rect x="520" y="386" width="360" height="62" rx="16"/>
+    <rect x="35" y="500" width="390" height="62" rx="16"/>
+    <rect x="505" y="500" width="390" height="62" rx="16"/>
+    <rect x="975" y="500" width="390" height="62" rx="16"/>
+    <rect x="35" y="606" width="360" height="72" rx="16"/>
+    <rect x="420" y="606" width="360" height="72" rx="16"/>
+    <rect x="805" y="606" width="360" height="72" rx="16"/>
+    <rect x="1170" y="606" width="195" height="72" rx="16"/>
+    <rect x="35" y="690" width="360" height="72" rx="16"/>
+    <rect x="420" y="690" width="360" height="72" rx="16"/>
+    <rect x="805" y="690" width="360" height="72" rx="16"/>
+    <rect x="1170" y="690" width="195" height="72" rx="16"/>
+    <rect x="500" y="790" width="400" height="62" rx="16"/>
+    <rect x="80" y="900" width="360" height="62" rx="16"/>
+    <rect x="520" y="900" width="360" height="62" rx="16"/>
+    <rect x="960" y="900" width="360" height="62" rx="16"/>
+  </g>
+  <g fill="#fff" font-family="Arial, sans-serif" text-anchor="middle" font-weight="700">
+    <text x="700" y="116" font-size="25">ГРУППЫ</text>
+    <text x="700" y="214" font-size="23">Представители групп</text>
+    <text x="250" y="319" font-size="22">Интергруппа г. Алматы</text>
+    <text x="700" y="319" font-size="22">Интергруппа Казахстана</text>
+    <text x="1150" y="319" font-size="22">Интергруппа г. Астана</text>
+    <text x="700" y="425" font-size="24">СОВЕТ ОБСЛУЖИВАНИЯ</text>
+    <text x="230" y="539" font-size="20">Состав Совета обслуживания</text>
+    <text x="700" y="539" font-size="24">КОМИТЕТЫ</text>
+    <text x="1170" y="539" font-size="23">Конференции</text>
+    <text x="215" y="636" font-size="19"><tspan x="215">Лечебные учреждения</tspan><tspan x="215" dy="24">(ЛУ)</tspan></text>
+    <text x="600" y="636" font-size="18"><tspan x="600">Информирование</tspan><tspan x="600" dy="23">общественности (КИО)</tspan></text>
+    <text x="985" y="636" font-size="18"><tspan x="985">Духовные учреждения</tspan><tspan x="985" dy="23">(ДУ)</tspan></text>
+    <text x="1268" y="634" font-size="16"><tspan x="1268">Гос. органы</tspan><tspan x="1268" dy="21">(ГО)</tspan></text>
+    <text x="215" y="733" font-size="20">Литературный (ЛК)</text>
+    <text x="600" y="720" font-size="18"><tspan x="600">Организация и развитие</tspan><tspan x="600" dy="23">групп (КОРГ)</tspan></text>
+    <text x="985" y="733" font-size="20">Международный (МК)</text>
+    <text x="1268" y="719" font-size="16"><tspan x="1268">Финансовый</tspan><tspan x="1268" dy="21">комитет</tspan></text>
+    <text x="700" y="829" font-size="24">ФОНД ОБСЛУЖИВАНИЯ</text>
+    <text x="260" y="939" font-size="22">Генеральный директор</text>
+    <text x="700" y="939" font-size="22">Бухгалтер</text>
+    <text x="1140" y="939" font-size="22">Секретарь</text>
+  </g>
+</svg>
