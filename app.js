@@ -1623,6 +1623,7 @@ function closeFirstTimeInfo() {
         document.body.classList.remove('first-run-open');
         setTimeout(runInternalNotificationChecks, 1800);
         notificationTimer = setInterval(runInternalNotificationChecks, 60000);
+        window.dispatchEvent(new Event('aa-app-ready'));
     }
 
     window.addEventListener('online', () => {
@@ -1663,4 +1664,3 @@ function closeFirstTimeInfo() {
         document.getElementById('install-close')?.addEventListener('click',()=>document.getElementById('install-banner')?.classList.remove('show'));
     });
 })();
-
