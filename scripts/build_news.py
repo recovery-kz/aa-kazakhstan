@@ -53,6 +53,7 @@ def load_flat_image(image: Path, existing_dates: dict[str, str]) -> dict[str, An
     return {
         "id": f"flat-{image.stem}",
         "date": publication_date,
+        "_sort_order": 0,
         "title": "",
         "category": "",
         "description": "",
@@ -104,6 +105,7 @@ def load_legacy_folder(folder: Path) -> dict[str, Any] | None:
     return {
         "id": folder.name,
         "date": post["date"],
+        "_sort_order": int(post.get("sort_order", 0)),
         "title": str(post["title"]).strip(),
         "category": str(post["category"]).strip(),
         "description": str(post.get("description", "")).strip(),
@@ -132,9 +134,12 @@ def main() -> None:
             posts.append(post)
 
     posts.sort(
-        key=lambda item: (item["date"], item["id"]),
+        key=lambda item: (item["date"], item["_sort_order"], item["id"]),
         reverse=True,
     )
+
+    for post in posts:
+        post.pop("_sort_order", None)
 
     OUTPUT_FILE.write_text(
         json.dumps(posts, ensure_ascii=False, indent=2),
