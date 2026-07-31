@@ -1,10 +1,11 @@
 name: Fix forum poster format
 
 on:
-  push:
+  pull_request:
     paths:
       - 'scripts/fix-forum-poster-format.py'
       - '.github/workflows/fix-forum-poster-format.yml'
+      - 'news/2026-07-31-almaty-forum-4/original-poster.jpg'
 
 permissions:
   contents: write
@@ -14,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -33,4 +36,4 @@ PY
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add news/2026-07-31-almaty-forum-4/original-poster.jpg
           git diff --cached --quiet || git commit -m "Convert forum poster to real JPEG"
-          git push
+          git push origin HEAD:${{ github.head_ref }}
