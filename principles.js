@@ -110,5 +110,61 @@ window.AA_PRINCIPLES = {
                 'Конференцияның жалпы кепілдіктері: Конференция ешқашан қауіпті байлықтың немесе биліктің орталығына айналмауы тиіс; жеткілікті ағымдағы қаражат пен орынды резерв оның парасатты қаржылық қағидасы болуы керек; Конференцияның ешбір мүшесіне шексіз билік берілмеуі тиіс; барлық маңызды шешімдер талқылау және дауыс беру арқылы, ал мүмкіндігінше елеулі бірауыздылықпен қабылдануы керек; Конференцияның әрекеттері ешкімді жеке жазалауға бағытталмауы немесе қоғамдық дауларды қоздырмауы тиіс; Конференция ешқашан билік жүргізбеуі керек және өзі қызмет ететін Қауымдастық сияқты ойы мен ісінде әрқашан демократиялық болып қалуы тиіс.'
             ]
         }
+    },
+    en: {
+        steps: {
+            title: '12 STEPS',
+            intro: 'The Twelve Steps are the foundation of the Alcoholics Anonymous program of personal recovery.',
+            items: [
+                'We admitted we were powerless over alcohol — that our lives had become unmanageable.',
+                'Came to believe that a Power greater than ourselves could restore us to sanity.',
+                'Made a decision to turn our will and our lives over to the care of God as we understood Him.',
+                'Made a searching and fearless moral inventory of ourselves.',
+                'Admitted to God, to ourselves, and to another human being the exact nature of our wrongs.',
+                'Were entirely ready to have God remove all these defects of character.',
+                'Humbly asked Him to remove our shortcomings.',
+                'Made a list of all persons we had harmed, and became willing to make amends to them all.',
+                'Made direct amends to such people wherever possible, except when to do so would injure them or others.',
+                'Continued to take personal inventory and when we were wrong promptly admitted it.',
+                'Sought through prayer and meditation to improve our conscious contact with God as we understood Him, praying only for knowledge of His will for us and the power to carry that out.',
+                'Having had a spiritual awakening as the result of these Steps, we tried to carry this message to alcoholics, and to practice these principles in all our affairs.'
+            ]
+        },
+        traditions: {
+            title: '12 TRADITIONS',
+            intro: 'The Twelve Traditions help AA preserve unity and guide the life of its groups.',
+            items: [
+                'Our common welfare should come first; personal recovery depends upon AA unity.',
+                'For our group purpose there is but one ultimate authority — a loving God as He may express Himself in our group conscience. Our leaders are but trusted servants; they do not govern.',
+                'The only requirement for AA membership is a desire to stop drinking.',
+                'Each group should be autonomous except in matters affecting other groups or AA as a whole.',
+                'Each group has but one primary purpose — to carry its message to the alcoholic who still suffers.',
+                'An AA group ought never endorse, finance, or lend the AA name to any related facility or outside enterprise, lest problems of money, property, and prestige divert us from our primary purpose.',
+                'Every AA group ought to be fully self-supporting, declining outside contributions.',
+                'Alcoholics Anonymous should remain forever nonprofessional, but our service centers may employ special workers.',
+                'AA, as such, ought never be organized; but we may create service boards or committees directly responsible to those they serve.',
+                'Alcoholics Anonymous has no opinion on outside issues; hence the AA name ought never be drawn into public controversy.',
+                'Our public relations policy is based on attraction rather than promotion; we need always maintain personal anonymity at the level of press, radio, and films.',
+                'Anonymity is the spiritual foundation of all our Traditions, ever reminding us to place principles before personalities.'
+            ]
+        },
+        concepts: {
+            title: '12 CONCEPTS',
+            intro: 'The Twelve Concepts describe principles of responsibility, authority, and cooperation in AA service.',
+            items: [
+                'Final responsibility and ultimate authority for AA world services should always reside in the collective conscience of our whole Fellowship.',
+                'The General Service Conference of AA has become, for nearly every practical purpose, the active voice and the effective conscience of our whole Society in its world affairs.',
+                'To ensure effective leadership, we should endow each element of AA — the Conference, the General Service Board and its service corporations, staffs, committees, and executives — with a traditional Right of Decision.',
+                'At all responsible levels, we should maintain a traditional Right of Participation, allowing voting representation in reasonable proportion to the responsibility each must discharge.',
+                'Throughout our structure, a traditional Right of Appeal should prevail so minority opinion will be heard and personal grievances receive careful consideration.',
+                'The Conference recognizes that the chief initiative and active responsibility in most world service matters should be exercised by the trustee members of the Conference acting as the General Service Board.',
+                'The Charter and Bylaws of the General Service Board are legal instruments empowering the trustees to manage world service affairs. The Conference Charter is not a legal document; it relies on the force of tradition and the AA purse for final effectiveness.',
+                'The trustees are the principal planners and administrators of overall policy and finance. They exercise custodial oversight of the separately incorporated and constantly active services through their ability to elect all directors of those entities.',
+                'Good service leadership at all levels is indispensable. Primary world service leadership, once exercised by AA’s founders, must necessarily be assumed by the trustees.',
+                'Every service responsibility should be matched by an equal service authority, with the scope of that authority always clearly defined.',
+                'The trustees should always have the best possible committees, service corporation directors, executives, staffs, and consultants. Composition, qualifications, induction procedures, rights, and duties will always be matters of serious concern.',
+                'General Warranties of the Conference: it shall never become the seat of perilous wealth or power; sufficient operating funds and a prudent reserve shall be its financial principle; no Conference member shall be placed in unqualified authority; important decisions shall be reached by discussion, vote, and whenever possible substantial unanimity; Conference actions shall never be personally punitive or provoke public controversy; it shall never perform acts of government and, like the Society it serves, shall always remain democratic in thought and action.'
+            ]
+        }
     }
 };
