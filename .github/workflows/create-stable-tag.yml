@@ -1,0 +1,29 @@
+name: Create stable tag
+
+"on":
+  push:
+    branches:
+      - agent/strengthen-validation
+    paths:
+      - .github/workflows/create-stable-tag.yml
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create immutable stable tag
+        run: |
+          if git rev-parse "refs/tags/v2.1.0-stable" >/dev/null 2>&1; then
+            echo "Tag already exists"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a v2.1.0-stable 90c6f6ff45a473d5c7f602e05d7e2e93063dbab7 -m "AA Kazakhstan stable 2.1.0 — 2026-08-03"
+          git push origin refs/tags/v2.1.0-stable
