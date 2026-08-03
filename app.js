@@ -27,13 +27,8 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const VISIT_STATS_ENDPOINT = 'https://countapi.mileshilliard.com/api/v1';
-    const VISIT_STATS_KEY_PREFIX = 'aa_kazakhstan_public_visits_20260731_v1';
-    const VISIT_STATS_STATE_KEY = 'aaVisitStatsCountedV1';
-    const VISIT_STATS_PENDING_MS = 30000;
     let groupFilterMode = 'all';
     let notificationTimer = null;
-    let latestVisitStats = null;
 
     let currentReflectionsData = null;
     let currentNewsData = null;
@@ -104,132 +99,6 @@
                 }
             }
         });
-    }
-
-    function getAlmatyDateKeys() {
-        const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
-            timeZone: 'Asia/Almaty', year: 'numeric', month: '2-digit', day: '2-digit'
-        }).formatToParts(new Date()).filter(part => part.type !== 'literal').map(part => [part.type, part.value]));
-        return {
-            date: `${parts.year}-${parts.month}-${parts.day}`,
-            month: `${parts.year}-${parts.month}`,
-            year: parts.year
-        };
-    }
-
-    function getVisitMode() {
-        const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        return standalone ? 'app' : 'web';
-    }
-
-    function getVisitStatsState(date) {
-        try {
-            const saved = JSON.parse(localStorage.getItem(VISIT_STATS_STATE_KEY) || '{}');
-            return saved.date === date && saved.modes ? saved : { date, modes: {} };
-        } catch (error) {
-            return { date, modes: {} };
-        }
-    }
-
-    function saveVisitStatsState(state) {
-        try { localStorage.setItem(VISIT_STATS_STATE_KEY, JSON.stringify(state)); } catch (error) {}
-    }
-
-    function claimVisitStatsPeriods(mode, date) {
-        const state = getVisitStatsState(date);
-        const modeState = state.modes[mode] || {};
-        const now = Date.now();
-        const claims = {};
-        ['day', 'month', 'year'].forEach(period => {
-            const current = modeState[period];
-            const pendingRecently = current && current.status === 'pending' && now - Number(current.at || 0) < VISIT_STATS_PENDING_MS;
-            claims[period] = current !== true && !pendingRecently;
-            if (claims[period]) modeState[period] = { status: 'pending', at: now };
-        });
-        state.modes[mode] = modeState;
-        saveVisitStatsState(state);
-        return claims;
-    }
-
-    function finishVisitStatsClaim(mode, date, period, succeeded) {
-        const state = getVisitStatsState(date);
-        const modeState = state.modes[mode] || {};
-        if (succeeded) modeState[period] = true;
-        else delete modeState[period];
-        state.modes[mode] = modeState;
-        saveVisitStatsState(state);
-    }
-
-    function getVisitCounterKey(mode, period, periodKey) {
-        return `${VISIT_STATS_KEY_PREFIX}_${mode}_${period}_${periodKey}`;
-    }
-
-    async function requestVisitCounter(action, key) {
-        const response = await fetch(`${VISIT_STATS_ENDPOINT}/${action}/${encodeURIComponent(key)}`, { cache: 'no-store' });
-        if (action === 'get' && response.status === 404) return 0;
-        if (!response.ok) throw new Error(`Visit counter returned ${response.status}`);
-        const payload = await response.json();
-        const value = Number(payload.value);
-        if (!Number.isFinite(value)) throw new Error('Visit counter returned an invalid value');
-        return value;
-    }
-
-    function renderVisitStatsLabels() {
-        const d = i18n[curLang];
-        const labels = {
-            'visit-stats-title': d.visitStatsTitle,
-            'visit-stats-note': d.visitStatsNote,
-            'visit-stats-app-label': d.visitStatsApp,
-            'visit-stats-site-label': d.visitStatsSite,
-            'visit-stats-day-label': d.visitStatsDay,
-            'visit-stats-month-label': d.visitStatsMonth,
-            'visit-stats-year-label': d.visitStatsYear
-        };
-        Object.entries(labels).forEach(([id, value]) => {
-            const element = document.getElementById(id);
-            if (element) element.innerText = value;
-        });
-        renderVisitStatsValues(latestVisitStats);
-    }
-
-    function renderVisitStatsValues(stats) {
-        const formatter = new Intl.NumberFormat(getLocale());
-        ['app', 'web'].forEach(mode => {
-            ['day', 'month', 'year'].forEach(period => {
-                const element = document.getElementById(`visit-stats-${mode}-${period}`);
-                const value = stats?.[mode]?.[period];
-                if (element) element.innerText = Number.isFinite(value) ? formatter.format(value) : '—';
-            });
-        });
-    }
-
-    async function loadVisitStatistics() {
-        const keys = getAlmatyDateKeys();
-        const activeMode = getVisitMode();
-        const claims = claimVisitStatsPeriods(activeMode, keys.date);
-        const stats = { app: {}, web: {} };
-        const requests = [];
-
-        ['app', 'web'].forEach(mode => {
-            ['day', 'month', 'year'].forEach(period => {
-                const shouldHit = mode === activeMode && claims[period];
-                const action = shouldHit ? 'hit' : 'get';
-                const counterKey = getVisitCounterKey(mode, period, keys[period === 'day' ? 'date' : period]);
-                requests.push(requestVisitCounter(action, counterKey)
-                    .then(value => {
-                        stats[mode][period] = value;
-                        if (shouldHit) finishVisitStatsClaim(mode, keys.date, period, true);
-                    })
-                    .catch(() => {
-                        stats[mode][period] = null;
-                        if (shouldHit) finishVisitStatsClaim(mode, keys.date, period, false);
-                    }));
-            });
-        });
-
-        await Promise.all(requests);
-        latestVisitStats = stats;
-        renderVisitStatsValues(stats);
     }
 
     function getGroupId(g) {
@@ -822,7 +691,6 @@
         document.getElementById('settings-update-label').innerText = d.updateLabel;
         renderEnglishProfile();
         renderPrinciples(lang);
-        renderVisitStatsLabels();
         updateCitySettingDisplay();
 
         document.getElementById('quick-today-text').innerText = d.quickToday;
@@ -1878,8 +1746,6 @@ function closeFirstTimeInfo() {
         renderGroups();
         renderLit();
         updateFreshnessDisplay();
-        loadVisitStatistics();
-
         const releaseNotificationKey = 'release:2.0';
         if (!notificationSeen(releaseNotificationKey)) {
             const releaseTitle = curLang === 'kz'
@@ -1922,7 +1788,6 @@ function closeFirstTimeInfo() {
         trackEvent('network_status', 'online');
         setMotivation();
         loadNews(true);
-        loadVisitStatistics();
         setTimeout(runInternalNotificationChecks, 1800);
     });
 
