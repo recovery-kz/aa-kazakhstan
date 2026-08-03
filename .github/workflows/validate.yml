@@ -11,6 +11,7 @@ on:
       - 'books.json'
       - 'news.json'
       - 'news/**'
+      - 'assets/**'
       - 'manifest.json'
       - 'version.json'
       - 'sw.js'
