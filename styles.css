@@ -1046,10 +1046,29 @@ body.large-text .backup-btn{min-height:52px;font-size:14px}
 #first-run { display: none !important; }
 body.first-run-open { overflow: auto !important; }
 
-        .book-cover.book-cover-real { padding: 0; background: #08083f; }
+        /* Единое окно для загруженных обложек: полный показ без растяжения и обрезки */
+        .book-cover.book-cover-real {
+            padding: 7px;
+            background: #f2f0eb;
+            border: 1px solid var(--border);
+            box-shadow: 0 9px 20px rgba(0,0,0,0.14);
+        }
         .book-cover.book-cover-real::before,
         .book-cover.book-cover-real::after { display: none; }
-        .book-cover-image { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center; }
+        .book-cover-image {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 5px 9px 9px 5px;
+            box-shadow: 0 2px 7px rgba(0,0,0,0.12);
+            background: #fff;
+        }
+        body.dark-mode .book-cover.book-cover-real {
+            background: #20262d;
+            border-color: #343d47;
+        }
 
 /* Структура АА Казахстана */
 .structure-main-btn { border-top: none; }
