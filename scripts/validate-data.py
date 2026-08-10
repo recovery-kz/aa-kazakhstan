@@ -1,6 +1,7 @@
 import json
 import re
 import sys
+from datetime import date
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -72,6 +73,40 @@ for i,g in enumerate(groups or []):
   if v.startswith('http') and not re.match(r'^https?://',v): errors.append(f'bad url {name}: {v}')
 if not isinstance(books,list): errors.append('books invalid')
 if not isinstance(news,list): errors.append('news invalid')
+seen_news_ids = set()
+previous_news_date = None
+for i, item in enumerate(news or []):
+    if not isinstance(item, dict):
+        errors.append(f'news item {i}: invalid object')
+        continue
+
+    news_id = str(item.get('id', '')).strip()
+    if not news_id:
+        errors.append(f'news item {i}: empty id')
+    elif news_id in seen_news_ids:
+        errors.append(f'duplicate news id: {news_id}')
+    seen_news_ids.add(news_id)
+
+    try:
+        publication_date = date.fromisoformat(str(item.get('date', '')))
+    except ValueError:
+        errors.append(f'news item {i} ({news_id or "unnamed"}): invalid date')
+        publication_date = None
+
+    if publication_date is not None:
+        if previous_news_date is not None and publication_date > previous_news_date:
+            errors.append('news order invalid: newest items must be first')
+        previous_news_date = publication_date
+
+    for field in ('title', 'category', 'description', 'language'):
+        if not isinstance(item.get(field, ''), str):
+            errors.append(f'news item {i} ({news_id or "unnamed"}): {field} must be text')
+
+    images = item.get('images')
+    if not isinstance(images, list) or not images:
+        errors.append(f'news item {i} ({news_id or "unnamed"}): no images')
+    elif any(not isinstance(image, str) or not image.strip() for image in images):
+        errors.append(f'news item {i} ({news_id or "unnamed"}): invalid image path')
 
 if isinstance(groups, list) and len(groups) != 47:
     warnings.append(f'group count changed: expected 47, found {len(groups)}')
@@ -88,12 +123,6 @@ for i, book in enumerate(books or []):
 for i, item in enumerate(news or []):
     for image in item.get('images', []) or []:
         require_file(image, f'news item {i} ({item.get("id", "unnamed")})')
-
-for post_path in Path('news').glob('*/post.json'):
-    post = load_json(post_path)
-    if isinstance(post, dict):
-        for image in post.get('images', []) or []:
-            require_file(image, post_path.as_posix())
 
 for required in ('index.html', 'manifest.json', 'app.js', 'i18n.js', 'principles.js',
                  'styles.css', 'groups.json', 'books.json', 'news.json', 'version.json'):
