@@ -27,12 +27,21 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
+    const APP_VERSION = '2.2.0';
+    const WHATS_NEW_STORAGE_KEY = `aa_whats_new_${APP_VERSION}`;
+    const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
     let notificationTimer = null;
+    let groupSearchQuery = '';
+    let activeQuickGroupId = '';
+    let activeCalendarGroupId = '';
+    let longPressTimer = null;
+    let longPressTriggered = false;
 
     let currentReflectionsData = null;
     let currentNewsData = null;
     let newsLoaded = false;
+    let dataLoadFailed = false;
 
     let books = [];
 
@@ -126,6 +135,8 @@
         saveFavoriteGroups(favorites);
         trackEvent(isAdding ? 'group_favorite_add' : 'group_favorite_remove', groupId);
         renderGroups();
+        renderNearestFavorite();
+        showAppStatus(isAdding ? featureText().favorite : featureText().unfavorite);
     }
 
     function defaultNotificationSettings() {
@@ -173,7 +184,7 @@
         markNotificationSeen(item.key);
         updateNotificationBadge();
         if (showBrowser && settings.browser && document.visibilityState === 'visible' && 'Notification' in window && Notification.permission === 'granted') {
-            try { new Notification(item.title, { body: item.text, icon: 'icon-192.png', tag: item.key }); } catch (error) {}
+            try { new Notification(item.title, { body: item.text, icon: 'assets/icon-192.png', tag: item.key }); } catch (error) {}
         }
         return true;
     }
@@ -463,6 +474,215 @@
         return `https://2gis.kz/search/${encodeURIComponent(g.c + ', ' + rawAddress)}`;
     }
 
+    function featureText() {
+        const texts = {
+            ru: {
+                nearestFavorite:'Ближайшее избранное собрание', addFavoritePrompt:'Добавьте свою группу в избранное, чтобы ближайшее собрание появлялось здесь.', openGroups:'Выбрать группу', today:'Сегодня', tomorrow:'Завтра', inProgress:'Идёт сейчас', finished:'На сегодня завершено', todaySchedule:'Сегодня', inCalendar:'В календарь', share:'Поделиться', shared:'Информация о группе скопирована', calendarOnce:'Ближайшее собрание', calendarWeekly:'Повторять каждую неделю', calendarSaved:'Файл календаря подготовлен', searchPlaceholder:'Название, город, адрес, день или онлайн', emptyTitle:'Ничего не найдено', emptyText:'Измените запрос, город или выбранный фильтр.', clearFilters:'Сбросить', loadTitle:'Не удалось загрузить данные', loadText:'Проверьте подключение к интернету и попробуйте ещё раз.', retry:'Повторить', help:'Позвонить в АА', actions:'Действия с группой', favorite:'В избранное', unfavorite:'Убрать из избранного', call:'Позвонить', route:'Маршрут', online:'Открыть онлайн', formatOnline:'Онлайн', formatOffline:'Очно', formatKz:'Қазақша', formatRu:'Русский', formatWomen:'Женская', qrTitle:'Приложение АА Казахстана', qrNote:'Наведите камеру телефона на QR-код', qrSave:'Сохранить QR-код', whatsNew:'Что нового', understood:'Понятно', calendarTitle:'Добавить в календарь', swipeTip:'Проведите влево или вправо, чтобы перейти в соседний раздел.', favoriteTip:'Нажмите на звёздочку, чтобы сохранить группу. Удерживайте карточку для быстрых действий.'
+            },
+            kz: {
+                nearestFavorite:'Ең жақын таңдаулы жиналыс', addFavoritePrompt:'Ең жақын жиналысты осы жерден көру үшін тобыңызды таңдаулыларға қосыңыз.', openGroups:'Топты таңдау', today:'Бүгін', tomorrow:'Ертең', inProgress:'Қазір өтіп жатыр', finished:'Бүгін аяқталды', todaySchedule:'Бүгін', inCalendar:'Күнтізбеге', share:'Бөлісу', shared:'Топ туралы ақпарат көшірілді', calendarOnce:'Ең жақын жиналыс', calendarWeekly:'Апта сайын қайталау', calendarSaved:'Күнтізбе файлы дайын', searchPlaceholder:'Атауы, қала, мекенжай, күн немесе онлайн', emptyTitle:'Ештеңе табылмады', emptyText:'Сұранысты, қаланы немесе сүзгіні өзгертіңіз.', clearFilters:'Қалпына келтіру', loadTitle:'Деректерді жүктеу мүмкін болмады', loadText:'Интернет байланысын тексеріп, қайталап көріңіз.', retry:'Қайталау', help:'АА-ға қоңырау шалу', actions:'Топ әрекеттері', favorite:'Таңдаулыларға', unfavorite:'Таңдаулылардан алып тастау', call:'Қоңырау шалу', route:'Бағыт', online:'Онлайн ашу', formatOnline:'Онлайн', formatOffline:'Бетпе-бет', formatKz:'Қазақша', formatRu:'Орысша', formatWomen:'Әйелдер', qrTitle:'Қазақстан АА қолданбасы', qrNote:'Телефон камерасын QR-кодқа бағыттаңыз', qrSave:'QR-кодты сақтау', whatsNew:'Не жаңалық', understood:'Түсінікті', calendarTitle:'Күнтізбеге қосу', swipeTip:'Көрші бөлімге өту үшін солға немесе оңға сырғытыңыз.', favoriteTip:'Топты сақтау үшін жұлдызшаны басыңыз. Жылдам әрекеттер үшін карточканы басып тұрыңыз.'
+            },
+            en: {
+                nearestFavorite:'Next favorite meeting', addFavoritePrompt:'Add your group to Favorites to see its next meeting here.', openGroups:'Choose a group', today:'Today', tomorrow:'Tomorrow', inProgress:'In progress now', finished:'Finished for today', todaySchedule:'Today', inCalendar:'Add to calendar', share:'Share', shared:'Group information copied', calendarOnce:'Next meeting', calendarWeekly:'Repeat every week', calendarSaved:'Calendar file is ready', searchPlaceholder:'Name, city, address, day, or online', emptyTitle:'Nothing found', emptyText:'Change the query, city, or selected filter.', clearFilters:'Reset', loadTitle:'Could not load data', loadText:'Check your internet connection and try again.', retry:'Try again', help:'Call AA', actions:'Group actions', favorite:'Add to Favorites', unfavorite:'Remove from Favorites', call:'Call', route:'Directions', online:'Open online', formatOnline:'Online', formatOffline:'In person', formatKz:'Kazakh', formatRu:'Russian', formatWomen:'Women', qrTitle:'AA Kazakhstan app', qrNote:'Point your phone camera at the QR code', qrSave:'Save QR code', whatsNew:'What’s new', understood:'Got it', calendarTitle:'Add to calendar', swipeTip:'Swipe left or right to move to the next section.', favoriteTip:'Tap the star to save a group. Press and hold a card for quick actions.'
+            }
+        };
+        return texts[curLang] || texts.ru;
+    }
+
+    function hhmm(value) {
+        return `${String(Math.floor(value / 100)).padStart(2,'0')}:${String(value % 100).padStart(2,'0')}`;
+    }
+
+    function slotMinutes(value) {
+        return Math.floor(value / 100) * 60 + value % 100;
+    }
+
+    function getTodayMeetingState(g) {
+        const slots = Array.isArray(g.sc) ? g.sc.filter(slot => slot.d === new Date().getDay()).sort((a,b)=>a.s-b.s) : [];
+        const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+        const live = slots.find(slot => nowMinutes >= slotMinutes(slot.s) && nowMinutes < slotMinutes(slot.e));
+        const next = slots.find(slot => nowMinutes < slotMinutes(slot.s));
+        return { slots, live, next, past: slots.length > 0 && !live && !next };
+    }
+
+    function getNextMeeting(g, includeCurrent = true) {
+        if (!Array.isArray(g.sc) || !g.sc.length) return null;
+        const now = new Date();
+        for (let offset = 0; offset < 8; offset++) {
+            const date = new Date(now);
+            date.setHours(0,0,0,0);
+            date.setDate(date.getDate() + offset);
+            const slots = g.sc.filter(slot => slot.d === date.getDay()).sort((a,b)=>a.s-b.s);
+            for (const slot of slots) {
+                const start = new Date(date);
+                start.setHours(Math.floor(slot.s/100),slot.s%100,0,0);
+                const end = new Date(date);
+                end.setHours(Math.floor(slot.e/100),slot.e%100,0,0);
+                if (start > now || (includeCurrent && end > now)) return {start,end,slot,offset,isLive:start <= now && end > now};
+            }
+        }
+        return null;
+    }
+
+    function formatNextMeeting(next) {
+        if (!next) return '';
+        const t = featureText();
+        const day = next.offset === 0 ? t.today : next.offset === 1 ? t.tomorrow : new Intl.DateTimeFormat(getLocale(),{weekday:'long',day:'numeric',month:'long'}).format(next.start);
+        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{hour:'2-digit',minute:'2-digit'})}`;
+    }
+
+    function getGroupById(id) {
+        return data.find(group => getGroupId(group) === id) || null;
+    }
+
+    function renderNearestFavorite() {
+        const card = document.getElementById('nearest-favorite-card');
+        if (!card) return;
+        const t = featureText();
+        const favorites = getFavoriteGroups();
+        const candidates = data.map(group => ({group,next:getNextMeeting(group)})).filter(item => favorites.has(getGroupId(item.group)) && item.next).sort((a,b)=>a.next.start-b.next.start);
+        if (!candidates.length) {
+            card.className = 'card nearest-card is-empty';
+            card.innerHTML = `<div class="nearest-label">${t.nearestFavorite}</div><div class="nearest-empty">${t.addFavoritePrompt}</div><div class="nearest-actions"><button class="nearest-action primary full" type="button" data-home-action="groups">${t.openGroups}</button></div>`;
+            return;
+        }
+        const {group,next} = candidates[0];
+        const phone = getPrimaryPhone(group);
+        const map = build2GISLink(group);
+        card.className = 'card nearest-card';
+        card.innerHTML = `<div class="nearest-label">${t.nearestFavorite}</div><div class="nearest-name">${escapeHtml(group.n)}</div><div class="nearest-time">${escapeHtml(formatNextMeeting(next))}</div><div class="nearest-remaining">${escapeHtml(group.c)} · ${escapeHtml(group.online ? t.formatOnline : t.formatOffline)}</div><div class="nearest-actions">${phone?`<a class="nearest-action primary" href="tel:${cleanPhone(phone)}">${t.call}</a>`:''}${map?`<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${t.route}</a>`:''}<button class="nearest-action" type="button" data-group-action="calendar" data-group-id="${escapeHtml(getGroupId(group))}">${t.inCalendar}</button></div>`;
+    }
+
+    function groupFormatChips(g) {
+        const t = featureText();
+        const chips = [g.online ? t.formatOnline : t.formatOffline, g.k ? t.formatKz : t.formatRu];
+        if (g.f) chips.push(t.formatWomen);
+        return `<div class="format-chips">${chips.map(chip=>`<span class="format-chip">${escapeHtml(chip)}</span>`).join('')}</div>`;
+    }
+
+    function todayScheduleHtml(g) {
+        const state = getTodayMeetingState(g);
+        if (!state.slots.length) return '';
+        return `<div class="today-schedule"><strong>${featureText().todaySchedule}</strong>${state.slots.map(slot=>`${hhmm(slot.s)}–${hhmm(slot.e)}`).join(' · ')}</div>`;
+    }
+
+    function normalizedGroupSearch(g) {
+        return [g.n,g.c,g.a,g.t,g.online?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
+    }
+
+    function matchesGroupSearch(g, query) {
+        const q = String(query||'').trim().toLocaleLowerCase();
+        if (!q) return true;
+        const dayAliases = {
+            сегодня:['вс','пн','вт','ср','чт','пт','сб'][new Date().getDay()],today:['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()],бүгін:['жс','дс','сс','ср','бс','жм','сб'][new Date().getDay()],
+            понедельник:'пн',вторник:'вт',среда:'ср',четверг:'чт',пятница:'пт',суббота:'сб',воскресенье:'вс',
+            monday:'пн',tuesday:'вт',wednesday:'ср',thursday:'чт',friday:'пт',saturday:'сб',sunday:'вс',
+            дүйсенбі:'пн',сейсенбі:'вт',сәрсенбі:'ср',бейсенбі:'чт',жұма:'пт',сенбі:'сб',жексенбі:'вс'
+        };
+        const expanded = dayAliases[q] || q;
+        return normalizedGroupSearch(g).includes(expanded) || (q==='сегодня'||q==='today'||q==='бүгін') && Array.isArray(g.sc) && g.sc.some(slot=>slot.d===new Date().getDay());
+    }
+
+    function groupShareText(g) {
+        const phone = getPrimaryPhone(g);
+        const link = g.online ? (g.a||g.z||'') : build2GISLink(g);
+        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,phone,link,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/'].filter(Boolean).join('\n');
+    }
+
+    async function shareGroup(g) {
+        if (!g) return;
+        const text = groupShareText(g);
+        try {
+            if (navigator.share) await navigator.share({title:g.n,text});
+            else if (navigator.clipboard) { await navigator.clipboard.writeText(text); showAppStatus(featureText().shared); }
+            trackEvent('group_share',g.n);
+        } catch (error) { if (error?.name !== 'AbortError') console.error('Group share failed:',error); }
+    }
+
+    function openFeatureModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('feature-open');
+    }
+
+    function closeFeatureModal(id) {
+        const modal = document.getElementById(id);
+        if (!modal) return;
+        modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
+        if (!document.querySelector('.feature-modal.open')) document.body.classList.remove('feature-open');
+    }
+
+    function openQuickActions(g) {
+        if (!g) return;
+        const t = featureText();
+        const id = getGroupId(g); activeQuickGroupId = id;
+        const favorite = getFavoriteGroups().has(id);
+        const phone = getPrimaryPhone(g); const map = build2GISLink(g); const online = g.online ? (g.a||g.z||'') : (g.z||'');
+        document.getElementById('quick-action-title').textContent = g.n;
+        document.getElementById('quick-action-grid').innerHTML = `${phone?`<a class="feature-secondary primary" href="tel:${cleanPhone(phone)}">${t.call}</a>`:''}${map?`<a class="feature-secondary" href="${map}" target="_blank" rel="noopener noreferrer">${t.route}</a>`:''}${online?`<a class="feature-secondary" href="${escapeHtml(online)}" target="_blank" rel="noopener noreferrer">${t.online}</a>`:''}<button class="feature-secondary" type="button" data-quick-action="favorite">${favorite?t.unfavorite:t.favorite}</button><button class="feature-secondary" type="button" data-quick-action="calendar">${t.inCalendar}</button><button class="feature-secondary" type="button" data-quick-action="share">${t.share}</button>`;
+        openFeatureModal('quick-action-modal');
+    }
+
+    function openCalendar(g) {
+        if (!g) return;
+        const next = getNextMeeting(g,false);
+        if (!next) { showAppStatus(i18n[curLang].noSchedule); return; }
+        activeCalendarGroupId = getGroupId(g);
+        document.getElementById('calendar-title').textContent = featureText().calendarTitle;
+        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)}`;
+        document.querySelector('[data-calendar-mode="once"]').textContent = featureText().calendarOnce;
+        document.querySelector('[data-calendar-mode="weekly"]').textContent = featureText().calendarWeekly;
+        openFeatureModal('calendar-modal');
+    }
+
+    function icsDate(date) {
+        return date.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
+    }
+
+    function icsEscape(value) {
+        return String(value||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+    }
+
+    function downloadCalendar(g, weekly) {
+        const next = getNextMeeting(g,false);
+        if (!next) return;
+        const uid = `${Date.now()}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`;
+        const location = g.online ? (g.a||g.z||'Online') : g.a;
+        const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App 2.2//RU','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${uid}`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(next.start)}`,`DTEND:${icsDate(next.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(location)}`,`DESCRIPTION:${icsEscape(groupShareText(g))}`];
+        if (weekly) lines.push('RRULE:FREQ=WEEKLY');
+        lines.push('END:VEVENT','END:VCALENDAR');
+        const blob = new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+        const link = document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=`aa-${g.n.replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()}.ics`; link.click(); setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+        showAppStatus(featureText().calendarSaved); closeFeatureModal('calendar-modal'); trackEvent('group_calendar',g.n,{repeat:weekly?'weekly':'once'});
+    }
+
+    function showWhatsNew() {
+        if (localStorage.getItem(WHATS_NEW_STORAGE_KEY)==='1') return false;
+        const t=featureText();
+        document.getElementById('whats-new-title').textContent=t.whatsNew;
+        document.getElementById('whats-new-close').textContent=t.understood;
+        const items = curLang==='en' ? ['Next favorite meeting on the Today screen','Calendar and sharing for every group','Smart search and meeting format labels','QR code and quick actions'] : curLang==='kz' ? ['Бүгін экранындағы ең жақын таңдаулы жиналыс','Әр топ үшін күнтізбе және бөлісу','Ақылды іздеу және жиналыс форматтары','QR-код және жылдам әрекеттер'] : ['Ближайшее избранное собрание на экране «Сегодня»','Календарь и отправка каждой группы','Умный поиск и обозначения формата','QR-код и быстрые действия'];
+        document.getElementById('whats-new-list').innerHTML=items.map(item=>`<li>${escapeHtml(item)}</li>`).join('');
+        openFeatureModal('whats-new-modal'); return true;
+    }
+
+    function showCoachmark(kind='swipe') {
+        let seen={}; try{seen=JSON.parse(localStorage.getItem(COACHMARK_STORAGE_KEY)||'{}');}catch(error){}
+        if(seen[kind]) return;
+        const box=document.getElementById('coachmark');
+        box.dataset.kind=kind; document.getElementById('coachmark-text').textContent=kind==='favorite'?featureText().favoriteTip:featureText().swipeTip; document.getElementById('coachmark-close').textContent=featureText().understood; box.classList.add('show');
+    }
+
+    function dismissCoachmark() {
+        const box=document.getElementById('coachmark'); const kind=box.dataset.kind||'swipe'; let seen={}; try{seen=JSON.parse(localStorage.getItem(COACHMARK_STORAGE_KEY)||'{}');}catch(error){} seen[kind]=true; localStorage.setItem(COACHMARK_STORAGE_KEY,JSON.stringify(seen)); box.classList.remove('show');
+    }
+
+    function renderDataLoadError() {
+        const t=featureText(); const c=document.getElementById('list-container');
+        if(c) c.innerHTML=`<div class="card error-state"><div class="state-icon">↻</div><div class="state-title">${t.loadTitle}</div><div class="state-text">${t.loadText}</div><div class="state-actions"><button class="group-action primary" type="button" data-retry-app>${t.retry}</button><a class="group-action" href="tel:+77072080553">${t.help}</a></div></div>`;
+        const nearest=document.getElementById('nearest-favorite-card'); if(nearest) nearest.hidden=true;
+    }
+
     function toggleSos() {
         const box = document.getElementById('sos-box');
         const isOpening = !box.classList.contains('open');
@@ -476,6 +696,8 @@
         document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
         const themeColor = isDark ? '#080A0D' : '#FAF0E6';
         document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
+        const label=isDark?(curLang==='en'?'Enable light theme':curLang==='kz'?'Ашық тақырыпты қосу':'Включить светлую тему'):(curLang==='en'?'Enable dark theme':curLang==='kz'?'Қараңғы тақырыпты қосу':'Включить тёмную тему');
+        document.getElementById('theme-icon').setAttribute('aria-label',label);
     }
 
     function toggleAcc(id, btn) {
@@ -706,6 +928,18 @@
         document.getElementById('text-size-title').innerText = d.textSizeTitle;
         document.getElementById('text-size-normal').innerText = d.textSizeNormal;
         document.getElementById('text-size-large').innerText = d.textSizeLarge;
+        const ft=featureText();
+        document.getElementById('group-search').placeholder=ft.searchPlaceholder;
+        document.getElementById('group-search').setAttribute('aria-label',ft.searchPlaceholder);
+        document.getElementById('show-app-qr').textContent=ft.qrTitle;
+        document.getElementById('app-qr-title').textContent=ft.qrTitle;
+        document.getElementById('app-qr-note').textContent=ft.qrNote;
+        document.getElementById('app-qr-save').textContent=ft.qrSave;
+        document.getElementById('quick-action-title').textContent=ft.actions;
+        document.getElementById('calendar-title').textContent=ft.calendarTitle;
+        document.getElementById('settings-version-value').textContent=APP_VERSION;
+        document.getElementById('theme-icon').setAttribute('aria-label',document.body.classList.contains('dark-mode')?(lang==='en'?'Enable light theme':lang==='kz'?'Ашық тақырыпты қосу':'Включить светлую тему'):(lang==='en'?'Enable dark theme':lang==='kz'?'Қараңғы тақырыпты қосу':'Включить тёмную тему'));
+        [['ru','Русский'],['kz','Қазақша'],['en','English']].forEach(([code,label])=>{const button=document.getElementById(`l-${code}`);button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',code===lang?'true':'false');});
 
         const newsLanguageNote = document.getElementById('news-language-note');
         if (newsLanguageNote) {
@@ -765,6 +999,7 @@
             document.getElementById(`tr-p-${i}`).placeholder = d.trustPhone;
         }
         rebuildCityOptions();
+        renderNearestFavorite();
         updateDate(document.getElementById('date-input').value);
         if (currentReflectionsData) renderMotivationFromData(currentReflectionsData);
         if (currentNewsData) renderNews(currentNewsData);
@@ -827,7 +1062,9 @@
         if (phone) actions.push(`<a href="tel:${cleanPhone(phone)}" class="group-action primary" data-track="group_phone" data-phone="${escapeHtml(phone)}">${d.callAction}</a>`);
         if (map) actions.push(`<a href="${map}" target="_blank" rel="noopener noreferrer" class="group-action" data-track="map_open" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}">${d.route}</a>`);
         if (online) actions.push(`<a href="${escapeHtml(online)}" target="_blank" rel="noopener noreferrer" class="group-action${actions.length % 2 === 0 ? ' full' : ''}" data-online-action="true" data-track="open_online" data-group="${escapeHtml(g.n)}" data-city="${escapeHtml(g.c)}">${g.chat ? d.openChat : d.openZoom}</a>`);
-        if (!actions.length) return `<button type="button" class="group-action full" data-no-phone="true">${d.statusNoPhone}</button>`;
+        const groupId=escapeHtml(getGroupId(g));
+        actions.push(`<button type="button" class="group-action calendar" data-group-action="calendar" data-group-id="${groupId}">${featureText().inCalendar}</button>`);
+        actions.push(`<button type="button" class="group-action share" data-group-action="share" data-group-id="${groupId}">${featureText().share}</button>`);
         return actions.join('');
     }
 
@@ -850,7 +1087,7 @@
 
         if (tab === 'news') loadNews();
         if (tab === 'lit') renderLit();
-        if (tab === 'groups') renderGroups();
+        if (tab === 'groups') { renderGroups(); setTimeout(()=>showCoachmark('favorite'),500); }
         window.scrollTo(0, 0);
     }
 
@@ -1028,6 +1265,8 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
             if (curM >= startM && curM < endM) return `<div class="status-badge s-open"><div class="status-dot"></div>${i18n[curLang].sOpen} ${formatRemainingMinutes(endM - curM)}</div>`;
             if (curM < startM) return `<div class="status-badge s-soon"><div class="status-dot"></div>${i18n[curLang].sSoon} ${formatRemainingMinutes(startM - curM)}</div>`;
         }
+        const next=getNextMeeting(g,false);
+        if(next) return `<div class="status-badge s-closed"><div class="status-dot"></div>${escapeHtml(formatNextMeeting(next))}</div>`;
         return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
     }
 
@@ -1189,33 +1428,47 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
         const currentDay = new Date().getDay();
         const favorites = getFavoriteGroups();
         const userCity = getSavedUserCity();
-        const filtered = data.filter(g => {
+        let filtered = data.filter(g => {
             let matchesLocation = selected === 'all' || g.c === selected;
             if (groupFilterMode === 'mycity') matchesLocation = userCity ? g.c === userCity : true;
             if (groupFilterMode === 'favorites') matchesLocation = favorites.has(getGroupId(g));
             if (groupFilterMode === 'online') matchesLocation = Boolean(g.online);
             const matchesToday = groupFilterMode !== 'today' || (Array.isArray(g.sc) && g.sc.some(s => s.d === currentDay));
-            return matchesLocation && matchesToday;
+            return matchesLocation && matchesToday && matchesGroupSearch(g,groupSearchQuery);
+        });
+        if(groupFilterMode==='today') filtered=filtered.sort((a,b)=>{
+            const sa=getTodayMeetingState(a),sb=getTodayMeetingState(b);
+            const av=sa.live?-1:sa.next?slotMinutes(sa.next.s):9999;
+            const bv=sb.live?-1:sb.next?slotMinutes(sb.next.s):9999;
+            return av-bv||a.n.localeCompare(b.n,'ru');
         });
         if (groupFilterMode === 'favorites' && filtered.length === 0) {
             c.innerHTML = `<div class="card groups-empty">${i18n[curLang].noFavorites}</div>`;
             return;
         }
+        if (!filtered.length) {
+            const t=featureText();
+            c.innerHTML=`<div class="card empty-state"><div class="state-icon">⌕</div><div class="state-title">${t.emptyTitle}</div><div class="state-text">${t.emptyText}</div><button class="group-action primary full" type="button" data-clear-group-filters>${t.clearFilters}</button></div>`;
+            return;
+        }
         c.innerHTML = filtered.map(g => {
-            const icons = `${g.online ? '🌍' : '👤'} ${g.f ? '👩' : ''} ${g.k ? '🇰🇿' : ''}`.trim();
             const groupId = getGroupId(g);
             const isFavorite = favorites.has(groupId);
             const favoriteLabel = isFavorite ? i18n[curLang].removeFavorite : i18n[curLang].addFavorite;
+            const meetingState=getTodayMeetingState(g);
+            const stateClass=meetingState.live?' meeting-live':meetingState.past?' meeting-past':'';
             return `
-                <div class="card group-card${isFavorite ? ' favorite' : ''}">
+                <div class="card group-card${isFavorite ? ' favorite' : ''}${stateClass}" data-group-card-id="${escapeHtml(groupId)}">
                     <div class="group-card-head">
                         <div class="group-card-main">
                             ${getGroupStatus(g)}
                             <div class="city-tag">${escapeHtml(curLang === 'en' && g.c === 'Онлайн' ? i18n.en.onlineFilter : g.c)}</div>
-                            <div class="group-name">${escapeHtml(g.n)} ${icons ? `<span class="group-icons">${icons}</span>` : ''}</div>
+                            <div class="group-name">${escapeHtml(g.n)}</div>
+                            ${groupFormatChips(g)}
                         </div>
                         <button type="button" class="favorite-btn${isFavorite ? ' active' : ''}" data-favorite-id="${escapeHtml(groupId)}" aria-label="${escapeHtml(favoriteLabel)}" title="${escapeHtml(favoriteLabel)}">${isFavorite ? '★' : '☆'}</button>
                     </div>
+                    ${todayScheduleHtml(g)}
                     <div class="group-info">
                         ${renderAddress(g)}
                         <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(localizeSchedule(g.t || i18n[curLang].noSchedule))}</div></div></div>
@@ -1585,19 +1838,45 @@ function closeFirstTimeInfo() {
         document.getElementById('notification-list').addEventListener('click', event => { const item = event.target.closest('[data-notification-id]'); if (item) openInternalNotification(item.dataset.notificationId); });
         ['master','reflection','news','today','favorites','browser'].forEach(key => document.getElementById(`notif-${key}`).addEventListener('change', event => updateNotificationSetting(key, event.target.checked)));
         document.getElementById('notif-before').addEventListener('change', event => updateNotificationSetting('before', Number(event.target.value)));
-        document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeNotificationCenter(); closeStructureImage(); } });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') { closeNotificationCenter(); closeStructureImage(); document.querySelectorAll('.feature-modal.open').forEach(modal=>closeFeatureModal(modal.id)); dismissCoachmark(); } });
 
-    document.getElementById('list-container').addEventListener('click', event => {
-        const button = event.target.closest('[data-favorite-id]');
-        if (!button) return;
-        toggleFavorite(button.dataset.favoriteId);
-    });
+        const groupList=document.getElementById('list-container');
+        groupList.addEventListener('click', event => {
+            if(longPressTriggered){longPressTriggered=false;event.preventDefault();return;}
+            const favorite = event.target.closest('[data-favorite-id]');
+            if (favorite) { toggleFavorite(favorite.dataset.favoriteId); return; }
+            const action=event.target.closest('[data-group-action]');
+            if(action){const group=getGroupById(action.dataset.groupId);if(action.dataset.groupAction==='share')shareGroup(group);if(action.dataset.groupAction==='calendar')openCalendar(group);return;}
+            if(event.target.closest('[data-clear-group-filters]')){groupSearchQuery='';document.getElementById('group-search').value='';document.querySelector('.group-search-wrap').classList.remove('has-value');groupFilterMode='all';document.getElementById('citySelect').value='all';document.querySelectorAll('[data-group-mode]').forEach(button=>button.classList.remove('active'));renderGroups();return;}
+            if(event.target.closest('[data-retry-app]')) location.reload();
+        });
+        groupList.addEventListener('pointerdown',event=>{
+            if(event.target.closest('a,button,input,select,textarea'))return;
+            const card=event.target.closest('[data-group-card-id]');if(!card)return;
+            longPressTriggered=false;card.classList.add('pressed');
+            longPressTimer=setTimeout(()=>{longPressTriggered=true;card.classList.remove('pressed');if(navigator.vibrate)navigator.vibrate(25);openQuickActions(getGroupById(card.dataset.groupCardId));},560);
+        });
+        ['pointerup','pointercancel','pointerleave'].forEach(type=>groupList.addEventListener(type,event=>{clearTimeout(longPressTimer);event.target.closest?.('.group-card')?.classList.remove('pressed');}));
+        groupList.addEventListener('contextmenu',event=>{const card=event.target.closest('[data-group-card-id]');if(!card||event.target.closest('a,button'))return;event.preventDefault();openQuickActions(getGroupById(card.dataset.groupCardId));});
+
+        document.getElementById('group-search').addEventListener('input',event=>{groupSearchQuery=event.target.value;event.target.closest('.group-search-wrap').classList.toggle('has-value',Boolean(groupSearchQuery));renderGroups();});
+        document.getElementById('group-search-clear').addEventListener('click',()=>{groupSearchQuery='';const input=document.getElementById('group-search');input.value='';input.closest('.group-search-wrap').classList.remove('has-value');input.focus();renderGroups();});
         document.getElementById('citySelect').addEventListener('change', e => {
             trackEvent('city_filter', e.target.value);
             groupFilterMode = 'all';
             document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
             renderGroups();
         });
+        document.getElementById('nearest-favorite-card').addEventListener('click',event=>{const home=event.target.closest('[data-home-action="groups"]');if(home){goTo('groups');return;}const action=event.target.closest('[data-group-action="calendar"]');if(action)openCalendar(getGroupById(action.dataset.groupId));});
+        document.getElementById('show-app-qr').addEventListener('click',()=>openFeatureModal('app-qr-modal'));
+        document.getElementById('app-qr-close').addEventListener('click',()=>closeFeatureModal('app-qr-modal'));
+        document.getElementById('quick-action-close').addEventListener('click',()=>closeFeatureModal('quick-action-modal'));
+        document.getElementById('calendar-close').addEventListener('click',()=>closeFeatureModal('calendar-modal'));
+        document.getElementById('whats-new-close').addEventListener('click',()=>{localStorage.setItem(WHATS_NEW_STORAGE_KEY,'1');closeFeatureModal('whats-new-modal');setTimeout(()=>showCoachmark('swipe'),350);});
+        document.getElementById('coachmark-close').addEventListener('click',dismissCoachmark);
+        document.querySelectorAll('.feature-modal').forEach(modal=>modal.addEventListener('click',event=>{if(event.target===modal){if(modal.id==='whats-new-modal')localStorage.setItem(WHATS_NEW_STORAGE_KEY,'1');closeFeatureModal(modal.id);}}));
+        document.getElementById('quick-action-grid').addEventListener('click',event=>{const action=event.target.closest('[data-quick-action]');if(!action)return;const group=getGroupById(activeQuickGroupId);if(!group)return;if(action.dataset.quickAction==='favorite')toggleFavorite(activeQuickGroupId);if(action.dataset.quickAction==='calendar')openCalendar(group);if(action.dataset.quickAction==='share')shareGroup(group);closeFeatureModal('quick-action-modal');});
+        document.getElementById('calendar-modal').addEventListener('click',event=>{const option=event.target.closest('[data-calendar-mode]');if(option)downloadCalendar(getGroupById(activeCalendarGroupId),option.dataset.calendarMode==='weekly');});
         document.getElementById('date-input').addEventListener('change', e => updateDate(e.target.value));
         document.getElementById('user-notes').addEventListener('input', e => saveNotes(e.target.value));
         document.querySelectorAll('.acc-btn').forEach(button => {
@@ -1706,6 +1985,7 @@ function closeFirstTimeInfo() {
             books = await booksResponse.json();
         } catch (error) {
             console.error('Не удалось загрузить данные приложения:', error);
+            dataLoadFailed = true;
             showAppStatus(curLang === 'kz' ? 'Қолданба деректерін жүктеу мүмкін болмады' : curLang === 'en' ? 'Could not load app data' : 'Не удалось загрузить данные приложения', 4000);
         }
         trackEvent('app_loaded', 'initial_load');
@@ -1743,17 +2023,17 @@ function closeFirstTimeInfo() {
         setLang(curLang);
         setMotivation();
         loadNews();
-        renderGroups();
+        if(dataLoadFailed) renderDataLoadError(); else { renderGroups(); renderNearestFavorite(); }
         renderLit();
         updateFreshnessDisplay();
-        const releaseNotificationKey = 'release:2.0';
+        const releaseNotificationKey = 'release:2.2';
         if (!notificationSeen(releaseNotificationKey)) {
             const releaseTitle = curLang === 'kz'
-                ? 'Қазақстан АА қолданбасының 2.0 нұсқасы шықты'
-                : curLang === 'en' ? i18n.en.releaseTitle : 'Вышла версия приложения АА Казахстана 2.0';
+                ? 'Қазақстан АА қолданбасының 2.2 нұсқасы шықты'
+                : curLang === 'en' ? 'AA Kazakhstan app version 2.2 is available' : 'Вышла версия приложения АА Казахстана 2.2';
             const releaseText = curLang === 'kz'
-                ? 'Жаңа навигация, ірі мәтін, топтардың жаңа түймелері, хабарламалар, сақтық көшірме және басқа өзгерістер.'
-                : curLang === 'en' ? i18n.en.releaseText : 'Новая навигация, крупный текст, новые кнопки групп, уведомления, резервная копия и другие изменения.';
+                ? 'Ең жақын жиналыс, күнтізбе, бөлісу, ақылды іздеу, QR-код және жылдам әрекеттер қосылды.'
+                : curLang === 'en' ? 'Added next meeting, calendar, sharing, smart search, QR code, and quick actions.' : 'Добавлены ближайшее собрание, календарь, отправка, умный поиск, QR-код и быстрые действия.';
             const releaseItems = getInternalNotifications();
             releaseItems.unshift({
                 key: releaseNotificationKey,
@@ -1768,7 +2048,7 @@ function closeFirstTimeInfo() {
             });
             saveInternalNotifications(releaseItems);
             markNotificationSeen(releaseNotificationKey);
-            localStorage.setItem('aa_last_news_identity', 'release-2-0-ru');
+            localStorage.setItem('aa_last_news_identity', 'release-2-2');
             updateNotificationBadge();
         }
 
@@ -1781,6 +2061,8 @@ function closeFirstTimeInfo() {
         document.body.classList.remove('first-run-open');
         setTimeout(runInternalNotificationChecks, 1800);
         notificationTimer = setInterval(runInternalNotificationChecks, 60000);
+        setInterval(()=>{renderNearestFavorite();if(document.getElementById('tab-groups').classList.contains('active'))renderGroups();},60000);
+        setTimeout(()=>{if(!showWhatsNew())showCoachmark('swipe');},900);
         window.dispatchEvent(new Event('aa-app-ready'));
     }
 
