@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
     <title>АА Казахстана</title>
-    <link rel="manifest" href="manifest.json?v=2.1.1">
+    <link rel="manifest" href="manifest.json?v=2.2.0">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="assets/icon-192.png">
     <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
 
-    <link rel="stylesheet" href="styles.css?v=2.1.3">
+    <link rel="stylesheet" href="styles.css?v=2.2.0">
 <script>
     // Emergency recovery from a stale service-worker reload loop.
     window.__AA_DISABLE_SERVICE_WORKER__ = true;
@@ -89,6 +89,7 @@
             <button class="today-action" type="button" data-today-action="today"><span class="today-action-icon">📅</span><span id="quick-today-text">Найти собрание сегодня</span></button>
             <button class="today-action" type="button" data-today-action="favorites"><span class="today-action-icon">★</span><span id="quick-favorites-text">Мои группы</span></button>
         </div>
+        <div id="nearest-favorite-card" class="card nearest-card" aria-live="polite"></div>
 <div class="sos-wrapper sos-priority-block">
     <button class="sos-main-btn" id="btn-sos-main" type="button">🚨 НУЖНА ПОМОЩЬ?</button>
     <div class="sos-options" id="sos-box">
@@ -245,7 +246,10 @@
                     <div><span id="schedule-updated-label">Расписание обновлено</span>: <strong id="schedule-updated-value">30 июля 2026</strong></div>
                     <div><span id="news-checked-label">Новости проверены</span>: <strong id="news-checked-value">—</strong></div>
                 </div>
-                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">2.1.0</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
+                <div class="share-app-tools">
+                    <button class="backup-btn" id="show-app-qr" type="button">Показать QR-код приложения</button>
+                </div>
+                <div class="settings-version"><span id="settings-version-label">Версия приложения</span>: <strong id="settings-version-value">2.2.0</strong><br><span id="settings-update-label">Обновление применяется автоматически при запуске</span></div>
             </div>
         </div>
     </div>
@@ -291,10 +295,59 @@
             <button type="button" class="group-quick-filter" data-group-mode="favorites" id="group-filter-favorites">Избранные</button>
             <button type="button" class="group-quick-filter" data-group-mode="online" id="group-filter-online">Онлайн</button>
         </div>
+        <div class="group-search-wrap">
+            <span class="group-search-icon" aria-hidden="true">⌕</span>
+            <input id="group-search" class="group-search" type="search" autocomplete="off" placeholder="Название, адрес, день или онлайн" aria-label="Поиск групп">
+            <button id="group-search-clear" class="group-search-clear" type="button" aria-label="Очистить поиск">×</button>
+        </div>
         <div class="group-city-row"><select id="citySelect"></select></div>
         <div id="list-container" style="width:100%;"></div>
     </div>
 </main>
+
+<div class="feature-modal" id="whats-new-modal" aria-hidden="true">
+    <div class="feature-sheet" role="dialog" aria-modal="true" aria-labelledby="whats-new-title">
+        <div class="feature-kicker">Версия 2.2</div>
+        <h2 class="feature-title" id="whats-new-title">Что нового</h2>
+        <ul class="feature-list" id="whats-new-list"></ul>
+        <button class="feature-primary" id="whats-new-close" type="button">Понятно</button>
+    </div>
+</div>
+
+<div class="feature-modal" id="app-qr-modal" aria-hidden="true">
+    <div class="feature-sheet qr-sheet" role="dialog" aria-modal="true" aria-labelledby="app-qr-title">
+        <button class="feature-close" id="app-qr-close" type="button" aria-label="Закрыть">×</button>
+        <h2 class="feature-title" id="app-qr-title">Приложение АА Казахстана</h2>
+        <p class="feature-note" id="app-qr-note">Наведите камеру телефона на QR-код</p>
+        <img class="app-qr-image" src="assets/app-qr.svg" alt="QR-код приложения АА Казахстана">
+        <a class="feature-primary" id="app-qr-save" href="assets/app-qr.svg" download="aa-kazakhstan-qr.svg">Сохранить QR-код</a>
+    </div>
+</div>
+
+<div class="feature-modal" id="quick-action-modal" aria-hidden="true">
+    <div class="feature-sheet quick-action-sheet" role="dialog" aria-modal="true" aria-labelledby="quick-action-title">
+        <button class="feature-close" id="quick-action-close" type="button" aria-label="Закрыть">×</button>
+        <h2 class="feature-title" id="quick-action-title">Действия с группой</h2>
+        <div class="quick-action-grid" id="quick-action-grid"></div>
+    </div>
+</div>
+
+<div class="feature-modal" id="calendar-modal" aria-hidden="true">
+    <div class="feature-sheet" role="dialog" aria-modal="true" aria-labelledby="calendar-title">
+        <button class="feature-close" id="calendar-close" type="button" aria-label="Закрыть">×</button>
+        <h2 class="feature-title" id="calendar-title">Добавить в календарь</h2>
+        <p class="feature-note" id="calendar-note"></p>
+        <div class="calendar-options">
+            <button class="feature-secondary" type="button" data-calendar-mode="once">Ближайшее собрание</button>
+            <button class="feature-primary" type="button" data-calendar-mode="weekly">Повторять каждую неделю</button>
+        </div>
+    </div>
+</div>
+
+<div class="coachmark" id="coachmark" role="status" aria-live="polite">
+    <span id="coachmark-text"></span>
+    <button id="coachmark-close" type="button" aria-label="Закрыть подсказку">Понятно</button>
+</div>
 
 
 <div class="first-run" id="first-run" aria-hidden="true">
@@ -365,9 +418,9 @@
 </nav>
 <div class="app-status" id="app-status" role="status" aria-live="polite"></div>
 
-<script src="i18n.js?v=2.1.2"></script>
+<script src="i18n.js?v=2.2.0"></script>
 <script src="principles.js?v=1.1.0"></script>
-<script src="app.js?v=2.1.2" defer></script>
+<script src="app.js?v=2.2.0" defer></script>
 <script>
     (() => {
         const splash = document.getElementById('app-splash');
