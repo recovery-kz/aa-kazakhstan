@@ -30,11 +30,6 @@ for source in ('news.json', 'books.json'):
             add(path, f'{source} item {index}')
         add(item.get('img'), f'{source} item {index}')
 
-for post_path in Path('news').glob('*/post.json'):
-    post = json.loads(post_path.read_text(encoding='utf-8'))
-    for path in post.get('images', []) or []:
-        add(path, post_path.as_posix())
-
 manifest = json.loads(Path('manifest.json').read_text(encoding='utf-8'))
 for index, icon in enumerate(manifest.get('icons', []) or []):
     source = f'manifest icon {index}'
