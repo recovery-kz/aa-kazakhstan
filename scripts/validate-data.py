@@ -108,8 +108,8 @@ for i, item in enumerate(news or []):
     elif any(not isinstance(image, str) or not image.strip() for image in images):
         errors.append(f'news item {i} ({news_id or "unnamed"}): invalid image path')
 
-if isinstance(groups, list) and len(groups) != 48:
-    warnings.append(f'group count changed: expected 48, found {len(groups)}')
+if isinstance(groups, list) and len(groups) != 49:
+    warnings.append(f'group count changed: expected 49, found {len(groups)}')
 if isinstance(books, list) and len(books) != 27:
     warnings.append(f'book count changed: expected 27, found {len(books)}')
 

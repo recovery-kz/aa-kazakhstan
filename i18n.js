@@ -51,7 +51,7 @@ window.AA_I18N = {
             reportGroupMessage: name => `Hello. I found inaccurate information about the “${name}” group in the AA Kazakhstan app.\n\nWhat information is incorrect: `,
             checkedToday: 'today', bookCopied: 'Book information copied', literatureShare: 'AA Kazakhstan Literature Committee', meetingCount: count => `${count} meetings`, onlineWord: 'online',
             backupRestored: 'Data restored. The app will restart.', backupRestoreFailed: 'Could not restore data from this file.', releaseTitle: 'AA Kazakhstan app version 2.0 is available', releaseText: 'New navigation, larger text, new group buttons, notifications, backup, and other improvements.',
-            scheduleDate: 'August 25, 2026', minuteOptions: ['15 min','30 min','1 hour','2 hours']
+            scheduleDate: 'September 14, 2026', minuteOptions: ['15 min','30 min','1 hour','2 hours']
         }
     };
 

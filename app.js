@@ -27,7 +27,7 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.2';
+    const APP_VERSION = '2.2.3';
     const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.0';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
@@ -550,12 +550,13 @@
         const phone = getPrimaryPhone(group);
         const map = build2GISLink(group);
         card.className = 'card nearest-card';
-        card.innerHTML = `<div class="nearest-label">${t.nearestFavorite}</div><div class="nearest-name">${escapeHtml(group.n)}</div><div class="nearest-time">${escapeHtml(formatNextMeeting(next))}</div><div class="nearest-remaining">${escapeHtml(group.c)} · ${escapeHtml(group.online ? t.formatOnline : t.formatOffline)}</div><div class="nearest-actions">${phone?`<a class="nearest-action primary" href="tel:${cleanPhone(phone)}">${t.call}</a>`:''}${map?`<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${t.route}</a>`:''}<button class="nearest-action" type="button" data-group-action="calendar" data-group-id="${escapeHtml(getGroupId(group))}">${t.inCalendar}</button></div>`;
+        card.innerHTML = `<div class="nearest-label">${t.nearestFavorite}</div><div class="nearest-name">${escapeHtml(group.n)}</div><div class="nearest-time">${escapeHtml(formatNextMeeting(next))}</div><div class="nearest-remaining">${escapeHtml(group.c)} · ${escapeHtml(group.hybrid ? `${t.formatOffline} / ${t.formatOnline}` : group.online ? t.formatOnline : t.formatOffline)}</div><div class="nearest-actions">${phone?`<a class="nearest-action primary" href="tel:${cleanPhone(phone)}">${t.call}</a>`:''}${map?`<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${t.route}</a>`:''}<button class="nearest-action" type="button" data-group-action="calendar" data-group-id="${escapeHtml(getGroupId(group))}">${t.inCalendar}</button></div>`;
     }
 
     function groupFormatChips(g) {
         const t = featureText();
-        const chips = [g.online ? t.formatOnline : t.formatOffline, g.k ? t.formatKz : t.formatRu];
+        const chips = g.hybrid ? [t.formatOffline, t.formatOnline] : [g.online ? t.formatOnline : t.formatOffline];
+        chips.push(g.k ? t.formatKz : t.formatRu);
         if (g.f) chips.push(t.formatWomen);
         return `<div class="format-chips">${chips.map(chip=>`<span class="format-chip">${escapeHtml(chip)}</span>`).join('')}</div>`;
     }
@@ -567,7 +568,7 @@
     }
 
     function normalizedGroupSearch(g) {
-        return [g.n,g.c,g.a,g.t,g.online?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
+        return [g.n,g.c,g.a,g.t,g.note,(g.online||g.hybrid)?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
     }
 
     function matchesGroupSearch(g, query) {
@@ -587,7 +588,7 @@
         const phone = Array.isArray(g.p) ? g.p.join(' · ') : getPrimaryPhone(g);
         const map = g.online ? '' : build2GISLink(g);
         const online = g.online ? (g.a||g.z||'') : (g.z||'');
-        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,phone,map,online,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/'].filter(Boolean).join('\n');
+        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/'].filter(Boolean).join('\n');
     }
 
     async function shareGroup(g) {
@@ -649,7 +650,7 @@
         if (!next) return;
         const uid = `${Date.now()}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`;
         const location = g.online ? (g.a||g.z||'Online') : g.a;
-        const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App 2.2//RU','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${uid}`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(next.start)}`,`DTEND:${icsDate(next.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(location)}`,`DESCRIPTION:${icsEscape(groupShareText(g))}`];
+        const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App 2.2.3//RU','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${uid}`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(next.start)}`,`DTEND:${icsDate(next.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(location)}`,`DESCRIPTION:${icsEscape(groupShareText(g))}`];
         if (weekly) lines.push('RRULE:FREQ=WEEKLY');
         lines.push('END:VEVENT','END:VCALENDAR');
         const blob = new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
@@ -1433,7 +1434,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
             let matchesLocation = selected === 'all' || g.c === selected;
             if (groupFilterMode === 'mycity') matchesLocation = userCity ? g.c === userCity : true;
             if (groupFilterMode === 'favorites') matchesLocation = favorites.has(getGroupId(g));
-            if (groupFilterMode === 'online') matchesLocation = Boolean(g.online);
+            if (groupFilterMode === 'online') matchesLocation = Boolean(g.online || g.hybrid);
             const matchesToday = groupFilterMode !== 'today' || (Array.isArray(g.sc) && g.sc.some(s => s.d === currentDay));
             return matchesLocation && matchesToday && matchesGroupSearch(g,groupSearchQuery);
         });
@@ -1474,6 +1475,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
                         ${renderAddress(g)}
                         <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(localizeSchedule(g.t || i18n[curLang].noSchedule))}</div></div></div>
                         ${g.p && g.p.length ? renderPhones(g.p, g.pl) : ''}
+                        ${g.note ? `<div class="info-row"><span class="info-row-icon">ℹ️</span><div>${escapeHtml(g.note)}</div></div>` : ''}
                     </div>
                     <div class="group-actions">${buildGroupActions(g)}<a class="report-error" href="${buildReportLink(g)}" target="_blank" rel="noopener noreferrer" data-track="report_error" data-group="${escapeHtml(g.n)}">${i18n[curLang].reportError}</a></div>
                 </div>`;
