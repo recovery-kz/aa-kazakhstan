@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1528" viewBox="0 0 1080 1528" role="img" aria-labelledby="title desc">
+  <title id="title">Программа VI Конференции АА Казахстана — суббота, 3 октября 2026 года</title>
+  <desc id="desc">Расписание первого дня конференции в Алматы</desc>
+  <rect width="1080" height="1528" fill="#ffffff"/>
+  <rect x="64" y="56" width="952" height="122" rx="2" fill="#063f7e"/>
+  <text x="86" y="102" fill="#fff" font-family="Arial, sans-serif" font-size="34" font-weight="700">ПРОГРАММА</text>
+  <text x="86" y="145" fill="#fff" font-family="Arial, sans-serif" font-size="25" font-weight="700">VI КОНФЕРЕНЦИИ АА КАЗАХСТАНА</text>
+  <text x="988" y="94" text-anchor="end" fill="#fff" font-family="Arial, sans-serif" font-size="23" font-weight="700">3–4 ОКТЯБРЯ</text>
+  <text x="988" y="126" text-anchor="end" fill="#fff" font-family="Arial, sans-serif" font-size="23" font-weight="700">2026</text>
+  <text x="988" y="156" text-anchor="end" fill="#fff" font-family="Arial, sans-serif" font-size="19">АЛМАТЫ</text>
+  <text x="540" y="205" text-anchor="middle" fill="#245786" font-family="Arial, sans-serif" font-size="21" font-weight="700">Best Western Plus Atakent Park Hotel</text>
+  <rect x="64" y="224" width="952" height="62" fill="#0d70b7"/>
+  <text x="540" y="264" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="25" font-weight="700">СУББОТА, 03.10.2026 г.</text>
+
+  <g font-family="Arial, sans-serif" fill="#23384b">
+    <rect x="72" y="310" width="936" height="58" fill="#f3f8fc"/>
+    <text x="96" y="346" fill="#176b9d" font-size="19" font-weight="700">09:00–09:30</text><text x="248" y="346" font-size="21">Сбор и регистрация участников</text>
+
+    <rect x="72" y="372" width="936" height="58" fill="#edf5fa"/>
+    <text x="96" y="408" fill="#176b9d" font-size="19" font-weight="700">09:30–10:00</text><text x="248" y="408" font-size="21" font-weight="700">Открытие VI Конференции АА РК</text>
+
+    <rect x="72" y="434" width="936" height="58" fill="#f3f8fc"/>
+    <text x="96" y="470" fill="#176b9d" font-size="19" font-weight="700">10:00–13:00</text><text x="248" y="470" font-size="22" font-weight="700">Основная часть 1</text>
+
+    <rect x="72" y="496" width="936" height="54" fill="#edf5fa"/>
+    <text x="96" y="530" fill="#176b9d" font-size="19" font-weight="700">10:00–10:20</text><text x="248" y="530" font-size="20">Отчёт Председателя КСО</text>
+
+    <rect x="72" y="554" width="936" height="54" fill="#f3f8fc"/>
+    <text x="96" y="588" fill="#176b9d" font-size="19" font-weight="700">10:20–10:40</text><text x="248" y="588" font-size="20">Отчёт Директора Фонда</text>
+
+    <rect x="72" y="612" width="936" height="292" fill="#edf5fa"/>
+    <text x="96" y="650" fill="#176b9d" font-size="19" font-weight="700">10:40–13:00</text>
+    <text x="248" y="648" font-size="20" font-weight="700">Отчёты Председателей Комитетов КСО</text>
+    <text x="248" y="676" font-size="18">(каждый по 15–20 минут)</text>
+    <g font-size="17.5">
+      <text x="264" y="708">• Комитет по организации и развитию групп;</text>
+      <text x="264" y="734">• Комитет по организации и развитию казахоязычных групп;</text>
+      <text x="264" y="760">• Комитет по работе с гос. органами;</text>
+      <text x="264" y="786">• Комитет по работе с лечебными учреждениями;</text>
+      <text x="264" y="812">• Комитет по работе с духовными учреждениями;</text>
+      <text x="264" y="838">• Комитет по информированию общественности;</text>
+      <text x="264" y="864">• Финансовый, Литературный комитеты;</text>
+      <text x="264" y="890">• Комитет по организации мероприятий.</text>
+    </g>
+
+    <rect x="72" y="908" width="936" height="58" fill="#f3f8fc"/>
+    <text x="96" y="944" fill="#176b9d" font-size="19" font-weight="700">13:00–14:30</text><text x="248" y="944" font-size="22" font-weight="700">Перерыв</text>
+
+    <rect x="72" y="970" width="936" height="58" fill="#edf5fa"/>
+    <text x="96" y="1006" fill="#176b9d" font-size="19" font-weight="700">14:30–16:00</text><text x="248" y="1006" font-size="22" font-weight="700">Основная часть 2</text>
+
+    <rect x="72" y="1032" width="936" height="112" fill="#f3f8fc"/>
+    <text x="96" y="1070" fill="#176b9d" font-size="19" font-weight="700">14:30–15:30</text>
+    <text x="248" y="1068" font-size="19" font-weight="700">Отчёты Председателей Интергрупп (по 20 минут)</text>
+    <text x="264" y="1098" font-size="17.5">• Интергруппа Казахстана  • Интергруппа г. Астана</text>
+    <text x="264" y="1127" font-size="17.5">• Интергруппа г. Алматы</text>
+
+    <rect x="72" y="1148" width="936" height="82" fill="#edf5fa"/>
+    <text x="96" y="1184" fill="#176b9d" font-size="19" font-weight="700">15:30–16:00</text>
+    <text x="248" y="1182" font-size="19">Отчёт Председателя Делегатской Ассамблеи АА Казахстана</text>
+    <text x="248" y="1212" font-size="17">Ответы на вопросы (10 минут)</text>
+
+    <rect x="72" y="1234" width="936" height="58" fill="#f3f8fc"/>
+    <text x="96" y="1270" fill="#176b9d" font-size="19" font-weight="700">16:00–18:00</text><text x="248" y="1270" font-size="21" font-weight="700">Представление новых членов в состав КСО</text>
+
+    <rect x="72" y="1296" width="936" height="50" fill="#edf5fa"/>
+    <text x="96" y="1328" fill="#176b9d" font-size="18" font-weight="700">16:00–16:45</text><text x="248" y="1328" font-size="19">Выступления кандидатов (по 15 минут)</text>
+
+    <rect x="72" y="1350" width="936" height="50" fill="#f3f8fc"/>
+    <text x="96" y="1382" fill="#176b9d" font-size="18" font-weight="700">16:45–17:45</text><text x="248" y="1382" font-size="19">Ответы на вопросы</text>
+
+    <rect x="72" y="1404" width="936" height="50" fill="#edf5fa"/>
+    <text x="96" y="1436" fill="#176b9d" font-size="18" font-weight="700">17:45–18:00</text><text x="248" y="1436" font-size="19" font-weight="700">Окончание 1-го дня Конференции</text>
+  </g>
+  <text x="540" y="1494" text-anchor="middle" fill="#66859e" font-family="Arial, sans-serif" font-size="16">VI Конференция АА Казахстана • 3–4 октября 2026</text>
+</svg>
