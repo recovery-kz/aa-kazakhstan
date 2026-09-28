@@ -27,7 +27,7 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.6';
+    const APP_VERSION = '2.2.7';
     const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.0';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
@@ -46,6 +46,38 @@
     let books = [];
 
     let data = [];
+    let restoringNavigation = false;
+
+    function pushAppHistory(overlay = null) {
+        if (restoringNavigation) return;
+        const state = { aaApp: true, tab: getActiveTab(), overlay };
+        history.pushState(state, '', location.href);
+    }
+
+    function closeHistoryEntry(overlay) {
+        if (restoringNavigation) return false;
+        if (history.state?.aaApp && history.state.overlay === overlay) {
+            history.back();
+            return true;
+        }
+        return false;
+    }
+
+    function closeOpenLayerFromHistory() {
+        const notificationPanel = document.getElementById('notification-panel');
+        if (notificationPanel?.classList.contains('open')) { closeNotificationCenter(true); return true; }
+        const bookModal = document.getElementById('book-modal');
+        if (bookModal?.classList.contains('open')) { closeBook(true); return true; }
+        const structureModal = document.getElementById('structure-image-modal');
+        if (structureModal?.classList.contains('open')) { closeStructureImage(true); return true; }
+        const cityModal = document.getElementById('city-onboarding');
+        if (cityModal?.classList.contains('open')) { closeCityOnboarding(true); return true; }
+        const firstTimeModal = document.getElementById('first-time-modal');
+        if (firstTimeModal?.classList.contains('open')) { closeFirstTimeInfo(true); return true; }
+        const featureModal = document.querySelector('.feature-modal.open');
+        if (featureModal) { closeFeatureModal(featureModal.id, true); return true; }
+        return false;
+    }
 
     function getLocale() {
         if (curLang === 'kz') return 'kk-KZ';
@@ -220,12 +252,14 @@
         document.getElementById('notification-panel').classList.add('open');
         document.getElementById('notification-panel').setAttribute('aria-hidden', 'false');
         document.body.classList.add('notifications-open');
+        pushAppHistory('notification-panel');
     }
 
-    function closeNotificationCenter() {
+    function closeNotificationCenter(fromHistory = false) {
         document.getElementById('notification-panel').classList.remove('open');
         document.getElementById('notification-panel').setAttribute('aria-hidden', 'true');
         document.body.classList.remove('notifications-open');
+        if (!fromHistory) closeHistoryEntry('notification-panel');
     }
 
     function markAllNotificationsRead() {
@@ -605,13 +639,15 @@
         const modal = document.getElementById(id);
         if (!modal) return;
         modal.classList.add('open'); modal.setAttribute('aria-hidden','false'); document.body.classList.add('feature-open');
+        pushAppHistory(id);
     }
 
-    function closeFeatureModal(id) {
+    function closeFeatureModal(id, fromHistory = false) {
         const modal = document.getElementById(id);
         if (!modal) return;
         modal.classList.remove('open'); modal.setAttribute('aria-hidden','true');
         if (!document.querySelector('.feature-modal.open')) document.body.classList.remove('feature-open');
+        if (!fromHistory) closeHistoryEntry(id);
     }
 
     function openQuickActions(g) {
@@ -734,14 +770,16 @@
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('structure-image-open');
+        pushAppHistory('structure-image-modal');
     }
 
-    function closeStructureImage() {
+    function closeStructureImage(fromHistory = false) {
         const modal = document.getElementById('structure-image-modal');
         if (!modal) return;
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('structure-image-open');
+        if (!fromHistory) closeHistoryEntry('structure-image-modal');
     }
 
     function toggleToday() { setGroupFilterMode(groupFilterMode === 'today' ? 'all' : 'today'); }
@@ -1070,8 +1108,9 @@
         return actions.join('');
     }
 
-    function goTo(tab, direction = null) {
+    function goTo(tab, direction = null, fromHistory = false) {
         if (!TAB_ORDER.includes(tab)) return;
+        const previousTab = getActiveTab();
 
         trackEvent('open_tab', tab, direction ? { navigation_method: 'swipe', swipe_direction: direction } : {});
         document.querySelectorAll('.content-section').forEach(section => {
@@ -1091,6 +1130,7 @@
         if (tab === 'lit') renderLit();
         if (tab === 'groups') { renderGroups(); setTimeout(()=>showCoachmark('favorite'),500); }
         window.scrollTo(0, 0);
+        if (!fromHistory && tab !== previousTab) pushAppHistory();
     }
 
     function getActiveTab() {
@@ -1223,15 +1263,17 @@
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
+        pushAppHistory('book-modal');
         trackEvent('book_open', book.n);
     }
 
-    function closeBook() {
+    function closeBook(fromHistory = false) {
         const modal = document.getElementById('book-modal');
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
         activeBookIndex = null;
+        if (!fromHistory) closeHistoryEntry('book-modal');
     }
 
     async function shareBook() {
@@ -1519,13 +1561,15 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('city-onboarding-open');
+        pushAppHistory('city-onboarding');
     }
 
-    function closeCityOnboarding() {
+    function closeCityOnboarding(fromHistory = false) {
         const modal = document.getElementById('city-onboarding');
         modal.classList.remove('open');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('city-onboarding-open');
+        if (!fromHistory) closeHistoryEntry('city-onboarding');
     }
 
     function saveUserCity(city) {
@@ -1547,13 +1591,15 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('modal-open');
+    pushAppHistory('first-time-modal');
 }
 
-function closeFirstTimeInfo() {
+function closeFirstTimeInfo(fromHistory = false) {
     const modal = document.getElementById('first-time-modal');
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('modal-open');
+    if (!fromHistory) closeHistoryEntry('first-time-modal');
 }
 
     function applySavedTheme() {
@@ -1878,7 +1924,7 @@ function closeFirstTimeInfo() {
         document.getElementById('whats-new-close').addEventListener('click',()=>{localStorage.setItem(WHATS_NEW_STORAGE_KEY,'1');closeFeatureModal('whats-new-modal');setTimeout(()=>showCoachmark('swipe'),350);});
         document.getElementById('coachmark-close').addEventListener('click',dismissCoachmark);
         document.querySelectorAll('.feature-modal').forEach(modal=>modal.addEventListener('click',event=>{if(event.target===modal){if(modal.id==='whats-new-modal')localStorage.setItem(WHATS_NEW_STORAGE_KEY,'1');closeFeatureModal(modal.id);}}));
-        document.getElementById('quick-action-grid').addEventListener('click',event=>{const action=event.target.closest('[data-quick-action]');if(!action)return;const group=getGroupById(activeQuickGroupId);if(!group)return;if(action.dataset.quickAction==='favorite')toggleFavorite(activeQuickGroupId);if(action.dataset.quickAction==='calendar')openCalendar(group);if(action.dataset.quickAction==='share')shareGroup(group);closeFeatureModal('quick-action-modal');});
+        document.getElementById('quick-action-grid').addEventListener('click',event=>{const action=event.target.closest('[data-quick-action]');if(!action)return;const group=getGroupById(activeQuickGroupId);if(!group)return;if(action.dataset.quickAction==='favorite')toggleFavorite(activeQuickGroupId);if(action.dataset.quickAction==='calendar'){closeFeatureModal('quick-action-modal');setTimeout(()=>openCalendar(group),0);return;}if(action.dataset.quickAction==='share')shareGroup(group);closeFeatureModal('quick-action-modal');});
         document.getElementById('calendar-modal').addEventListener('click',event=>{const option=event.target.closest('[data-calendar-mode]');if(option)downloadCalendar(getGroupById(activeCalendarGroupId),option.dataset.calendarMode==='weekly');});
         document.getElementById('date-input').addEventListener('change', e => updateDate(e.target.value));
         document.getElementById('user-notes').addEventListener('input', e => saveNotes(e.target.value));
@@ -2016,6 +2062,16 @@ function closeFirstTimeInfo() {
     applyTextSize(localStorage.getItem('aa_text_size') || 'normal');
     applySavedTheme();
         attachEvents();
+        history.replaceState({ aaApp: true, tab: getActiveTab(), overlay: null }, '', location.href);
+        window.addEventListener('popstate', event => {
+            restoringNavigation = true;
+            const closedLayer = closeOpenLayerFromHistory();
+            if (!closedLayer) {
+                const tab = event.state?.aaApp && TAB_ORDER.includes(event.state.tab) ? event.state.tab : 'counter';
+                goTo(tab, null, true);
+            }
+            restoringNavigation = false;
+        });
         rebuildCityOptions();
         const storedDate = getSavedSoberDate() || new Date().toISOString().split('T')[0];
         document.getElementById('date-input').value = storedDate;
