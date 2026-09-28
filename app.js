@@ -27,7 +27,7 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.3';
+    const APP_VERSION = '2.2.6';
     const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.0';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
