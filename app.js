@@ -27,7 +27,7 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.7';
+    const APP_VERSION = '2.2.8';
     const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.0';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
@@ -63,6 +63,37 @@
         return false;
     }
 
+    function resetGroupsToRoot() {
+        groupFilterMode = 'all';
+        onlyToday = false;
+        groupSearchQuery = '';
+        const search = document.getElementById('group-search');
+        if (search) {
+            search.value = '';
+            search.closest('.group-search-wrap')?.classList.remove('has-value');
+        }
+        const city = document.getElementById('citySelect');
+        if (city) city.value = 'all';
+        document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
+        renderGroups();
+    }
+
+    function closeOpenAccordion() {
+        const openCommittee = [...document.querySelectorAll('.committee-content')].find(el => el.style.display === 'block');
+        if (openCommittee) {
+            const button = document.querySelector(`[data-acc-target="${openCommittee.id}"]`);
+            toggleAcc(openCommittee.id, button);
+            return true;
+        }
+        const openSection = [...document.querySelectorAll('.acc-content:not(.committee-content)')].find(el => el.style.display === 'block');
+        if (openSection) {
+            const button = document.querySelector(`[data-acc-target="${openSection.id}"]`);
+            toggleAcc(openSection.id, button);
+            return true;
+        }
+        return false;
+    }
+
     function closeOpenLayerFromHistory() {
         const notificationPanel = document.getElementById('notification-panel');
         if (notificationPanel?.classList.contains('open')) { closeNotificationCenter(true); return true; }
@@ -76,6 +107,13 @@
         if (firstTimeModal?.classList.contains('open')) { closeFirstTimeInfo(true); return true; }
         const featureModal = document.querySelector('.feature-modal.open');
         if (featureModal) { closeFeatureModal(featureModal.id, true); return true; }
+
+        const activeTab = getActiveTab();
+        if (activeTab === 'groups' && (groupFilterMode !== 'all' || groupSearchQuery || document.getElementById('citySelect')?.value !== 'all')) {
+            resetGroupsToRoot();
+            return true;
+        }
+        if (activeTab === 'profile' && closeOpenAccordion()) return true;
         return false;
     }
 
@@ -1431,7 +1469,8 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
 
     function getSavedUserCity() { return localStorage.getItem(USER_CITY_STORAGE_KEY) || ''; }
 
-    function setGroupFilterMode(mode) {
+    function setGroupFilterMode(mode, fromHistory = false) {
+        const previousMode = groupFilterMode;
         groupFilterMode = mode;
         onlyToday = mode === 'today';
         document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.toggle('active', button.dataset.groupMode === mode));
@@ -1450,6 +1489,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
             document.getElementById('citySelect').value = 'Онлайн';
         }
         renderGroups();
+        if (!fromHistory && mode !== 'all' && mode !== previousMode) pushAppHistory(`groups:${mode}`);
     }
 
     function localizeSchedule(schedule) {
@@ -1934,6 +1974,8 @@ function closeFirstTimeInfo(fromHistory = false) {
                 if (target) {
                     const isOpening = document.getElementById(target).style.display !== 'block';
                     toggleAcc(target, button);
+                    if (isOpening) pushAppHistory(`accordion:${target}`);
+                    else closeHistoryEntry(`accordion:${target}`);
                     trackEvent(isOpening ? 'accordion_open' : 'accordion_close', target);
                 }
             });
