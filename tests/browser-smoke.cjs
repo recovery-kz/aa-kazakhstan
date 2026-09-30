@@ -39,7 +39,7 @@ assert((await page.locator('#list-container').innerText()).includes('8 Март�
 await page.locator('#group-search').fill('суббота');
 assert((await page.locator('#list-container').innerText()).includes('Решение есть'));
 await page.locator('#group-search').fill('Бірлік');
-assert((await page.locator('.group-card').innerText()).includes('Завтра, 21:00'));
+assert((await page.locator('.group-card').textContent()).includes('Завтра, 21:00'));
 await page.locator('[data-group-action="calendar"]').click();
 assert((await page.locator('#calendar-note').innerText()).includes('Завтра, 21:00'));
 await page.locator('#calendar-close').click();
