@@ -90,11 +90,13 @@ for (const language of ['kz', 'en']) {
     const fields = ['title', 'quote', 'source', 'text'];
     reflectionTranslationStats[language] = Object.fromEntries(fields.map(field => [
         field,
-        reflectionKeys.filter(key => String(reflections[key][`${field}_${language}`] || '').trim()).length
+        reflectionKeys.filter(key => !String(reflections[key][field] || '').trim() || String(reflections[key][`${field}_${language}`] || '').trim()).length
     ]));
     for (const key of reflectionKeys) {
         for (const field of fields) {
-            if (!String(reflections[key][`${field}_${language}`] || '').trim()) {
+            const source = String(reflections[key][field] || '').trim();
+            const translated = String(reflections[key][`${field}_${language}`] || '').trim();
+            if (source && !translated) {
                 errors.push(`daily reflection ${key}: missing ${field}_${language}`);
             }
         }
