@@ -163,42 +163,56 @@
     "n": "Вопросник по 12 традициям",
     "l": "рус",
     "d": "Краткий список вопросов для проверки здоровья группы и понимания традиций. Помогает группе оценить свою эффективность в несении вести. Выявляет слабые места в единстве и анонимности. Отличный инструмент для проведения рабочих собраний группы.",
-    "img": "book-covers/traditions-questionnaire-ru.svg"
+    "img": "book-covers/traditions-questionnaire-ru.svg",
+    "d_kz": "Топтың жағдайын және 12 дәстүрді түсіну деңгейін бағалауға арналған қысқа сұрақтар жинағы. Топқа хабарды жеткізу тиімділігін, бірлік пен анонимдік принциптерін талқылауға көмектеседі. Жұмыс жиналыстарында қолдануға ыңғайлы құрал.",
+    "d_en": "A concise set of questions for reviewing group health and understanding of the Twelve Traditions. It can help a group discuss its effectiveness in carrying the message, unity, anonymity, and other principles during business or inventory meetings."
   },
   {
     "n": "12 традиций в иллюстрациях",
     "l": "рус",
     "d": "Наглядное пособие, где каждая традиция объяснена простыми словами и снабжена картинками. Идеально подходит для первичного ознакомления с принципами устройства АА. Делает сложные понятия доступными для каждого. Популярна среди новичков и опытных участников.",
-    "img": "book-covers/traditions-illustrated-ru.svg"
+    "img": "book-covers/traditions-illustrated-ru.svg",
+    "d_kz": "Әр дәстүр қарапайым тілмен түсіндіріліп, иллюстрациялармен берілген көрнекі құрал. АА топтарының құрылымдық принциптерімен алғаш танысатын адамдарға ыңғайлы және күрделі ұғымдарды жеңіл қабылдауға көмектеседі.",
+    "d_en": "An illustrated introduction to the Twelve Traditions, explaining each Tradition in accessible language. The visual format helps make AA group principles easier to understand for both newcomers and experienced members."
   },
   {
     "n": "Думаешь ты особенный?",
     "l": "рус",
     "d": "Брошюра для тех, кто сомневается, подходит ли ему программа АА из-за возраста или социального статуса. Разрушает мифы об «особых» случаях алкоголизма. Показывает, что болезнь не выбирает профессию или доход. Помогает человеку преодолеть барьер уникальности и прийти на собрание.",
-    "img": "book-covers/think-special-ru.svg"
+    "img": "book-covers/think-special-ru.svg",
+    "d_kz": "Жасы, әлеуметтік жағдайы немесе басқа ерекшеліктеріне байланысты АА бағдарламасы өзіне сай келе ме деп күмәнданатын адамдарға арналған брошюра. «Ерекше жағдай» туралы түсініктерді қарастырып, алкоголизмнің әртүрлі адамдарға әсер ететінін көрсетеді.",
+    "d_en": "A pamphlet for people who wonder whether AA applies to them because of age, social status, background, or other differences. It addresses the feeling of being a special or exceptional case and shows how alcoholism can affect people from many walks of life."
   },
   {
     "n": "Молодежь и АА",
     "l": "рус",
     "d": "Истории молодых людей, которые смогли признать проблему и обрести трезвость в раннем возрасте. Показывает, что алкоголизм не зависит от стажа употребления. Вдохновляет молодежь не ждать дна, а начать жить полноценно уже сейчас. Содержит советы по преодолению социального давления сверстников.",
-    "img": "book-covers/young-people-aa-ru.svg"
+    "img": "book-covers/young-people-aa-ru.svg",
+    "d_kz": "Алкоголь мәселесін ерте жаста мойындап, АА-да байсалдылық тапқан жастардың оқиғалары. Алкоголизмнің тек ұзақ уақыт ішумен байланысты емес екенін көрсетіп, жастарды көмек іздеуді кейінге қалдырмауға шақырады.",
+    "d_en": "Stories of young people who recognized a problem with alcohol and found sobriety in AA. The pamphlet shows that alcoholism is not defined by age or length of drinking and addresses some of the social pressures younger members may face."
   },
   {
     "n": "Женщины в АА",
     "l": "рус",
     "d": "Специальный выпуск историй женщин, столкнувшихся с алкоголизмом и нашедших поддержку в содружестве. Затрагивает темы материнства, отношений и социальной реабилитации. Помогает женщинам почувствовать, что они не одиноки в своей беде. Дает надежду на восстановление семьи и обретение достоинства.",
-    "img": "book-covers/women-aa-ru.svg"
+    "img": "book-covers/women-aa-ru.svg",
+    "d_kz": "Алкоголизммен бетпе-бет келіп, АА қауымдастығынан қолдау тапқан әйелдердің тәжірибелері. Отбасы, ана болу, қарым-қатынас және қоғамдағы өмірге қайта оралу сияқты тақырыптар қозғалады. Әйелдерге өз тәжірибесінде жалғыз емес екенін көруге көмектеседі.",
+    "d_en": "Experiences of women who faced alcoholism and found support in AA. The material addresses relationships, family life, motherhood, social pressures, and recovery, helping women see that they are not alone in their experience."
   },
   {
     "n": "Группа АА там где все начинается",
     "l": "рус",
     "d": "Важное пособие о том, как создать группу, проводить собрания и нести весть. Описывает роли служителей группы и их обязанности. Дает рекомендации по ведению финансовой отчетности и аренде помещения. Фундаментальный документ для развития здоровой атмосферы на собраниях.",
-    "img": "book-covers/group-aa-ru.svg"
+    "img": "book-covers/group-aa-ru.svg",
+    "d_kz": "АА тобын құру, жиналыстар өткізу және хабарды жеткізу туралы практикалық құрал. Топ қызметшілерінің рөлдері мен міндеттерін, қаржы мен ұйымдастыру мәселелерін түсіндіреді және сау топтық ортаны қалыптастыруға көмектеседі.",
+    "d_en": "A practical guide to starting and maintaining an AA group, holding meetings, and carrying the message. It describes group service positions and responsibilities and discusses organizational matters that support a healthy group environment."
   },
   {
     "n": "Пособие по работе АА в ЛУ",
     "l": "рус",
     "d": "Методический материал для служения в лечебных учреждениях и больницах. Объясняет специфику взаимодействия с персоналом клиник. Дает советы по проведению информационных встреч для пациентов. Помогает эффективно наладить мост между больницей и группами АА.",
-    "img": "book-covers/treatment-facilities-ru.svg"
+    "img": "book-covers/treatment-facilities-ru.svg",
+    "d_kz": "Емдеу мекемелері мен ауруханалардағы АА қызметіне арналған әдістемелік материал. Мекеме қызметкерлерімен өзара әрекеттесу ерекшеліктерін, пациенттерге ақпараттық кездесулер өткізуді және емдеу мекемесі мен АА топтары арасындағы байланысты ұйымдастыруды түсіндіреді.",
+    "d_en": "Guidance for AA service in treatment facilities and hospitals. It discusses working with facility staff, providing information to patients, and building an effective connection between treatment settings and local AA groups."
   }
 ]
