@@ -56,6 +56,17 @@ for (const post of news) {
     }
 }
 
+const groups = JSON.parse(fs.readFileSync('groups.json', 'utf8'));
+for (const [index, group] of groups.entries()) {
+    if (!String(group.note || '').trim()) continue;
+    for (const language of ['kz', 'en']) {
+        if (!String(group[`note_${language}`] || '').trim()) {
+            errors.push(`group ${index + 1} (${group.n || 'unnamed'}): missing note_${language}`);
+        }
+    }
+}
+console.log(`Group note localization: ${groups.filter(group => String(group.note || '').trim()).length} annotated groups checked`);
+
 const books = JSON.parse(fs.readFileSync('books.json', 'utf8'));
 const bookTranslationStats = {};
 for (const language of ['kz', 'en']) {
