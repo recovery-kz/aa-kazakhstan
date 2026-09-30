@@ -67,7 +67,16 @@ for (const language of ['kz', 'en']) {
         field,
         reflectionKeys.filter(key => String(reflections[key][`${field}_${language}`] || '').trim()).length
     ]));
+    for (const key of reflectionKeys) {
+        for (const field of fields) {
+            if (!String(reflections[key][`${field}_${language}`] || '').trim()) {
+                errors.push(`daily reflection ${key}: missing ${field}_${language}`);
+            }
+        }
+    }
 }
+
+console.log('Daily reflection translation coverage:', JSON.stringify(reflectionTranslationStats));
 
 if (errors.length) {
     console.error(errors.map(error => `ERROR: ${error}`).join('\n'));
