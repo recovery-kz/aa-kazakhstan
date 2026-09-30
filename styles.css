@@ -1360,3 +1360,11 @@ body.dark-mode .app-status {
     outline: 3px solid color-mix(in srgb, var(--accent) 36%, transparent);
     outline-offset: 3px;
 }
+
+/* Keep dialogs above onboarding hints and installation prompts. */
+body:has(.city-onboarding.open, .feature-modal.open, .book-modal.open, .notification-panel.open, .info-modal.open, .structure-image-modal.open, .first-run.open) .install-banner,
+body:has(.city-onboarding.open, .feature-modal.open, .book-modal.open, .notification-panel.open, .info-modal.open, .structure-image-modal.open, .first-run.open) .coachmark { display:none!important; }
+.notification-setting-title,.notification-setting-note { display:block; }
+.schedule-timezone { color:var(--text-sub); font-size:13px; margin:8px 2px; }
+.news-slide a { display:block; }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
