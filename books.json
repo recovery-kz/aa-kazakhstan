@@ -83,61 +83,81 @@
     "n": "Сбросить камень",
     "l": "рус",
     "d": "Книга посвящена Шестому и Седьмому Шагам, работе над дефектами характера и духовному росту. Она помогает распознать скрытые препятствия, которые мешают прогрессу в трезвости. Автор глубоко анализирует природу страха, гордыни и гнева. Это практическое руководство по очищению души и обретению покоя.",
-    "img": "book-covers/drop-the-rock-ru.svg"
+    "img": "book-covers/drop-the-rock-ru.svg",
+    "d_kz": "Кітап Алтыншы және Жетінші қадамдарға, мінез кемшіліктерімен жұмыс істеуге және рухани өсуге арналған. Ол байсалдылықтағы ілгерілеуге кедергі келтіретін жасырын тосқауылдарды тануға көмектеседі. Қорқыныш, тәкаппарлық пен ашудың табиғатын зерттеп, ішкі тыныштыққа жетуге бағыт береді.",
+    "d_en": "A book focused on the Sixth and Seventh Steps, character defects, and spiritual growth. It helps readers identify obstacles that can hinder progress in sobriety and examines fear, pride, anger, and the process of letting go."
   },
   {
     "n": "Сбросить камень",
     "l": "каз",
     "d": "Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды.",
-    "img": "book-covers/drop-the-rock-kz.svg"
+    "img": "book-covers/drop-the-rock-kz.svg",
+    "d_kz": "Мінез-құлықтағы кемшіліктермен жұмыс істеуге және рухани дамуға арналған көмекші құрал. Алтыншы және жетінші қадамдарды тереңірек зерттеуге мүмкіндік береді. Өзімізді жақсырақ танып, ішкі кедергілерден арылуға көмектеседі. Саналы және бақытты өмір сүруге бағыттайды.",
+    "d_en": "A Kazakh-language guide to working with character defects and spiritual development. It offers a deeper look at the Sixth and Seventh Steps and encourages greater self-awareness, release from inner obstacles, and a more conscious life."
   },
   {
     "n": "Новые очки (Чак Ч)",
     "l": "рус",
     "d": "Запись знаменитого выступления Чака Ч., которая помогает по-новому взглянуть на жизнь в трезвости и духовное пробуждение. Чак делится своим уникальным опытом проживания программы в радости и свободе. Он учит не просто не пить, а по-настоящему наслаждаться жизнью. Эта работа вдохновила тысячи людей на перемены.",
-    "img": "book-covers/new-glasses-ru.svg"
+    "img": "book-covers/new-glasses-ru.svg",
+    "d_kz": "Чак Ч.-ның байсалды өмір мен рухани оянуға жаңаша қарауға көмектесетін әйгілі баяндамасының жазбасы. Ол бағдарламаны қуанышпен және еркіндікпен өмір сүру тәжірибесімен бөліседі және тек ішпеуді емес, өмірді толыққанды қабылдауды ұсынады.",
+    "d_en": "A transcript of Chuck C.’s well-known talk on sobriety and spiritual awakening. He shares his experience of living the program with greater joy and freedom, encouraging readers to move beyond simply not drinking toward a fuller way of life."
   },
   {
     "n": "Новые очки (Чак Ч)",
     "l": "каз",
     "d": "Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі.",
-    "img": "book-covers/new-glasses-kz.svg"
+    "img": "book-covers/new-glasses-kz.svg",
+    "d_kz": "Чак Ч.-ның әйгілі баяндамасы. Салауатты өмірге жаңаша көзқараспен қарауға мүмкіндік береді. Ол рухани оянудың маңыздылығын және оның өмірді қалай өзгертетінін сипаттайды. Қиындықтарды жеңудің және ішкі тыныштықты табудың жолдарын айтады. Көптеген адамдар үшін үлкен мотивация көзі.",
+    "d_en": "A Kazakh-language presentation of Chuck C.’s well-known talk. It explores a new perspective on sober living, the importance of spiritual awakening, and ways of facing difficulties while developing greater inner peace."
   },
   {
     "n": "Доктор Боб и славные ветераны",
     "l": "рус",
     "d": "История зарождения АА на Среднем Западе США и биография сооснователя сообщества доктора Боба. Книга полна живых воспоминаний первых участников движения. Она показывает, как вера и служение помогли первым алкоголикам выжить. Это глубокое историческое исследование корней содружества.",
-    "img": "book-covers/dr-bob-ru.svg"
+    "img": "book-covers/dr-bob-ru.svg",
+    "d_kz": "АҚШ-тың Орта Батысында АА-ның қалыптасу тарихы және қауымдастықтың тең құрылтайшысы доктор Бобтың өмірбаяны. Алғашқы мүшелердің естеліктері арқылы сенім мен қызметтің алғашқы алкоголиктерге қалай көмектескені көрсетіледі.",
+    "d_en": "The story of AA’s beginnings in the American Midwest and the life of co-founder Dr. Bob. Drawing on memories of early members, it describes the fellowship’s formative years and the role of faith, service, and shared experience."
   },
   {
     "n": "АА Взрослеет",
     "l": "рус",
     "d": "Книга об истории развития сообщества, написанная Биллом У. Охватывает период становления традиций и структуры АА. Билл подробно описывает, как маленькое объединение превратилось во всемирное движение. В ней изложены три завета сообщества: выздоровление, единство и служение. Важное чтение для тех, кто интересуется устройством АА.",
-    "img": "book-covers/aa-comes-of-age-ru.svg"
+    "img": "book-covers/aa-comes-of-age-ru.svg",
+    "d_kz": "Билл У. жазған АА қауымдастығының даму тарихы. Кітап Дәстүрлер мен қызмет құрылымының қалыптасуын және шағын бірлестіктің дүниежүзілік қозғалысқа айналуын сипаттайды. Сауығу, бірлік және қызмет тақырыптарына ерекше назар аударылады.",
+    "d_en": "Bill W.’s account of the development of Alcoholics Anonymous. It describes the formation of the Traditions and service structure and how a small fellowship grew into a worldwide movement, with particular attention to recovery, unity, and service."
   },
   {
     "n": "Пришли к убеждению",
     "l": "рус",
     "d": "Сборник личного опыта участников АА, посвященный духовному аспекту программы и поиску Высшей Силы. В ней представлены самые разные точки зрения — от атеистов до глубоко верующих. Книга показывает, что в АА есть место каждому, независимо от убеждений. Она расширяет границы понимания духовности в программе.",
-    "img": "book-covers/came-to-believe-ru.svg"
+    "img": "book-covers/came-to-believe-ru.svg",
+    "d_kz": "АА мүшелерінің бағдарламаның рухани қыры мен Жоғары Күшті іздеу туралы жеке тәжірибелерінің жинағы. Мұнда атеистік көзқарастан діни сенімге дейін әртүрлі ұстанымдар берілген. Кітап руханилықты әр адам өз жолымен түсіне алатынын көрсетеді.",
+    "d_en": "A collection of AA members’ personal experiences with the spiritual dimension of the program and the search for a Higher Power. It includes a wide range of perspectives and shows that people with different beliefs can find a place in AA."
   },
   {
     "n": "Рук-во по обслуживанию АА + 12 Принципов",
     "l": "рус",
     "d": "Техническое руководство по структуре обслуживания АА и 12 принципов всемирного служения. Объясняет, как работают конференции, советы и делегаты. Показывает, как обеспечивается связь между группами и сообществом в целом. Необходима для тех, кто занимается ответственным служением.",
-    "img": "book-covers/service-manual-ru.svg"
+    "img": "book-covers/service-manual-ru.svg",
+    "d_kz": "АА-ның қызмет көрсету құрылымы мен дүниежүзілік қызметтің 12 принципін түсіндіретін техникалық нұсқаулық. Конференциялар, кеңестер мен делегаттардың жұмысын және топтар мен жалпы қауымдастық арасындағы байланысты сипаттайды. Қызмет атқаратын мүшелерге арналған негізгі материал.",
+    "d_en": "A technical guide to AA’s service structure together with the Twelve Concepts for World Service. It explains conferences, boards, delegates, and the connection between individual groups and the fellowship as a whole. It is intended for members involved in service."
   },
   {
     "n": "Рабочая тетрадь по изучению 12 традиций",
     "l": "рус",
     "d": "Материал для углубленного разбора традиций в малых группах с вопросами для обсуждения. Помогает понять, как применять традиции не только в группе, но и в личной жизни. Содержит практические примеры и упражнения. Укрепляет единство содружества через осознание общих принципов.",
-    "img": "book-covers/traditions-workbook-ru.svg"
+    "img": "book-covers/traditions-workbook-ru.svg",
+    "d_kz": "12 дәстүрді шағын топтарда тереңірек зерттеуге арналған, талқылау сұрақтары бар жұмыс дәптері. Дәстүрлерді топ өмірінде ғана емес, жеке өмірде де түсінуге көмектесетін практикалық мысалдар мен жаттығулар қамтылған.",
+    "d_en": "A workbook for in-depth study of the Twelve Traditions in small groups. It includes discussion questions, practical examples, and exercises designed to deepen understanding of how the Traditions apply within AA groups and beyond."
   },
   {
     "n": "Рабочая тетрадь по изучению Принципов обслуживания",
     "l": "рус",
     "d": "Пособие для тех, кто хочет глубже понять структуру и принципы работы конференций и советов. Разбирает сложные вопросы управления и ответственности в АА. Помогает новым служителям быстрее войти в курс дела. Структурирует знания о всемирном обслуживании.",
-    "img": "book-covers/service-concepts-workbook-ru.svg"
+    "img": "book-covers/service-concepts-workbook-ru.svg",
+    "d_kz": "Конференциялар мен кеңестердің құрылымы мен жұмыс принциптерін тереңірек түсінгісі келетіндерге арналған жұмыс дәптері. Басқару, жауапкершілік және қызмет мәселелерін талқылап, жаңа қызметшілерге АА-ның дүниежүзілік қызмет жүйесін түсінуге көмектеседі.",
+    "d_en": "A workbook for members who want a deeper understanding of AA service principles and the work of conferences and boards. It explores responsibility, governance, and service, helping newer trusted servants become familiar with the wider service structure."
   },
   {
     "n": "Вопросник по 12 традициям",
