@@ -655,8 +655,14 @@
         return `<div class="today-schedule"><strong>${featureText().todaySchedule}</strong>${state.slots.map(slot=>`${hhmm(slot.s)}–${hhmm(slot.e)}${slotMinutes(slot.e)<=schedule.clock().minutes ? ` (${featureText().finished})` : ''}`).join(' · ')}</div>`;
     }
 
+    function localizedGroupNote(g) {
+        if (!g?.note) return '';
+        if (curLang === 'ru') return g.note;
+        return g[`note_${curLang}`] || g.note;
+    }
+
     function normalizedGroupSearch(g) {
-        return [g.n,g.c,g.a,g.t,g.note,(g.online||g.hybrid)?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
+        return [g.n,g.c,g.a,g.t,localizedGroupNote(g),(g.online||g.hybrid)?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
     }
 
     function matchesGroupSearch(g, query) {
@@ -667,7 +673,7 @@
         const phone = Array.isArray(g.p) ? g.p.join(' · ') : getPrimaryPhone(g);
         const map = g.online ? '' : build2GISLink(g);
         const online = g.online ? (g.a||g.z||'') : (g.z||'');
-        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,(curLang==='kz'?'Қазақстан АА':curLang==='en'?'AA Kazakhstan':'АА Казахстана')+': https://recovery-kz.github.io/aa-kazakhstan/',curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
+        return [g.n,g.c,g.online?'Онлайн':g.a,localizeSchedule(g.t),localizedGroupNote(g),phone,map,online,(curLang==='kz'?'Қазақстан АА':curLang==='en'?'AA Kazakhstan':'АА Казахстана')+': https://recovery-kz.github.io/aa-kazakhstan/',curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
     }
 
     async function shareGroup(g) {
@@ -1600,7 +1606,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
                         ${renderAddress(g)}
                         <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(localizeSchedule(g.t || i18n[curLang].noSchedule))}</div></div></div>
                         ${g.p && g.p.length ? renderPhones(g.p, g.pl) : ''}
-                        ${g.note ? `<div class="info-row"><span class="info-row-icon">ℹ️</span><div>${escapeHtml(g.note)}</div></div>` : ''}
+                        ${g.note ? `<div class="info-row"><span class="info-row-icon">ℹ️</span><div>${escapeHtml(localizedGroupNote(g))}</div></div>` : ''}
                     </div>
                     <div class="group-actions">${buildGroupActions(g)}<a class="report-error" href="${buildReportLink(g)}" target="_blank" rel="noopener noreferrer" data-track="report_error" data-group="${escapeHtml(g.n)}">${i18n[curLang].reportError}</a></div>
                 </div>`;
