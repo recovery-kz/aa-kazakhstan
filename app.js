@@ -667,7 +667,7 @@
         const phone = Array.isArray(g.p) ? g.p.join(' · ') : getPrimaryPhone(g);
         const map = g.online ? '' : build2GISLink(g);
         const online = g.online ? (g.a||g.z||'') : (g.z||'');
-        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/','Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
+        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,(curLang==='kz'?'Қазақстан АА':curLang==='en'?'AA Kazakhstan':'АА Казахстана')+': https://recovery-kz.github.io/aa-kazakhstan/',curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
     }
 
     async function shareGroup(g) {
@@ -712,7 +712,7 @@
         if (!next) { showAppStatus(i18n[curLang].noSchedule); return; }
         activeCalendarGroupId = getGroupId(g);
         document.getElementById('calendar-title').textContent = featureText().calendarTitle;
-        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)} · Казахстан (UTC+5)`;
+        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)} · ${curLang==='kz'?'Қазақстан (UTC+5)':curLang==='en'?'Kazakhstan (UTC+5)':'Казахстан (UTC+5)'}`;
         document.querySelector('[data-calendar-mode="once"]').textContent = featureText().calendarOnce;
         document.querySelector('[data-calendar-mode="weekly"]').textContent = featureText().calendarWeekly;
         openFeatureModal('calendar-modal');
@@ -743,7 +743,7 @@
         const occurrences=weekly ? (g.sc||[]).map(slot=>schedule.nextMeeting({...g,sc:[slot]},false)) : [next];
         const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App//RU','CALSCALE:GREGORIAN','X-WR-TIMEZONE:Asia/Almaty'];
         occurrences.filter(Boolean).forEach((meeting,index)=>{
-            lines.push('BEGIN:VEVENT',`UID:${Date.now()}-${index}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(meeting.start)}`,`DTEND:${icsDate(meeting.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(g.a||g.z||'')}`,`DESCRIPTION:${icsEscape(groupShareText(g)+'\nВремя: Казахстан (UTC+5)')}`);
+            lines.push('BEGIN:VEVENT',`UID:${Date.now()}-${index}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(meeting.start)}`,`DTEND:${icsDate(meeting.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(g.a||g.z||'')}`,`DESCRIPTION:${icsEscape(groupShareText(g)+'\n'+(curLang==='kz'?'Уақыт: Қазақстан (UTC+5)':curLang==='en'?'Time: Kazakhstan (UTC+5)':'Время: Казахстан (UTC+5)'))}`);
             if(weekly) lines.push('RRULE:FREQ=WEEKLY');
             lines.push('END:VEVENT');
         });
@@ -1073,7 +1073,7 @@
             const labels=lang==='kz'?['Сенімді адамның аты','Сенімді адамның телефоны','Сенімді адамға қоңырау шалу']:lang==='en'?['Trusted contact name','Trusted contact phone','Call trusted contact']:['Имя доверенного лица','Телефон доверенного лица','Позвонить доверенному лицу'];
             ['tr-n-','tr-p-','call-'].forEach((prefix,j)=>document.getElementById(prefix+i).setAttribute('aria-label',`${labels[j]} ${i+1}`));
         }
-        document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
+        document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
         document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
         document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
         const minuteOptions = document.querySelectorAll('#notif-before option');
@@ -1086,7 +1086,7 @@
             button.setAttribute('aria-label', label);
         });
         const splash = document.getElementById('app-splash');
-        if (splash) splash.setAttribute('aria-label', lang === 'en' ? 'App loading' : 'Приложение загружается');
+        if (splash) splash.setAttribute('aria-label', lang === 'en' ? 'App loading' : lang === 'kz' ? 'Қолданба жүктелуде' : 'Приложение загружается');
         const splashTitle = document.querySelector('.app-splash-title');
         const splashTagline = document.querySelector('.app-splash-tagline');
         [splashTitle, splashTagline].forEach(element => {
@@ -1094,7 +1094,7 @@
         });
         if (splashTitle) splashTitle.textContent = lang === 'en' ? 'AA Kazakhstan' : splashTitle.dataset.defaultText;
         if (splashTagline) splashTagline.textContent = lang === 'en' ? 'There is a way out' : splashTagline.dataset.defaultText;
-        document.title = lang === 'en' ? 'AA Kazakhstan' : 'АА Казахстана';
+        document.title = lang === 'en' ? 'AA Kazakhstan' : lang === 'kz' ? 'Қазақстан АА' : 'АА Казахстана';
 
         document.getElementById('prayer-content').innerText = d.prayer;
         document.getElementById('user-notes').placeholder = d.placeholder;
@@ -1360,7 +1360,7 @@
 
 ${book.d}
 
-${curLang === 'en' ? i18n.en.literatureShare : 'Литературный комитет АА Казахстана'}: +7 (777) 556-71-41`;
+${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақстан АА Әдебиет комитеті' : 'Литературный комитет АА Казахстана'}: +7 (777) 556-71-41`;
         try {
             if (navigator.share) {
                 await navigator.share({ title: book.n, text: shareText });
