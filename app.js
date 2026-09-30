@@ -369,7 +369,7 @@
         const previous = localStorage.getItem('aa_last_news_identity');
         localStorage.setItem('aa_last_news_identity', identity);
         if (!previous || previous === identity) return;
-        const title = latest.title || latest.n || latest.name || i18n[curLang].notifNewsNew;
+        const title = localizedNews(latest).title || latest.n || latest.name || i18n[curLang].notifNewsNew;
         addInternalNotification({ key: `news:${identity}`, type: 'news', icon: '📰', title: i18n[curLang].notifNewsNew, text: String(title), tab: 'news' });
     }
 
@@ -1738,7 +1738,7 @@ function closeFirstTimeInfo(fromHistory = false) {
         const total = dots.length || 1;
         const safeIndex = Math.max(0, Math.min(index, total - 1));
 
-        if (counter) counter.textContent = curLang === 'en' ? i18n.en.newsCounter(safeIndex + 1, total) : `${safeIndex + 1} из ${total}`;
+        if (counter) counter.textContent = i18n[curLang].newsCounter(safeIndex + 1, total);
         dots.forEach((dot, dotIndex) => {
             dot.classList.toggle('active', dotIndex === safeIndex);
             dot.setAttribute('aria-current', dotIndex === safeIndex ? 'true' : 'false');
@@ -1814,7 +1814,7 @@ function closeFirstTimeInfo(fromHistory = false) {
                 <div class="news-slide">
                     <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer" aria-label="${curLang==='kz'?'Суретті толық ашу':curLang==='en'?'Open full-size image':'Открыть изображение целиком'} ${imageIndex+1}"><img
                         src="${escapeHtml(image)}"
-                        alt="${escapeHtml(post.title || (curLang === 'en' ? i18n.en.newsImageAlt : 'Новость АА Казахстана'))} — ${imageIndex + 1}"
+                        alt="${escapeHtml(post.title || i18n[curLang].newsImageAlt)} — ${imageIndex + 1}"
                         loading="${postIndex === 0 && imageIndex === 0 ? 'eager' : 'lazy'}"
                         draggable="false"
                     ></a>
@@ -1822,12 +1822,12 @@ function closeFirstTimeInfo(fromHistory = false) {
             `).join('');
 
             const dots = total > 1
-                ? `<div class="news-dots" aria-label="${curLang === 'en' ? i18n.en.newsCarouselLabel : 'Навигация по карточкам'}">
+                ? `<div class="news-dots" aria-label="${i18n[curLang].newsCarouselLabel}">
                     ${images.map((_, imageIndex) => `
                         <button
                             type="button"
                             class="news-dot${imageIndex === 0 ? ' active' : ''}"
-                            aria-label="${curLang === 'en' ? i18n.en.newsOpenCard(imageIndex + 1) : `Открыть карточку ${imageIndex + 1}`}"
+                            aria-label="${i18n[curLang].newsOpenCard(imageIndex + 1)}"
                         ></button>
                     `).join('')}
                    </div>`
@@ -1838,7 +1838,7 @@ function closeFirstTimeInfo(fromHistory = false) {
                     ${total ? `
                         <div class="news-carousel-wrap">
                             <div class="news-carousel">${slides}</div>
-                            ${total > 1 ? `<div class="news-counter">${curLang === 'en' ? i18n.en.newsCounter(1, total) : `1 из ${total}`}</div>` : ''}
+                            ${total > 1 ? `<div class="news-counter">${i18n[curLang].newsCounter(1, total)}</div>` : ''}
                         </div>
                         ${dots}
                     ` : ''}
