@@ -480,6 +480,30 @@
         return titleText ? `${dateText}. ${titleText}` : dateText;
     }
 
+    function localizedField(item, field) {
+        if (!item) return '';
+        if (curLang === 'ru') return item[field] ?? item[field + '_ru'] ?? '';
+        return item[field + '_' + curLang] ?? item[curLang]?.[field] ?? item[field] ?? item[field + '_ru'] ?? '';
+    }
+
+    function localizedNews(post) {
+        return {
+            ...post,
+            title: localizedField(post, 'title'),
+            category: localizedField(post, 'category'),
+            description: localizedField(post, 'description')
+        };
+    }
+
+    function localizedBook(book) {
+        if (!book) return book;
+        return {
+            ...book,
+            n: localizedField(book, 'n'),
+            d: localizedField(book, 'd')
+        };
+    }
+
     function renderMotivationFromData(reflections) {
         const titleEl = document.getElementById('mot-title');
         const quoteEl = document.getElementById('mot-quote');
@@ -504,10 +528,18 @@
             return false;
         }
 
-        titleEl.innerText = getReflectionLine(today, item);
-        quoteEl.innerText = item.quote || '';
-        sourceEl.innerText = item.source || '';
-        fullTextEl.innerText = item.text || '';
+        const localized = {
+            ...item,
+            date_ru: localizedField(item, 'date') || item.date_ru,
+            title: localizedField(item, 'title'),
+            quote: localizedField(item, 'quote'),
+            source: localizedField(item, 'source'),
+            text: localizedField(item, 'text')
+        };
+        titleEl.innerText = getReflectionLine(today, localized);
+        quoteEl.innerText = localized.quote || '';
+        sourceEl.innerText = localized.source || '';
+        fullTextEl.innerText = localized.text || '';
         return true;
     }
 
@@ -1258,7 +1290,7 @@
     function renderLit() {
         const c = document.getElementById('book-list');
         const filteredBooks = books
-            .map((book, index) => ({ book, index }))
+            .map((book, index) => ({ book: localizedBook(book), index }))
             .filter(item => currentBookFilter === 'all' || item.book.l === currentBookFilter);
 
         c.innerHTML = filteredBooks.map(({ book, index }) => `
@@ -1282,8 +1314,9 @@
     }
 
     function openBook(index) {
-        const book = books[Number(index)];
-        if (!book) return;
+        const rawBook = books[Number(index)];
+        if (!rawBook) return;
+        const book = localizedBook(rawBook);
         activeBookIndex = Number(index);
         const d = i18n[curLang];
         const content = document.getElementById('book-modal-content');
@@ -1320,8 +1353,9 @@
     }
 
     async function shareBook() {
-        const book = books[activeBookIndex];
-        if (!book) return;
+        const rawBook = books[activeBookIndex];
+        if (!rawBook) return;
+        const book = localizedBook(rawBook);
         const shareText = `${book.n}
 
 ${book.d}
@@ -1771,7 +1805,8 @@ function closeFirstTimeInfo(fromHistory = false) {
 
         currentNewsData = posts;
 
-        container.innerHTML = posts.map((post, postIndex) => {
+        container.innerHTML = posts.map((rawPost, postIndex) => {
+            const post = localizedNews(rawPost);
             const images = Array.isArray(post.images) ? post.images.filter(Boolean) : [];
             const total = images.length;
 
