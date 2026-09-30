@@ -3,6 +3,7 @@
 
     const i18n = window.AA_I18N;
     const principles = window.AA_PRINCIPLES;
+    const schedule = window.AA_SCHEDULE;
     const englishProfile = window.AA_PROFILE_EN;
 
     let curLang = localStorage.getItem('aa_lang') || 'ru';
@@ -27,7 +28,7 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.8';
+    const APP_VERSION = '2.2.9';
     const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.0';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
@@ -57,7 +58,7 @@
     function closeHistoryEntry(overlay) {
         if (restoringNavigation) return false;
         if (history.state?.aaApp && history.state.overlay === overlay) {
-            history.back();
+            history.replaceState({ ...history.state, overlay: null }, '', location.href);
             return true;
         }
         return false;
@@ -109,7 +110,7 @@
         if (featureModal) { closeFeatureModal(featureModal.id, true); return true; }
 
         const activeTab = getActiveTab();
-        if (activeTab === 'groups' && (groupFilterMode !== 'all' || groupSearchQuery || document.getElementById('citySelect')?.value !== 'all')) {
+        if (activeTab === 'groups' && (groupFilterMode !== 'all' || onlyToday || groupSearchQuery || document.getElementById('citySelect')?.value !== 'all')) {
             resetGroupsToRoot();
             return true;
         }
@@ -140,17 +141,18 @@
         const structureImages = document.querySelectorAll('.structure-image, #structure-image-modal img');
         const structureModalPanel = document.querySelector('#structure-image-modal [role="dialog"]');
         const useEnglish = curLang === 'en';
+        const useKazakh = curLang === 'kz';
 
         [structureTitle, structureHint].forEach(element => {
             if (element && !element.dataset.defaultText) element.dataset.defaultText = element.textContent;
         });
-        if (structureTitle) structureTitle.textContent = useEnglish ? i18n.en.structureTitle : structureTitle.dataset.defaultText;
-        if (structureHint) structureHint.textContent = useEnglish ? i18n.en.structureHint : structureHint.dataset.defaultText;
-        if (structureTrigger) structureTrigger.setAttribute('aria-label', useEnglish ? i18n.en.structureImageLabel : 'Увеличить схему структуры АА Казахстана');
-        if (structureModalPanel) structureModalPanel.setAttribute('aria-label', useEnglish ? i18n.en.structureImageLabel : 'Структура АА Казахстана');
+        if (structureTitle) structureTitle.textContent = useEnglish ? i18n.en.structureTitle : useKazakh ? 'ҚАЗАҚСТАН АА ҚҰРЫЛЫМЫ' : structureTitle.dataset.defaultText;
+        if (structureHint) structureHint.textContent = useEnglish ? i18n.en.structureHint : useKazakh ? 'Үлкейту үшін басыңыз' : structureHint.dataset.defaultText;
+        if (structureTrigger) structureTrigger.setAttribute('aria-label', useEnglish ? i18n.en.structureImageLabel : useKazakh ? 'Қазақстан АА құрылымын үлкейту' : 'Увеличить схему структуры АА Казахстана');
+        if (structureModalPanel) structureModalPanel.setAttribute('aria-label', useEnglish ? i18n.en.structureImageLabel : useKazakh ? 'Қазақстан АА құрылымы' : 'Структура АА Казахстана');
         structureImages.forEach(image => {
-            image.src = useEnglish ? 'assets/aa-kazakhstan-structure-en.svg' : 'assets/aa-kazakhstan-structure.svg';
-            image.alt = useEnglish ? i18n.en.structureImageLabel : 'Структура Сообщества АА в Республике Казахстан';
+            image.src = useEnglish ? 'assets/aa-kazakhstan-structure-en.svg' : useKazakh ? 'assets/aa-kazakhstan-structure-kz.svg' : 'assets/aa-kazakhstan-structure.svg';
+            image.alt = useEnglish ? i18n.en.structureImageLabel : useKazakh ? 'Қазақстан Республикасындағы АА Қауымдастығының құрылымы' : 'Структура Сообщества АА в Республике Казахстан';
         });
 
         document.querySelectorAll('#acc-aa-structure .committee-item').forEach((item, index) => {
@@ -161,17 +163,17 @@
             [title, description, contact, message].forEach(element => {
                 if (element && !element.dataset.defaultText) element.dataset.defaultText = element.textContent;
             });
-            const translation = englishProfile?.committees?.[index];
-            if (title) title.textContent = useEnglish && translation ? translation.title : title.dataset.defaultText;
-            if (description) description.textContent = useEnglish && translation ? translation.description : description.dataset.defaultText;
-            if (contact) contact.textContent = useEnglish && translation ? translation.contact : contact.dataset.defaultText;
+            const translation = (useKazakh ? window.AA_PROFILE_KZ : englishProfile)?.committees?.[index];
+            if (title) title.textContent = (useEnglish || useKazakh) && translation ? translation.title : title.dataset.defaultText;
+            if (description) description.textContent = (useEnglish || useKazakh) && translation ? translation.description : description.dataset.defaultText;
+            if (contact) contact.textContent = (useEnglish || useKazakh) && translation ? translation.contact : contact.dataset.defaultText;
             if (message) {
-                message.textContent = useEnglish ? i18n.en.writeAction : message.dataset.defaultText;
-                message.setAttribute('aria-label', useEnglish ? 'Message on WhatsApp' : 'Написать в WhatsApp');
+                message.textContent = useEnglish ? i18n.en.writeAction : useKazakh ? 'Жазу' : message.dataset.defaultText;
+                message.setAttribute('aria-label', useEnglish ? 'Message on WhatsApp' : useKazakh ? 'WhatsApp арқылы жазу' : 'Написать в WhatsApp');
                 if (!message.dataset.defaultHref) message.dataset.defaultHref = message.href;
-                if (useEnglish && translation) {
+                if ((useEnglish || useKazakh) && translation) {
                     const phoneMatch = message.href.match(/wa\.me\/(\d+)/);
-                    const englishMessage = `Hello. I am writing from the AA Kazakhstan app about: ${translation.title}.`;
+                    const englishMessage = useKazakh ? `Сәлеметсіз бе. Қазақстан АА қолданбасынан жазып отырмын. Сұрағым: ${translation.title}.` : `Hello. I am writing from the AA Kazakhstan app about: ${translation.title}.`;
                     if (phoneMatch) message.href = `https://wa.me/${phoneMatch[1]}?text=${encodeURIComponent(englishMessage)}`;
                 } else {
                     message.href = message.dataset.defaultHref;
@@ -315,16 +317,12 @@
         closeNotificationCenter();
         if (!current) return;
         if (current.tab) goTo(current.tab);
-        if (current.action === 'today') {
-            onlyToday = true;
-            document.getElementById('todayFilter').classList.add('active');
-            renderGroups();
-        }
-        if (current.action === 'favorites') {
-            document.getElementById('citySelect').value = 'favorites';
-            renderGroups();
+        if (current.action === 'today' || current.action === 'favorites') {
+            resetGroupsToRoot();
+            setGroupFilterMode(current.action);
         }
     }
+
 
     function syncNotificationSettingsUI() {
         const settings = getNotificationSettings();
@@ -379,8 +377,8 @@
         const settings = getNotificationSettings();
         if (!settings.master || !settings.today) return;
         const now = new Date();
-        const day = now.getDay();
-        const dateKey = now.toISOString().slice(0, 10);
+        const day = schedule.clock(now).weekday;
+        const dateKey = schedule.clock(now).dateKey;
         const userCity = getSavedUserCity();
         const groups = data.filter(group => Array.isArray(group.sc) && group.sc.some(slot => slot.d === day) && (!userCity || group.c === userCity || group.online));
         if (!groups.length) return;
@@ -401,10 +399,10 @@
         const favorites = getFavoriteGroups();
         if (!favorites.size) return;
         const now = new Date();
-        const day = now.getDay();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+        const day = schedule.clock(now).weekday;
+        const currentMinutes = schedule.clock(now).minutes;
         const before = Number(settings.before || 60);
-        const dateKey = now.toISOString().slice(0, 10);
+        const dateKey = schedule.clock(now).dateKey;
         data.forEach(group => {
             if (!favorites.has(getGroupId(group)) || !Array.isArray(group.sc)) return;
             group.sc.filter(slot => slot.d === day).forEach(slot => {
@@ -549,13 +547,13 @@
     function featureText() {
         const texts = {
             ru: {
-                nearestFavorite:'Ближайшее избранное собрание', addFavoritePrompt:'Добавьте свою группу в избранное, чтобы ближайшее собрание появлялось здесь.', openGroups:'Выбрать группу', today:'Сегодня', tomorrow:'Завтра', inProgress:'Идёт сейчас', finished:'На сегодня завершено', todaySchedule:'Сегодня', inCalendar:'В календарь', share:'Поделиться', shared:'Информация о группе скопирована', calendarOnce:'Ближайшее собрание', calendarWeekly:'Повторять каждую неделю', calendarSaved:'Файл календаря подготовлен', searchPlaceholder:'Название, город, адрес, день или онлайн', emptyTitle:'Ничего не найдено', emptyText:'Измените запрос, город или выбранный фильтр.', clearFilters:'Сбросить', loadTitle:'Не удалось загрузить данные', loadText:'Проверьте подключение к интернету и попробуйте ещё раз.', retry:'Повторить', help:'Позвонить в АА', actions:'Действия с группой', favorite:'В избранное', unfavorite:'Убрать из избранного', call:'Позвонить', route:'Маршрут', online:'Открыть онлайн', formatOnline:'Онлайн', formatOffline:'Очно', formatKz:'Қазақша', formatRu:'Русский', formatWomen:'Женская', qrTitle:'Приложение АА Казахстана', qrNote:'Наведите камеру телефона на QR-код', qrSave:'Сохранить QR-код', whatsNew:'Что нового', understood:'Понятно', calendarTitle:'Добавить в календарь', swipeTip:'Проведите влево или вправо, чтобы перейти в соседний раздел.', favoriteTip:'Нажмите на звёздочку, чтобы сохранить группу. Удерживайте карточку для быстрых действий.'
+                nearestFavorite:'Ближайшее избранное собрание', addFavoritePrompt:'Добавьте свою группу в избранное, чтобы ближайшее собрание появлялось здесь.', openGroups:'Выбрать группу', today:'Сегодня', tomorrow:'Завтра', inProgress:'Идёт сейчас', finished:'Завершилось', todaySchedule:'Сегодня', inCalendar:'В календарь', share:'Поделиться', shared:'Информация о группе скопирована', calendarOnce:'Ближайшее собрание', calendarWeekly:'Всё расписание — каждую неделю', calendarSaved:'Файл календаря подготовлен', searchPlaceholder:'Название, город, адрес, день или онлайн', emptyTitle:'Ничего не найдено', emptyText:'Измените запрос, город или выбранный фильтр.', clearFilters:'Сбросить', loadTitle:'Не удалось загрузить данные', loadText:'Проверьте подключение к интернету и попробуйте ещё раз.', retry:'Повторить', help:'Позвонить в АА', actions:'Действия с группой', favorite:'В избранное', unfavorite:'Убрать из избранного', call:'Позвонить', route:'Маршрут', online:'Открыть онлайн', formatOnline:'Онлайн', formatOffline:'Очно', formatKz:'Қазақша', formatRu:'Русский', formatWomen:'Женская', qrTitle:'Приложение АА Казахстана', qrNote:'Наведите камеру телефона на QR-код', qrSave:'Сохранить QR-код', whatsNew:'Что нового', understood:'Понятно', calendarTitle:'Добавить в календарь', swipeTip:'Проведите влево или вправо, чтобы перейти в соседний раздел.', favoriteTip:'Нажмите на звёздочку, чтобы сохранить группу. Удерживайте карточку для быстрых действий.'
             },
             kz: {
-                nearestFavorite:'Ең жақын таңдаулы жиналыс', addFavoritePrompt:'Ең жақын жиналысты осы жерден көру үшін тобыңызды таңдаулыларға қосыңыз.', openGroups:'Топты таңдау', today:'Бүгін', tomorrow:'Ертең', inProgress:'Қазір өтіп жатыр', finished:'Бүгін аяқталды', todaySchedule:'Бүгін', inCalendar:'Күнтізбеге', share:'Бөлісу', shared:'Топ туралы ақпарат көшірілді', calendarOnce:'Ең жақын жиналыс', calendarWeekly:'Апта сайын қайталау', calendarSaved:'Күнтізбе файлы дайын', searchPlaceholder:'Атауы, қала, мекенжай, күн немесе онлайн', emptyTitle:'Ештеңе табылмады', emptyText:'Сұранысты, қаланы немесе сүзгіні өзгертіңіз.', clearFilters:'Қалпына келтіру', loadTitle:'Деректерді жүктеу мүмкін болмады', loadText:'Интернет байланысын тексеріп, қайталап көріңіз.', retry:'Қайталау', help:'АА-ға қоңырау шалу', actions:'Топ әрекеттері', favorite:'Таңдаулыларға', unfavorite:'Таңдаулылардан алып тастау', call:'Қоңырау шалу', route:'Бағыт', online:'Онлайн ашу', formatOnline:'Онлайн', formatOffline:'Бетпе-бет', formatKz:'Қазақша', formatRu:'Орысша', formatWomen:'Әйелдер', qrTitle:'Қазақстан АА қолданбасы', qrNote:'Телефон камерасын QR-кодқа бағыттаңыз', qrSave:'QR-кодты сақтау', whatsNew:'Не жаңалық', understood:'Түсінікті', calendarTitle:'Күнтізбеге қосу', swipeTip:'Көрші бөлімге өту үшін солға немесе оңға сырғытыңыз.', favoriteTip:'Топты сақтау үшін жұлдызшаны басыңыз. Жылдам әрекеттер үшін карточканы басып тұрыңыз.'
+                nearestFavorite:'Ең жақын таңдаулы жиналыс', addFavoritePrompt:'Ең жақын жиналысты осы жерден көру үшін тобыңызды таңдаулыларға қосыңыз.', openGroups:'Топты таңдау', today:'Бүгін', tomorrow:'Ертең', inProgress:'Қазір өтіп жатыр', finished:'Бүгін аяқталды', todaySchedule:'Бүгін', inCalendar:'Күнтізбеге', share:'Бөлісу', shared:'Топ туралы ақпарат көшірілді', calendarOnce:'Ең жақын жиналыс', calendarWeekly:'Барлық жиналыстар — апта сайын', calendarSaved:'Күнтізбе файлы дайын', searchPlaceholder:'Атауы, қала, мекенжай, күн немесе онлайн', emptyTitle:'Ештеңе табылмады', emptyText:'Сұранысты, қаланы немесе сүзгіні өзгертіңіз.', clearFilters:'Қалпына келтіру', loadTitle:'Деректерді жүктеу мүмкін болмады', loadText:'Интернет байланысын тексеріп, қайталап көріңіз.', retry:'Қайталау', help:'АА-ға қоңырау шалу', actions:'Топ әрекеттері', favorite:'Таңдаулыларға', unfavorite:'Таңдаулылардан алып тастау', call:'Қоңырау шалу', route:'Бағыт', online:'Онлайн ашу', formatOnline:'Онлайн', formatOffline:'Бетпе-бет', formatKz:'Қазақша', formatRu:'Орысша', formatWomen:'Әйелдер', qrTitle:'Қазақстан АА қолданбасы', qrNote:'Телефон камерасын QR-кодқа бағыттаңыз', qrSave:'QR-кодты сақтау', whatsNew:'Не жаңалық', understood:'Түсінікті', calendarTitle:'Күнтізбеге қосу', swipeTip:'Көрші бөлімге өту үшін солға немесе оңға сырғытыңыз.', favoriteTip:'Топты сақтау үшін жұлдызшаны басыңыз. Жылдам әрекеттер үшін карточканы басып тұрыңыз.'
             },
             en: {
-                nearestFavorite:'Next favorite meeting', addFavoritePrompt:'Add your group to Favorites to see its next meeting here.', openGroups:'Choose a group', today:'Today', tomorrow:'Tomorrow', inProgress:'In progress now', finished:'Finished for today', todaySchedule:'Today', inCalendar:'Add to calendar', share:'Share', shared:'Group information copied', calendarOnce:'Next meeting', calendarWeekly:'Repeat every week', calendarSaved:'Calendar file is ready', searchPlaceholder:'Name, city, address, day, or online', emptyTitle:'Nothing found', emptyText:'Change the query, city, or selected filter.', clearFilters:'Reset', loadTitle:'Could not load data', loadText:'Check your internet connection and try again.', retry:'Try again', help:'Call AA', actions:'Group actions', favorite:'Add to Favorites', unfavorite:'Remove from Favorites', call:'Call', route:'Directions', online:'Open online', formatOnline:'Online', formatOffline:'In person', formatKz:'Kazakh', formatRu:'Russian', formatWomen:'Women', qrTitle:'AA Kazakhstan app', qrNote:'Point your phone camera at the QR code', qrSave:'Save QR code', whatsNew:'What’s new', understood:'Got it', calendarTitle:'Add to calendar', swipeTip:'Swipe left or right to move to the next section.', favoriteTip:'Tap the star to save a group. Press and hold a card for quick actions.'
+                nearestFavorite:'Next favorite meeting', addFavoritePrompt:'Add your group to Favorites to see its next meeting here.', openGroups:'Choose a group', today:'Today', tomorrow:'Tomorrow', inProgress:'In progress now', finished:'Finished', todaySchedule:'Today', inCalendar:'Add to calendar', share:'Share', shared:'Group information copied', calendarOnce:'Next meeting', calendarWeekly:'Full schedule — every week', calendarSaved:'Calendar file is ready', searchPlaceholder:'Name, city, address, day, or online', emptyTitle:'Nothing found', emptyText:'Change the query, city, or selected filter.', clearFilters:'Reset', loadTitle:'Could not load data', loadText:'Check your internet connection and try again.', retry:'Try again', help:'Call AA', actions:'Group actions', favorite:'Add to Favorites', unfavorite:'Remove from Favorites', call:'Call', route:'Directions', online:'Open online', formatOnline:'Online', formatOffline:'In person', formatKz:'Kazakh', formatRu:'Russian', formatWomen:'Women', qrTitle:'AA Kazakhstan app', qrNote:'Point your phone camera at the QR code', qrSave:'Save QR code', whatsNew:'What’s new', understood:'Got it', calendarTitle:'Add to calendar', swipeTip:'Swipe left or right to move to the next section.', favoriteTip:'Tap the star to save a group. Press and hold a card for quick actions.'
             }
         };
         return texts[curLang] || texts.ru;
@@ -570,41 +568,27 @@
     }
 
     function getTodayMeetingState(g) {
-        const slots = Array.isArray(g.sc) ? g.sc.filter(slot => slot.d === new Date().getDay()).sort((a,b)=>a.s-b.s) : [];
-        const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
+        const slots = Array.isArray(g.sc) ? g.sc.filter(slot => slot.d === schedule.clock().weekday).sort((a,b)=>a.s-b.s) : [];
+        const nowMinutes = schedule.clock().minutes;
         const live = slots.find(slot => nowMinutes >= slotMinutes(slot.s) && nowMinutes < slotMinutes(slot.e));
         const next = slots.find(slot => nowMinutes < slotMinutes(slot.s));
         return { slots, live, next, past: slots.length > 0 && !live && !next };
     }
 
     function getNextMeeting(g, includeCurrent = true) {
-        if (!Array.isArray(g.sc) || !g.sc.length) return null;
-        const now = new Date();
-        for (let offset = 0; offset < 8; offset++) {
-            const date = new Date(now);
-            date.setHours(0,0,0,0);
-            date.setDate(date.getDate() + offset);
-            const slots = g.sc.filter(slot => slot.d === date.getDay()).sort((a,b)=>a.s-b.s);
-            for (const slot of slots) {
-                const start = new Date(date);
-                start.setHours(Math.floor(slot.s/100),slot.s%100,0,0);
-                const end = new Date(date);
-                end.setHours(Math.floor(slot.e/100),slot.e%100,0,0);
-                if (start > now || (includeCurrent && end > now)) return {start,end,slot,offset,isLive:start <= now && end > now};
-            }
-        }
-        return null;
+        return schedule.nextMeeting(g, includeCurrent);
     }
 
     function formatNextMeeting(next) {
         if (!next) return '';
         const t = featureText();
-        const day = next.offset === 0 ? t.today : next.offset === 1 ? t.tomorrow : new Intl.DateTimeFormat(getLocale(),{weekday:'long',day:'numeric',month:'long'}).format(next.start);
-        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{hour:'2-digit',minute:'2-digit'})}`;
+        const day = next.offset === 0 ? t.today : next.offset === 1 ? t.tomorrow : new Intl.DateTimeFormat(getLocale(),{timeZone:schedule.timeZone,weekday:'long',day:'numeric',month:'long'}).format(next.start);
+        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{timeZone:schedule.timeZone,hour:'2-digit',minute:'2-digit'})}`;
     }
 
     function getGroupById(id) {
-        return data.find(group => getGroupId(group) === id) || null;
+        const group=data.find(group => getGroupId(group) === id) || null;
+        return group && groupFilterMode==='remote' ? {...group,sc:schedule.remoteSlots(group)} : group;
     }
 
     function renderNearestFavorite() {
@@ -622,12 +606,12 @@
         const phone = getPrimaryPhone(group);
         const map = build2GISLink(group);
         card.className = 'card nearest-card';
-        card.innerHTML = `<div class="nearest-label">${t.nearestFavorite}</div><div class="nearest-name">${escapeHtml(group.n)}</div><div class="nearest-time">${escapeHtml(formatNextMeeting(next))}</div><div class="nearest-remaining">${escapeHtml(group.c)} · ${escapeHtml(group.hybrid ? `${t.formatOffline} / ${t.formatOnline}` : group.online ? t.formatOnline : t.formatOffline)}</div><div class="nearest-actions">${phone?`<a class="nearest-action primary" href="tel:${cleanPhone(phone)}">${t.call}</a>`:''}${map?`<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${t.route}</a>`:''}<button class="nearest-action" type="button" data-group-action="calendar" data-group-id="${escapeHtml(getGroupId(group))}">${t.inCalendar}</button></div>`;
+        card.innerHTML = `<div class="nearest-label">${t.nearestFavorite}</div><div class="nearest-name">${escapeHtml(group.n)}</div><div class="nearest-time">${escapeHtml(formatNextMeeting(next))}</div><div class="nearest-remaining">${escapeHtml(group.c)} · ${escapeHtml(group.online ? t.formatOnline : schedule.hasZoom(group) ? remoteLabel() : t.formatOffline)}</div><div class="nearest-actions">${phone?`<a class="nearest-action primary" href="tel:${cleanPhone(phone)}">${t.call}</a>`:''}${map?`<a class="nearest-action" href="${map}" target="_blank" rel="noopener noreferrer">${t.route}</a>`:''}<button class="nearest-action" type="button" data-group-action="calendar" data-group-id="${escapeHtml(getGroupId(group))}">${t.inCalendar}</button></div>`;
     }
 
     function groupFormatChips(g) {
         const t = featureText();
-        const chips = g.hybrid ? [t.formatOffline, t.formatOnline] : [g.online ? t.formatOnline : t.formatOffline];
+        const chips = g.online ? [t.formatOnline] : [t.formatOffline, ...(schedule.hasZoom(g) ? [remoteLabel()] : [])];
         chips.push(g.k ? t.formatKz : t.formatRu);
         if (g.f) chips.push(t.formatWomen);
         return `<div class="format-chips">${chips.map(chip=>`<span class="format-chip">${escapeHtml(chip)}</span>`).join('')}</div>`;
@@ -636,7 +620,7 @@
     function todayScheduleHtml(g) {
         const state = getTodayMeetingState(g);
         if (!state.slots.length) return '';
-        return `<div class="today-schedule"><strong>${featureText().todaySchedule}</strong>${state.slots.map(slot=>`${hhmm(slot.s)}–${hhmm(slot.e)}`).join(' · ')}</div>`;
+        return `<div class="today-schedule"><strong>${featureText().todaySchedule}</strong>${state.slots.map(slot=>`${hhmm(slot.s)}–${hhmm(slot.e)}${slotMinutes(slot.e)<=schedule.clock().minutes ? ` (${featureText().finished})` : ''}`).join(' · ')}</div>`;
     }
 
     function normalizedGroupSearch(g) {
@@ -644,23 +628,14 @@
     }
 
     function matchesGroupSearch(g, query) {
-        const q = String(query||'').trim().toLocaleLowerCase();
-        if (!q) return true;
-        const dayAliases = {
-            сегодня:['вс','пн','вт','ср','чт','пт','сб'][new Date().getDay()],today:['sun','mon','tue','wed','thu','fri','sat'][new Date().getDay()],бүгін:['жс','дс','сс','ср','бс','жм','сб'][new Date().getDay()],
-            понедельник:'пн',вторник:'вт',среда:'ср',четверг:'чт',пятница:'пт',суббота:'сб',воскресенье:'вс',
-            monday:'пн',tuesday:'вт',wednesday:'ср',thursday:'чт',friday:'пт',saturday:'сб',sunday:'вс',
-            дүйсенбі:'пн',сейсенбі:'вт',сәрсенбі:'ср',бейсенбі:'чт',жұма:'пт',сенбі:'сб',жексенбі:'вс'
-        };
-        const expanded = dayAliases[q] || q;
-        return normalizedGroupSearch(g).includes(expanded) || (q==='сегодня'||q==='today'||q==='бүгін') && Array.isArray(g.sc) && g.sc.some(slot=>slot.d===new Date().getDay());
+        return schedule.matchesSearch(g, query);
     }
 
     function groupShareText(g) {
         const phone = Array.isArray(g.p) ? g.p.join(' · ') : getPrimaryPhone(g);
         const map = g.online ? '' : build2GISLink(g);
         const online = g.online ? (g.a||g.z||'') : (g.z||'');
-        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/'].filter(Boolean).join('\n');
+        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/','Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
     }
 
     async function shareGroup(g) {
@@ -705,7 +680,7 @@
         if (!next) { showAppStatus(i18n[curLang].noSchedule); return; }
         activeCalendarGroupId = getGroupId(g);
         document.getElementById('calendar-title').textContent = featureText().calendarTitle;
-        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)}`;
+        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)} · Казахстан (UTC+5)`;
         document.querySelector('[data-calendar-mode="once"]').textContent = featureText().calendarOnce;
         document.querySelector('[data-calendar-mode="weekly"]').textContent = featureText().calendarWeekly;
         openFeatureModal('calendar-modal');
@@ -722,11 +697,14 @@
     function downloadCalendar(g, weekly) {
         const next = getNextMeeting(g,false);
         if (!next) return;
-        const uid = `${Date.now()}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`;
-        const location = g.online ? (g.a||g.z||'Online') : g.a;
-        const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App 2.2.3//RU','CALSCALE:GREGORIAN','BEGIN:VEVENT',`UID:${uid}`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(next.start)}`,`DTEND:${icsDate(next.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(location)}`,`DESCRIPTION:${icsEscape(groupShareText(g))}`];
-        if (weekly) lines.push('RRULE:FREQ=WEEKLY');
-        lines.push('END:VEVENT','END:VCALENDAR');
+        const occurrences=weekly ? (g.sc||[]).map(slot=>schedule.nextMeeting({...g,sc:[slot]},false)) : [next];
+        const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App//RU','CALSCALE:GREGORIAN','X-WR-TIMEZONE:Asia/Almaty'];
+        occurrences.filter(Boolean).forEach((meeting,index)=>{
+            lines.push('BEGIN:VEVENT',`UID:${Date.now()}-${index}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(meeting.start)}`,`DTEND:${icsDate(meeting.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(g.a||g.z||'')}`,`DESCRIPTION:${icsEscape(groupShareText(g)+'\nВремя: Казахстан (UTC+5)')}`);
+            if(weekly) lines.push('RRULE:FREQ=WEEKLY');
+            lines.push('END:VEVENT');
+        });
+        lines.push('END:VCALENDAR');
         const blob = new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
         const link = document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=`aa-${g.n.replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()}.ics`; link.click(); setTimeout(()=>URL.revokeObjectURL(link.href),1000);
         showAppStatus(featureText().calendarSaved); closeFeatureModal('calendar-modal'); trackEvent('group_calendar',g.n,{repeat:weekly?'weekly':'once'});
@@ -820,7 +798,7 @@
         if (!fromHistory) closeHistoryEntry('structure-image-modal');
     }
 
-    function toggleToday() { setGroupFilterMode(groupFilterMode === 'today' ? 'all' : 'today'); }
+    function toggleToday() { setGroupFilterMode('today'); }
 
     function setTrustCallState(id, phone) {
         const link = document.getElementById(`call-${id}`);
@@ -904,8 +882,12 @@
 
     function updateDate(v) {
         if (!v) return;
+        const localToday=new Date();
+        const maxDate=`${localToday.getFullYear()}-${String(localToday.getMonth()+1).padStart(2,'0')}-${String(localToday.getDate()).padStart(2,'0')}`;
+        document.getElementById('date-input').max=maxDate;
+        if(v>maxDate){v=maxDate;document.getElementById('date-input').value=v;}
         saveSoberDate(v);
-        const s = new Date(v);
+        const s = new Date(`${v}T00:00:00`);
         const n = new Date();
         let y = n.getFullYear() - s.getFullYear();
         let m = n.getMonth() - s.getMonth();
@@ -925,7 +907,7 @@
         const baseLabels = i18n[curLang].soberUnitsShort;
         let yearLabel = baseLabels[0];
         if (curLang === 'ru') {
-            yearLabel = (y >= 1 && y <= 4) ? 'года' : 'лет';
+            yearLabel = plural(y, ['год','года','лет']);
         }
         const labels = curLang === 'en'
             ? [y === 1 ? 'year' : 'years', 'mo.', d === 1 ? 'day' : 'days']
@@ -1007,6 +989,9 @@
         document.getElementById('text-size-normal').innerText = d.textSizeNormal;
         document.getElementById('text-size-large').innerText = d.textSizeLarge;
         const ft=featureText();
+        document.getElementById('group-filter-remote').textContent=remoteLabel();
+        document.getElementById('schedule-timezone').textContent=curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)';
+        syncGroupFilters();
         document.getElementById('group-search').placeholder=ft.searchPlaceholder;
         document.getElementById('group-search').setAttribute('aria-label',ft.searchPlaceholder);
         document.getElementById('show-app-qr').textContent=ft.qrTitle;
@@ -1037,6 +1022,15 @@
         setEnglishOnlyText('first-run-note-3', i18n.en.firstRunGroupNote);
         setEnglishOnlyText('first-run-back', i18n.en.firstRunBack);
         setEnglishOnlyText('schedule-updated-value', i18n.en.scheduleDate);
+        if(lang==='kz') {
+            const labels={'backup-title':'Сақтық көшірме','export-data':'Деректерімді экспорттау','restore-data':'Деректерді қалпына келтіру','install-banner-text':'Қазақстан АА қолданбасын телефонға орнатыңыз','install-app':'Орнату','first-run-back':'Артқа'};
+            Object.entries(labels).forEach(([id,text])=>{const el=document.getElementById(id);if(el)el.textContent=text;});
+        }
+        document.getElementById('schedule-updated-value').textContent=lang==='kz'?'2026 жылғы 30 қыркүйек':lang==='en'?'September 30, 2026':'30 сентября 2026';
+        for(let i=0;i<5;i++) {
+            const labels=lang==='kz'?['Сенімді адамның аты','Сенімді адамның телефоны','Сенімді адамға қоңырау шалу']:lang==='en'?['Trusted contact name','Trusted contact phone','Call trusted contact']:['Имя доверенного лица','Телефон доверенного лица','Позвонить доверенному лицу'];
+            ['tr-n-','tr-p-','call-'].forEach((prefix,j)=>document.getElementById(prefix+i).setAttribute('aria-label',`${labels[j]} ${i+1}`));
+        }
         document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
         document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
         document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
@@ -1229,6 +1223,7 @@
             document.getElementById(`tr-p-${i}`).value = p;
             setTrustCallState(i, p);
         }
+        for(let i=0;i<5;i++){document.getElementById(`tr-n-${i}`).setAttribute('aria-label',`Имя доверенного лица ${i+1}`);document.getElementById(`tr-p-${i}`).setAttribute('aria-label',`Телефон доверенного лица ${i+1}`);document.getElementById(`call-${i}`).setAttribute('aria-label',`Позвонить доверенному лицу ${i+1}`);}
         document.getElementById('user-notes').value = localStorage.getItem('aa_user_notes') || '';
     }
 
@@ -1336,10 +1331,10 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
     }
 
     function getGroupStatus(g) {
-        if (!g.sc || g.sc.length === 0) return `<div class="status-badge s-closed"><div class="status-dot"></div>${i18n[curLang].sClosed}</div>`;
+        if (!g.sc || g.sc.length === 0) return `<div class="status-badge s-closed"><div class="status-dot"></div>${curLang==='kz'?'Уақытын нақтылаңыз':curLang==='en'?'Confirm meeting time':'Уточните время'}</div>`;
         const now = new Date();
-        const d = now.getDay();
-        const curM = now.getHours() * 60 + now.getMinutes();
+        const d = schedule.clock(now).weekday;
+        const curM = schedule.clock(now).minutes;
         const todaySlots = g.sc.filter(s => s.d === d).sort((a,b) => a.s - b.s);
         for (const slot of todaySlots) {
             const startM = Math.floor(slot.s / 100) * 60 + (slot.s % 100);
@@ -1469,31 +1464,37 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
 
     function getSavedUserCity() { return localStorage.getItem(USER_CITY_STORAGE_KEY) || ''; }
 
+    function remoteLabel() { return curLang==='kz'?'Бетпе-бет + Zoom':curLang==='en'?'In person + Zoom':'Очно + Zoom'; }
+
+    function syncGroupFilters() {
+        document.querySelectorAll('[data-group-mode]').forEach(button => {
+            const active=button.dataset.groupMode==='today'?onlyToday:button.dataset.groupMode===groupFilterMode;
+            button.classList.toggle('active',active);
+            button.setAttribute('aria-pressed',String(active));
+        });
+    }
+
     function setGroupFilterMode(mode, fromHistory = false) {
-        const previousMode = groupFilterMode;
-        groupFilterMode = mode;
-        onlyToday = mode === 'today';
-        document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.toggle('active', button.dataset.groupMode === mode));
-        if (mode === 'mycity') {
-            const city = getSavedUserCity();
-            if (!city) {
-                openCityOnboarding();
-                groupFilterMode = 'all';
-                document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
-                return;
-            }
-            document.getElementById('citySelect').value = city;
-        } else if (mode === 'favorites') {
-            document.getElementById('citySelect').value = 'all';
-        } else if (mode === 'online') {
-            document.getElementById('citySelect').value = 'Онлайн';
+        if(mode==='today') onlyToday=!onlyToday;
+        else {
+            groupFilterMode=mode===groupFilterMode?'all':mode;
+            if(mode==='all') onlyToday=false;
+            const city=document.getElementById('citySelect');
+            if(groupFilterMode==='mycity') {
+                if(!getSavedUserCity()) { groupFilterMode='all'; openCityOnboarding(); syncGroupFilters(); return; }
+                city.value=getSavedUserCity();
+            } else if(groupFilterMode==='online') city.value='Онлайн';
+            else if(city.value==='Онлайн') city.value='all';
         }
+        syncGroupFilters();
         renderGroups();
-        if (!fromHistory && mode !== 'all' && mode !== previousMode) pushAppHistory(`groups:${mode}`);
+        if(!fromHistory) pushAppHistory('groups:filters');
     }
 
     function localizeSchedule(schedule) {
-        if (curLang !== 'en' || !schedule) return schedule;
+        if (!schedule) return schedule;
+        if(curLang==='kz') return String(schedule).replace(/По запросу/gi,'Келісім бойынша').replace(/Ежедневно/gi,'Күн сайын').replace(/Суббота/gi,'Сенбі').replace(/Пн/g,'Дс').replace(/Вт/g,'Сс').replace(/Ср/g,'Ср').replace(/Чт/g,'Бс').replace(/Пт/g,'Жм').replace(/Сб/g,'Сб').replace(/Вс/g,'Жс').replace(/все группы открытые/gi,'барлық жиналыстар ашық').replace(/откр/gi,'ашық').replace(/очно и онлайн/gi,'бетпе-бет және онлайн').replace(/очно/gi,'бетпе-бет').replace(/Интервью с алкоголиком/gi,'Алкоголикпен сұхбат');
+        if (curLang !== 'en') return schedule;
         const replacements = [
             [/По запросу/gi, 'On request'],
             [/Ежедневно/gi, 'Daily'],
@@ -1509,18 +1510,16 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
     function renderGroups() {
         const selected = document.getElementById('citySelect').value;
         const c = document.getElementById('list-container');
-        const currentDay = new Date().getDay();
+        const currentDay = schedule.clock().weekday;
         const favorites = getFavoriteGroups();
         const userCity = getSavedUserCity();
-        let filtered = data.filter(g => {
-            let matchesLocation = selected === 'all' || g.c === selected;
-            if (groupFilterMode === 'mycity') matchesLocation = userCity ? g.c === userCity : true;
-            if (groupFilterMode === 'favorites') matchesLocation = favorites.has(getGroupId(g));
-            if (groupFilterMode === 'online') matchesLocation = Boolean(g.online || g.hybrid);
-            const matchesToday = groupFilterMode !== 'today' || (Array.isArray(g.sc) && g.sc.some(s => s.d === currentDay));
-            return matchesLocation && matchesToday && matchesGroupSearch(g,groupSearchQuery);
+        let filtered = data.map(g => groupFilterMode==='remote' ? {...g, sc:schedule.remoteSlots(g)} : g).filter(g => {
+            const matchesLocation = selected==='all' || (selected==='Онлайн' ? Boolean(g.online) : g.c===selected);
+            const matchesMode = groupFilterMode==='favorites' ? favorites.has(getGroupId(g)) : groupFilterMode==='online' ? Boolean(g.online) : groupFilterMode==='remote' ? schedule.hasZoom(g)&&g.sc.length>0 : true;
+            const matchesToday = !onlyToday || (g.sc||[]).some(s=>s.d===currentDay);
+            return matchesLocation && matchesMode && matchesToday && matchesGroupSearch(g,groupSearchQuery);
         });
-        if(groupFilterMode==='today') filtered=filtered.sort((a,b)=>{
+        if(onlyToday) filtered=filtered.sort((a,b)=>{
             const sa=getTodayMeetingState(a),sb=getTodayMeetingState(b);
             const av=sa.live?-1:sa.next?slotMinutes(sa.next.s):9999;
             const bv=sb.live?-1:sb.next?slotMinutes(sb.next.s):9999;
@@ -1617,7 +1616,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
         if (city) localStorage.setItem(USER_CITY_STORAGE_KEY, city);
         else localStorage.removeItem(USER_CITY_STORAGE_KEY);
         rebuildCityOptions();
-        setGroupFilterMode(city ? 'mycity' : 'all');
+        setGroupFilterMode(city ? 'mycity' : 'all', true);
         updateCitySettingDisplay();
         closeCityOnboarding();
     }
@@ -1733,6 +1732,19 @@ function closeFirstTimeInfo(fromHistory = false) {
         });
     }
 
+    function newsDescription(value) {
+        const pattern=/(https?:\/\/[^\s<>]+|\+7[\d ()-]{9,20}\d)/g;
+        let html='',last=0;
+        for(const match of String(value).matchAll(pattern)) {
+            html+=escapeHtml(value.slice(last,match.index));
+            const label=match[0].replace(/[.,;!]$/,'');
+            const href=label.startsWith('+')?'tel:'+cleanPhone(label):label;
+            html+=`<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`+escapeHtml(match[0].slice(label.length));
+            last=match.index+match[0].length;
+        }
+        return html+escapeHtml(value.slice(last));
+    }
+
     function renderNews(posts) {
         const container = document.getElementById('news-list');
         if (!container) return false;
@@ -1754,12 +1766,12 @@ function closeFirstTimeInfo(fromHistory = false) {
 
             const slides = images.map((image, imageIndex) => `
                 <div class="news-slide">
-                    <img
+                    <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer" aria-label="${curLang==='kz'?'Суретті толық ашу':curLang==='en'?'Open full-size image':'Открыть изображение целиком'} ${imageIndex+1}"><img
                         src="${escapeHtml(image)}"
                         alt="${escapeHtml(post.title || (curLang === 'en' ? i18n.en.newsImageAlt : 'Новость АА Казахстана'))} — ${imageIndex + 1}"
                         loading="${postIndex === 0 && imageIndex === 0 ? 'eager' : 'lazy'}"
                         draggable="false"
-                    >
+                    ></a>
                 </div>
             `).join('');
 
@@ -1787,9 +1799,9 @@ function closeFirstTimeInfo(fromHistory = false) {
                     <div class="news-meta">
                         <div class="news-category">${escapeHtml(post.category || '')}</div>
                         <div class="news-date">${escapeHtml(formatNewsDate(post.date))}</div>
-                        <div class="news-title">${escapeHtml(post.title || '')}</div>
+                        <div class="news-title">${escapeHtml(post.title || (curLang==='kz'?'АА хабарландыруы':curLang==='en'?'AA announcement':'Объявление АА'))}</div>
                         ${post.description
-                            ? `<div class="news-description">${escapeHtml(post.description)}</div>`
+                            ? `<div class="news-description">${newsDescription(post.description)}</div>`
                             : ''}
                     </div>
                 </article>
@@ -1908,7 +1920,7 @@ function closeFirstTimeInfo(fromHistory = false) {
         document.getElementById('today-actions').addEventListener('click', event => {
             const action = event.target.closest('[data-today-action]');
             if (!action) return;
-            if (action.dataset.todayAction === 'today') { goTo('groups'); setGroupFilterMode('today'); }
+            if (action.dataset.todayAction === 'today') { goTo('groups'); resetGroupsToRoot(); setGroupFilterMode('today'); }
             if (action.dataset.todayAction === 'favorites') { goTo('groups'); setGroupFilterMode('favorites'); }
         });
         document.getElementById('group-quick-filters').addEventListener('click', event => {
@@ -1936,7 +1948,7 @@ function closeFirstTimeInfo(fromHistory = false) {
             if (favorite) { toggleFavorite(favorite.dataset.favoriteId); return; }
             const action=event.target.closest('[data-group-action]');
             if(action){const group=getGroupById(action.dataset.groupId);if(action.dataset.groupAction==='share')shareGroup(group);if(action.dataset.groupAction==='calendar')openCalendar(group);return;}
-            if(event.target.closest('[data-clear-group-filters]')){groupSearchQuery='';document.getElementById('group-search').value='';document.querySelector('.group-search-wrap').classList.remove('has-value');groupFilterMode='all';document.getElementById('citySelect').value='all';document.querySelectorAll('[data-group-mode]').forEach(button=>button.classList.remove('active'));renderGroups();return;}
+            if(event.target.closest('[data-clear-group-filters]')){groupSearchQuery='';document.getElementById('group-search').value='';document.querySelector('.group-search-wrap').classList.remove('has-value');groupFilterMode='all';onlyToday=false;document.getElementById('citySelect').value='all';document.querySelectorAll('[data-group-mode]').forEach(button=>button.classList.remove('active'));renderGroups();return;}
             if(event.target.closest('[data-retry-app]')) location.reload();
         });
         groupList.addEventListener('pointerdown',event=>{
@@ -1952,8 +1964,8 @@ function closeFirstTimeInfo(fromHistory = false) {
         document.getElementById('group-search-clear').addEventListener('click',()=>{groupSearchQuery='';const input=document.getElementById('group-search');input.value='';input.closest('.group-search-wrap').classList.remove('has-value');input.focus();renderGroups();});
         document.getElementById('citySelect').addEventListener('change', e => {
             trackEvent('city_filter', e.target.value);
-            groupFilterMode = 'all';
-            document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
+            groupFilterMode = e.target.value==='Онлайн'?'online':'all';
+            syncGroupFilters();
             renderGroups();
         });
         document.getElementById('nearest-favorite-card').addEventListener('click',event=>{const home=event.target.closest('[data-home-action="groups"]');if(home){goTo('groups');return;}const action=event.target.closest('[data-group-action="calendar"]');if(action)openCalendar(getGroupById(action.dataset.groupId));});

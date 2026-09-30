@@ -6,6 +6,8 @@ on:
       - 'index.html'
       - 'styles.css'
       - 'app.js'
+      - 'schedule.js'
+      - 'tests/**'
       - 'i18n.js'
       - 'groups.json'
       - 'books.json'
@@ -37,7 +39,8 @@ jobs:
       - run: python scripts/validate-data.py
       - run: python scripts/validate-assets.py
       - run: node scripts/validate-language-data.js
-      - run: node --check app.js && node --check i18n.js && node --check principles.js && node --check sw.js
+      - run: TZ=Asia/Almaty node tests/schedule.test.js && TZ=America/New_York node tests/schedule.test.js && TZ=Pacific/Auckland node tests/schedule.test.js
+      - run: node --check schedule.js && node --check app.js && node --check i18n.js && node --check principles.js && node --check sw.js
       - run: python -m json.tool groups.json >/dev/null && python -m json.tool books.json >/dev/null && python -m json.tool news.json >/dev/null && python -m json.tool manifest.json >/dev/null && python -m json.tool version.json >/dev/null
       - run: |
           grep -q 'styles.css' index.html
@@ -47,3 +50,23 @@ jobs:
           grep -q '77051871335' app.js
           grep -q 'id="install-banner"' index.html
           grep -q 'id="export-data"' index.html
+
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false playwright@1.51.1
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8080 > /tmp/aa-http.log 2>&1 &
+          for i in 1 2 3 4 5; do curl -fsS http://127.0.0.1:8080/ >/dev/null && break || sleep 1; done
+          TEST_TZ=America/New_York node tests/browser-smoke.cjs
+          TEST_TZ=Asia/Almaty node tests/browser-smoke.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-screenshots
+          path: test-results/
