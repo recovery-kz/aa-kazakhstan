@@ -15,6 +15,9 @@ await page.locator('#app-splash').waitFor({state:'hidden'});
 if(await page.locator('#whats-new-close').isVisible())await page.locator('#whats-new-close').click();
 if(await page.locator('#coachmark-close').isVisible())await page.locator('#coachmark-close').click();
 if(await page.locator('#install-close').isVisible())await page.locator('#install-close').click();
+// First-run city onboarding is modal and blocks the group quick filters. Dismiss it
+// for the general smoke flow; the onboarding itself is exercised later via Settings.
+if(await page.locator('#city-onboarding').isVisible())await page.locator('#city-onboarding-all').click();
 await page.locator('#btn-g').click();
 assert.equal(await page.locator('.group-card').count(),50);
 await page.locator('#group-filter-online').click();
