@@ -3,61 +3,81 @@
     "n": "Анонимные Алкоголики (с историями) твердый",
     "l": "рус",
     "d": "Основной учебник сообщества. Содержит описание программы выздоровления «12 шагов» и личные истории участников, нашедших выход из алкоголизма. Книга помогает понять природу болезни и предлагает четкий план действий для обретения свободы. Это фундамент, на котором строится жизнь миллионов людей по всему миру.",
-    "img": "book-covers/aa-stories-ru.svg"
+    "img": "book-covers/aa-stories-ru.svg",
+    "d_kz": "АА қауымдастығының негізгі оқулығы. Онда «12 қадам» сауығу бағдарламасы және алкоголизмнен шығу жолын тапқан мүшелердің жеке оқиғалары берілген. Кітап аурудың табиғатын түсінуге көмектесіп, еркіндікке жетудің нақты әрекет жоспарын ұсынады. Бұл дүние жүзіндегі миллиондаған адамның жаңа өмірінің негізіне айналған еңбек.",
+    "d_en": "AA’s foundational textbook. It explains the Twelve Step recovery program and includes personal stories from members who found a way out of alcoholism. The book helps readers understand the nature of the illness and offers a clear course of action toward freedom. It is the foundation on which millions of people worldwide have built their recovery."
   },
   {
     "n": "Анонимные Алкоголики (стандарт)",
     "l": "рус",
     "d": "Классическое издание Большой Книги без сокращений. Фундаментальный текст, по которому выздоравливают миллионы людей во всем мире. Содержит изложение принципов, которые помогли первым участникам остаться трезвыми. Идеально подходит для глубокого изучения программы и работы со спонсором.",
-    "img": "book-covers/aa-standard-ru.svg"
+    "img": "book-covers/aa-standard-ru.svg",
+    "d_kz": "Үлкен Кітаптың қысқартылмаған классикалық басылымы. Дүние жүзіндегі миллиондаған адамның сауығуына негіз болған іргелі мәтін. Алғашқы мүшелерге байсалдылықты сақтауға көмектескен принциптер баяндалады. Бағдарламаны терең зерттеуге және демеушімен жұмыс істеуге қолайлы.",
+    "d_en": "The classic unabridged edition of the Big Book. This foundational text presents the principles that helped AA’s early members stay sober and continues to support recovery worldwide. It is well suited to in-depth study of the program and work with a sponsor."
   },
   {
     "n": "Анонимные Алкоголики (стандарт)",
     "l": "каз",
     "d": "Анонимді Маскүнемдер қауымдастығының негізгі кітабы. Онда сауығу бағдарламасының принциптері мен тәжірибелері баяндалған. Бұл кітап қазақ тілді қауымдастық мүшелеріне арналған басты құрал болып табылады. Сауығудың 12 қадамын түсінуге және қолдануға көмектеседі.",
-    "img": "book-covers/aa-standard-kz.svg"
+    "img": "book-covers/aa-standard-kz.svg",
+    "d_kz": "Анонимді Маскүнемдер қауымдастығының негізгі кітабы. Онда сауығу бағдарламасының принциптері мен тәжірибелері баяндалған. Бұл кітап қазақ тілді қауымдастық мүшелеріне арналған басты құрал болып табылады. Сауығудың 12 қадамын түсінуге және қолдануға көмектеседі.",
+    "d_en": "The main book of Alcoholics Anonymous for Kazakh-speaking members. It presents the principles and experience of the recovery program and helps readers understand and apply the Twelve Steps in their lives."
   },
   {
     "n": "Анонимные Алкоголики (стандарт) карманный",
     "l": "рус",
     "d": "Удобный формат основной книги, который всегда можно взять с собой на встречу или в поездку. Содержит полный текст без изменений, но в компактном виде. Позволяет обращаться к мудрости сообщества в любой момент дня. Легко помещается в сумку или карман.",
-    "img": "book-covers/aa-pocket-ru.svg"
+    "img": "book-covers/aa-pocket-ru.svg",
+    "d_kz": "Негізгі кітаптың жиналысқа немесе сапарға өзіңізбен бірге алып жүруге ыңғайлы шағын нұсқасы. Мәтін толық сақталған, тек ықшам форматта берілген. Күннің кез келген уақытында қауымдастық тәжірибесіне жүгінуге мүмкіндік береді.",
+    "d_en": "A compact edition of the main AA book that is convenient to carry to meetings or while traveling. It contains the complete text in a smaller format, making AA experience and guidance easy to keep close at hand."
   },
   {
     "n": "Двенадцать шагов и двенадцать традиций",
     "l": "рус",
     "d": "Книга, подробно раскрывающая 12 принципов личного выздоровления и 12 правил устройства групп сообщества. Она дает глубокое понимание каждого шага, помогая проработать дефекты характера. Вторая часть книги объясняет, как группам оставаться едиными и эффективно нести весть. Это необходимое дополнение к Большой Книге.",
-    "img": "book-covers/12x12-ru.svg"
+    "img": "book-covers/12x12-ru.svg",
+    "d_kz": "Жеке сауығудың 12 қадамы мен топтардың өмірін реттейтін 12 дәстүрді егжей-тегжейлі түсіндіретін кітап. Әр қадамды тереңірек түсінуге және мінез кемшіліктерімен жұмыс істеуге көмектеседі. Екінші бөлім топтардың бірлігін сақтап, хабарды тиімді жеткізу жолдарын түсіндіреді.",
+    "d_en": "A detailed exploration of the Twelve Steps of personal recovery and the Twelve Traditions that guide AA groups. It offers deeper insight into each Step and explains how the Traditions help groups preserve unity and carry the message effectively."
   },
   {
     "n": "Двенадцать шагов и двенадцать традиций",
     "l": "каз",
     "d": "Жеке сауығудың 12 қадамы мен қауымдастық өмірінің 12 дәстүрі туралы тереңірек түсінік беретін еңбек. Бұл кітап қадамдарды өмірде қалай қолдану керектігін егжей-тегжейлі түсіндіреді. Дәстүрлер бөлімі топтардың өзара қарым-қатынасын реттейді. Рухани өсуді қалайтын әрбір мүшеге қажет.",
-    "img": "book-covers/12x12-kz.svg"
+    "img": "book-covers/12x12-kz.svg",
+    "d_kz": "Жеке сауығудың 12 қадамы мен қауымдастық өмірінің 12 дәстүрі туралы тереңірек түсінік беретін еңбек. Бұл кітап қадамдарды өмірде қалай қолдану керектігін егжей-тегжейлі түсіндіреді. Дәстүрлер бөлімі топтардың өзара қарым-қатынасын реттейді. Рухани өсуді қалайтын әрбір мүшеге қажет.",
+    "d_en": "A Kazakh-language exploration of the Twelve Steps and Twelve Traditions. It explains how the Steps can be applied in daily life and how the Traditions guide relationships and unity within AA groups. It is intended for members seeking deeper spiritual growth."
   },
   {
     "n": "Ежедневные размышления",
     "l": "рус",
     "d": "Сборник коротких чтений на каждый день года, написанный самими членами АА для поддержки ежедневной трезвости. Каждое размышление основано на цитате из литературы АА. Помогает настроиться на нужный лад с самого утра и сохранять осознанность. Читатели находят в ней утешение и практическую мудрость.",
-    "img": "book-covers/daily-reflections-ru.svg"
+    "img": "book-covers/daily-reflections-ru.svg",
+    "d_kz": "Жылдың әр күніне арналған АА мүшелері жазған қысқа мәтіндер жинағы. Әр ой-толғау АА әдебиетінен алынған дәйексөзге негізделген және күнделікті байсалдылықты қолдауға арналған. Таңертең дұрыс бағыт алуға және күні бойы саналы болуға көмектеседі.",
+    "d_en": "A collection of short readings for every day of the year, written by AA members to support daily sobriety. Each reflection is based on a quotation from AA literature and offers practical experience, perspective, and encouragement for the day."
   },
   {
     "n": "Ежедневные размышления",
     "l": "каз",
     "d": "Жылдың әр күніне арналған қысқаша оқулар жинағы. Күнделікті рухани сергектікті сақтауға және бағдарламаны еске түсіруге көмектеседі. Әр күнге арналған парақшада АА әдебиетінен үзінді мен мүшелердің тәжірибесі берілген. Бұл кітап күнделікті медитация үшін өте қолайлы.",
-    "img": "book-covers/daily-reflections-kz.svg"
+    "img": "book-covers/daily-reflections-kz.svg",
+    "d_kz": "Жылдың әр күніне арналған қысқаша оқулар жинағы. Күнделікті рухани сергектікті сақтауға және бағдарламаны еске түсіруге көмектеседі. Әр күнге арналған парақшада АА әдебиетінен үзінді мен мүшелердің тәжірибесі берілген. Бұл кітап күнделікті медитация үшін өте қолайлы.",
+    "d_en": "A Kazakh-language collection of daily readings for the entire year. Each entry combines a passage from AA literature with members’ experience, helping readers maintain spiritual awareness and keep the program in mind each day."
   },
   {
     "n": "Жить трезвыми",
     "l": "рус",
     "d": "Практическое пособие с конкретными советами о том, как не выпить «первую рюмку» в обычных жизненных ситуациях. Книга предлагает простые методы, которые работают здесь и сейчас. Она разбирает такие темы, как праздники, стресс, тяга и старые привычки. Идеально подходит для новичков на первых этапах пути.",
-    "img": "book-covers/living-sober-ru.svg"
+    "img": "book-covers/living-sober-ru.svg",
+    "d_kz": "Күнделікті өмірде «алғашқы рюмканы» ішпеуге көмектесетін нақты кеңестер берілген практикалық құрал. Мерекелер, күйзеліс, ішімдікке тартылу және ескі әдеттер сияқты жағдайлар қарастырылады. Әсіресе сауығу жолын енді бастаған адамдарға пайдалы.",
+    "d_en": "A practical guide with concrete suggestions for avoiding the first drink in everyday situations. It addresses celebrations, stress, cravings, old habits, and other common challenges. It is especially useful for people in the early stages of recovery."
   },
   {
     "n": "Жить трезвыми",
     "l": "каз",
     "d": "Күнделікті өмірдегі ішімдіктен бас тартудың практикалық әдістері мен кеңестері жинақталған құрал. «Бірінші стақанды» қалай көтермеу керектігін қарапайым тілмен түсіндіреді. Кітапта өмірлік қиындықтармен күресудің нақты жолдары көрсетілген. Жаңадан келгендер үшін таптырмас нұсқаулық.",
-    "img": "book-covers/living-sober-kz.svg"
+    "img": "book-covers/living-sober-kz.svg",
+    "d_kz": "Күнделікті өмірдегі ішімдіктен бас тартудың практикалық әдістері мен кеңестері жинақталған құрал. «Бірінші стақанды» қалай көтермеу керектігін қарапайым тілмен түсіндіреді. Кітапта өмірлік қиындықтармен күресудің нақты жолдары көрсетілген. Жаңадан келгендер үшін таптырмас нұсқаулық.",
+    "d_en": "A Kazakh-language practical guide to staying away from alcohol in everyday life. It explains in simple terms how to avoid the first drink and offers concrete ways to handle common difficulties. It is particularly useful for newcomers."
   },
   {
     "n": "Сбросить камень",
