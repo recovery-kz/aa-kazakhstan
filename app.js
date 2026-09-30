@@ -75,7 +75,7 @@
         }
         const city = document.getElementById('citySelect');
         if (city) city.value = 'all';
-        document.querySelectorAll('[data-group-mode]').forEach(button => button.classList.remove('active'));
+        syncGroupFilters();
         renderGroups();
     }
 
@@ -588,7 +588,7 @@
 
     function getGroupById(id) {
         const group=data.find(group => getGroupId(group) === id) || null;
-        return group && groupFilterMode==='remote' ? {...group,sc:schedule.remoteSlots(group)} : group;
+        return group && getActiveTab()==='groups' && groupFilterMode==='remote' ? {...group,sc:schedule.remoteSlots(group)} : group;
     }
 
     function renderNearestFavorite() {
@@ -694,6 +694,17 @@
         return String(value||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
     }
 
+    function foldCalendarLine(line) {
+        let result='',bytes=0;
+        const encoder=new TextEncoder();
+        for(const character of line) {
+            const size=encoder.encode(character).length;
+            if(bytes+size>75){result+='\r\n ';bytes=1;}
+            result+=character;bytes+=size;
+        }
+        return result;
+    }
+
     function downloadCalendar(g, weekly) {
         const next = getNextMeeting(g,false);
         if (!next) return;
@@ -705,7 +716,7 @@
             lines.push('END:VEVENT');
         });
         lines.push('END:VCALENDAR');
-        const blob = new Blob([lines.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+        const blob = new Blob([lines.map(foldCalendarLine).join('\r\n')+'\r\n'],{type:'text/calendar;charset=utf-8'});
         const link = document.createElement('a'); link.href=URL.createObjectURL(blob); link.download=`aa-${g.n.replace(/[^a-zа-яё0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()}.ics`; link.click(); setTimeout(()=>URL.revokeObjectURL(link.href),1000);
         showAppStatus(featureText().calendarSaved); closeFeatureModal('calendar-modal'); trackEvent('group_calendar',g.n,{repeat:weekly?'weekly':'once'});
     }
@@ -798,7 +809,6 @@
         if (!fromHistory) closeHistoryEntry('structure-image-modal');
     }
 
-    function toggleToday() { setGroupFilterMode('today'); }
 
     function setTrustCallState(id, phone) {
         const link = document.getElementById(`call-${id}`);
@@ -1616,6 +1626,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
         if (city) localStorage.setItem(USER_CITY_STORAGE_KEY, city);
         else localStorage.removeItem(USER_CITY_STORAGE_KEY);
         rebuildCityOptions();
+        groupFilterMode='all';
         setGroupFilterMode(city ? 'mycity' : 'all', true);
         updateCitySettingDisplay();
         closeCityOnboarding();
@@ -1921,7 +1932,7 @@ function closeFirstTimeInfo(fromHistory = false) {
             const action = event.target.closest('[data-today-action]');
             if (!action) return;
             if (action.dataset.todayAction === 'today') { goTo('groups'); resetGroupsToRoot(); setGroupFilterMode('today'); }
-            if (action.dataset.todayAction === 'favorites') { goTo('groups'); setGroupFilterMode('favorites'); }
+            if (action.dataset.todayAction === 'favorites') { goTo('groups'); resetGroupsToRoot(); setGroupFilterMode('favorites'); }
         });
         document.getElementById('group-quick-filters').addEventListener('click', event => {
             const button = event.target.closest('[data-group-mode]');
@@ -1931,7 +1942,6 @@ function closeFirstTimeInfo(fromHistory = false) {
         document.getElementById('city-onboarding-all').addEventListener('click', () => saveUserCity(''));
         document.getElementById('city-setting-open').addEventListener('click', event => { event.stopPropagation(); openCityOnboarding(); });
 
-        document.getElementById('todayFilter').addEventListener('click', toggleToday);
         document.getElementById('notification-button').addEventListener('click', openNotificationCenter);
         document.getElementById('notification-close').addEventListener('click', closeNotificationCenter);
         document.getElementById('notification-read-all').addEventListener('click', markAllNotificationsRead);
@@ -1948,7 +1958,7 @@ function closeFirstTimeInfo(fromHistory = false) {
             if (favorite) { toggleFavorite(favorite.dataset.favoriteId); return; }
             const action=event.target.closest('[data-group-action]');
             if(action){const group=getGroupById(action.dataset.groupId);if(action.dataset.groupAction==='share')shareGroup(group);if(action.dataset.groupAction==='calendar')openCalendar(group);return;}
-            if(event.target.closest('[data-clear-group-filters]')){groupSearchQuery='';document.getElementById('group-search').value='';document.querySelector('.group-search-wrap').classList.remove('has-value');groupFilterMode='all';onlyToday=false;document.getElementById('citySelect').value='all';document.querySelectorAll('[data-group-mode]').forEach(button=>button.classList.remove('active'));renderGroups();return;}
+            if(event.target.closest('[data-clear-group-filters]')){resetGroupsToRoot();return;}
             if(event.target.closest('[data-retry-app]')) location.reload();
         });
         groupList.addEventListener('pointerdown',event=>{

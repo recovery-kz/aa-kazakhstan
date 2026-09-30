@@ -3,9 +3,10 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs/promises');
 (async()=>{
 const browser=await chromium.launch({headless:true,...(process.env.CHROMIUM_PATH?{executablePath:process.env.CHROMIUM_PATH}:{})});
+let page;
 try {
 const context=await browser.newContext({viewport:{width:390,height:844},timezoneId:process.env.TEST_TZ||'America/New_York',acceptDownloads:true});
-const page=await context.newPage();
+page=await context.newPage();
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.addInitScript(()=>localStorage.setItem('aa_coachmarks_v2',JSON.stringify({swipe:true,favorite:true})));
 await page.clock.setFixedTime(new Date('2026-09-30T13:00:00Z'));
@@ -98,5 +99,5 @@ await page.setViewportSize({width:1440,height:1000});
 await page.screenshot({path:'test-results/aa-fixed-desktop.png',fullPage:true});
 assert.equal(errors.length,0,errors.join('\n'));
 console.log('OK: mobile browser, 5 tabs, 27 books, 11 committees, filters, search, notifications, history, calendar, city modal, languages. TZ='+process.env.TEST_TZ);
-} finally {await browser.close();}
+} finally {if(page){await fs.mkdir('test-results',{recursive:true});await page.screenshot({path:'test-results/last-state.png',fullPage:true}).catch(()=>{});await fs.writeFile('test-results/last-state.txt',await page.locator('body').innerText()).catch(()=>{});}await browser.close();}
 })().catch(e=>{console.error(e);process.exit(1)});
