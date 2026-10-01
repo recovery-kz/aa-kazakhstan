@@ -55,6 +55,34 @@ window.AA_I18N = {
         }
     };
 
+
+Object.assign(window.AA_I18N.ru, {
+    closeAction: 'Закрыть', closeTip: 'Закрыть подсказку', clearSearch: 'Очистить поиск', mainNavigation: 'Основная навигация', logoAlt: 'Логотип АА Казахстана', qrAlt: 'QR-код приложения АА Казахстана', literatureCall: 'Позвонить Вячеславу',
+    minuteOptions: ['15 мин', '30 мин', '1 час', '2 часа'], confirmAddress: 'Уточните адрес по телефону',
+    notesSaveError: 'Не удалось сохранить. Скопируйте текст',
+    releaseTitleFor: version => `Вышла версия приложения АА Казахстана ${version}`,
+    releaseFeatures: 'Добавлены ближайшее собрание, календарь, отправка, умный поиск, QR-код и быстрые действия.',
+    auditRelease: 'Исправлены языки уведомлений, даты, расписание, подписи и сохранение заметок.',
+    auditChanges: ['Уведомления меняют язык вместе с приложением', 'Исправлены даты и подписи на трёх языках', 'Размышление открывается из уведомления', 'Заметки сохраняются сразу при вводе']
+});
+Object.assign(window.AA_I18N.kz, {
+    closeAction: 'Жабу', closeTip: 'Кеңесті жабу', clearSearch: 'Іздеуді тазалау', mainNavigation: 'Негізгі навигация', logoAlt: 'Қазақстан АА логотипі', qrAlt: 'Қазақстан АА қолданбасының QR-коды', literatureCall: 'Вячеславқа қоңырау шалу',
+    minuteOptions: ['15 мин', '30 мин', '1 сағат', '2 сағат'], confirmAddress: 'Мекенжайды телефон арқылы нақтылаңыз',
+    notesSaveError: 'Сақтау мүмкін болмады. Мәтінді көшіріңіз',
+    releaseTitleFor: version => `Қазақстан АА қолданбасының ${version} нұсқасы шықты`,
+    releaseFeatures: 'Ең жақын жиналыс, күнтізбе, бөлісу, ақылды іздеу, QR-код және жылдам әрекеттер қосылды.',
+    auditRelease: 'Хабарламалар тілі, күндер, кесте, жазулар және жазбаларды сақтау түзетілді.',
+    auditChanges: ['Хабарламалар тілі қолданба тілімен бірге өзгереді', 'Үш тілдегі күндер мен жазулар түзетілді', 'Күнделікті ой хабарламадан ашылады', 'Жазбалар енгізілген сәтте сақталады']
+});
+Object.assign(window.AA_I18N.en, {
+    closeTip: 'Close tip', clearSearch: 'Clear search', mainNavigation: 'Main navigation', logoAlt: 'AA Kazakhstan logo', qrAlt: 'AA Kazakhstan app QR code', literatureCall: 'Call Vyacheslav', confirmAddress: 'Confirm the address by phone',
+    notesSaveError: 'Could not save. Copy your text',
+    releaseTitleFor: version => `AA Kazakhstan app version ${version} is available`,
+    releaseFeatures: 'Added next meeting, calendar, sharing, smart search, QR code, and quick actions.',
+    auditRelease: 'Fixed notification languages, dates, schedules, labels, and note saving.',
+    auditChanges: ['Notifications follow the selected language', 'Fixed dates and labels in all three languages', 'Reflections open directly from notifications', 'Notes are saved immediately as you type']
+});
+
 window.AA_PROFILE_EN = {
     committees: [
         { title: 'Committee on Cooperation with Government Agencies', description: 'The committee establishes and maintains contacts with government institutions, including akimats, the Ministry of Healthcare, the Ministry of Internal Affairs, health departments, clinics, local police offices, and other organizations. Committee members explain the work of Alcoholics Anonymous, provide information about groups and ways to receive help, and hold working meetings and presentations. The committee also helps prepare cooperation memoranda so public institutions can direct people affected by alcoholism to AA groups. This cooperation does not make AA part of a government institution, provide government funding to AA, or imply AA endorsement of government decisions. Alcoholics Anonymous remains independent; the committee creates practical working relationships and a clear way to cooperate.', contact: 'Chair: vacant' },

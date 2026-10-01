@@ -96,6 +96,68 @@ assert((await page.locator('#complex-sober-display').innerText()).includes('ГО
 await page.locator('#btn-g').click();await page.locator('#citySelect').selectOption('all');
 if(await page.locator('#todayFilter').getAttribute('aria-pressed')==='true')await page.locator('#todayFilter').click();
 await page.locator('#group-search').fill('Виктория');
+// Regression coverage for the live three-language audit (legacy data included).
+await page.evaluate(()=>localStorage.setItem('aa_internal_notifications_v1',JSON.stringify([
+ {id:'reflection:2026-10-01',key:'reflection:2026-10-01',type:'reflection',tab:'counter',title:'Новое ежедневное размышление',text:'1 октября. Избегать самодовольства',createdAt:Date.now()},
+ {id:'today:2026-10-01',key:'today:2026-10-01',type:'today',tab:'groups',action:'today',title:'Собрания сегодня',text:'16 собраний · Онлайн, Алматы, Астана',createdAt:Date.now()},
+ {id:'release:2.2',key:'release:2.2',type:'news',tab:'news',title:'Вышла версия приложения АА Казахстана 2.2',text:'Добавлены ближайшее собрание и календарь',createdAt:Date.now()}
+])));
+await page.locator('#l-en').click();
+await page.locator('#notification-button').click();
+const titles=await page.locator('.notification-item-title').allTextContents();
+assert(titles.includes('New Daily Reflection'));
+assert(titles.includes('Meetings today'));
+assert(titles.includes('AA Kazakhstan app version 2.2 is available'));
+assert((await page.locator('.notification-item-text').allTextContents()).some(t=>t.includes('16 meetings · Online')));
+await page.locator('#l-kz').click();
+assert((await page.locator('.notification-item-title').allTextContents()).includes('Жаңа күнделікті ой'));
+assert((await page.locator('.notification-item-text').allTextContents()).some(t=>t.includes('Өзіне-өзі')));
+await page.locator('#notification-close').click();
+await page.locator('#btn-n').click();
+assert((await page.locator('.news-date').first().innerText()).includes('қыркүйек'));
+assert(!/M\d{2}/.test((await page.locator('.news-date').allTextContents()).join(' ')));
+await page.locator('#btn-g').click();
+await page.locator('#group-search').fill('Боралдай');
+assert((await page.locator('.group-card').innerText()).includes('қазан'));
+assert((await page.locator('.group-card').innerText()).includes('сенбі'));
+await page.locator('#group-search').fill('Турксиб');
+assert((await page.locator('.group-card').innerText()).includes('Мекенжайды телефон арқылы нақтылаңыз'));
+await page.locator('#l-en').click();
+await page.locator('#group-search').fill('Сырдария');
+const mixed=await page.locator('.group-card').innerText();
+assert(mixed.includes('Thu (online)') && mixed.includes('Sat (in person)'));
+assert(!mixed.includes('(онлайн)') && !mixed.includes('(очно)'));
+assert.equal(await page.locator('#group-search-clear').getAttribute('aria-label'),'Clear search');
+await page.locator('#btn-l').click();
+assert.equal(await page.locator('.library-call').getAttribute('aria-label'),'Call Vyacheslav');
+assert.equal(await page.locator('#book-list .lang-tag').first().innerText(),'RU');
+await page.locator('#book-list button').first().click();
+await page.locator('#l-kz').click();
+assert((await page.locator('#book-modal-content').innerText()).includes('Анонимді Алкоголиктер'));
+await page.goBack();
+assert(!await page.locator('#book-modal').isVisible());
+await page.locator('#btn-p').click();
+await page.locator('#btn-settings-head').click();
+assert.deepEqual(await page.locator('#notif-before option').allTextContents(),['15 мин','30 мин','1 сағат','2 сағат']);
+assert.equal(await page.locator('#calendar-close').getAttribute('aria-label'),'Жабу');
+await page.locator('#btn-nt-head').click();
+await page.locator('#user-notes').fill('Audit note: immediate persistence');
+assert.equal(await page.evaluate(()=>localStorage.getItem('aa_user_notes')),'Audit note: immediate persistence');
+await page.reload();
+await page.locator('#app-splash').waitFor({state:'hidden'});
+await page.locator('#btn-p').click();await page.locator('#btn-nt-head').click();
+assert.equal(await page.locator('#user-notes').inputValue(),'Audit note: immediate persistence');
+await page.locator('#l-en').click();await page.locator('#btn-c').click();
+await page.locator('#date-input').fill('2020-09-30');
+assert((await page.locator('#total-days-display').innerText()).endsWith('2191 days'));
+await page.locator('#notification-button').click();
+await page.locator('.notification-item').filter({hasText:'New Daily Reflection'}).click();
+assert(await page.locator('#mot-content').isVisible());
+assert.equal(await page.locator('#mot-toggle').getAttribute('aria-expanded'),'true');
+await page.locator('#l-en').click();await page.locator('#btn-n').click();
+assert(!await page.locator('#news-language-note').isVisible());
+await page.locator('#l-ru').click();await page.locator('#btn-g').click();
+await page.locator('#group-search').fill('Виктория');
 await fs.mkdir('test-results',{recursive:true});
 await page.screenshot({path:process.env.SCREENSHOT_PATH||'test-results/aa-fixed-mobile.png',fullPage:true});
 await page.setViewportSize({width:1440,height:1000});
