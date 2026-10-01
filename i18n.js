@@ -63,7 +63,9 @@ Object.assign(window.AA_I18N.ru, {
     releaseTitleFor: version => `Вышла версия приложения АА Казахстана ${version}`,
     releaseFeatures: 'Добавлены ближайшее собрание, календарь, отправка, умный поиск, QR-код и быстрые действия.',
     auditRelease: 'Исправлены языки уведомлений, даты, расписание, подписи и сохранение заметок.',
-    auditChanges: ['Уведомления меняют язык вместе с приложением', 'Исправлены даты и подписи на трёх языках', 'Размышление открывается из уведомления', 'Заметки сохраняются сразу при вводе']
+    auditChanges: ['Уведомления меняют язык вместе с приложением', 'Исправлены даты и подписи на трёх языках', 'Размышление открывается из уведомления', 'Заметки сохраняются сразу при вводе'],
+    release30Summary: "АА Казахстана 3.0: три языка, размышления на весь год, поиск собраний, календарь и личные инструменты.",
+    release30Changes: ["Интерфейс на русском, казахском и английском языках", "Ежедневные размышления на трёх языках на весь год", "50 групп: поиск, фильтры и расписание по времени Казахстана", "Ближайшее избранное собрание, напоминания и календарь", "27 книг с описаниями на трёх языках", "Счётчик трезвости, личные заметки и резервная копия"]
 });
 Object.assign(window.AA_I18N.kz, {
     closeAction: 'Жабу', closeTip: 'Кеңесті жабу', clearSearch: 'Іздеуді тазалау', mainNavigation: 'Негізгі навигация', logoAlt: 'Қазақстан АА логотипі', qrAlt: 'Қазақстан АА қолданбасының QR-коды', literatureCall: 'Вячеславқа қоңырау шалу',
@@ -72,7 +74,9 @@ Object.assign(window.AA_I18N.kz, {
     releaseTitleFor: version => `Қазақстан АА қолданбасының ${version} нұсқасы шықты`,
     releaseFeatures: 'Ең жақын жиналыс, күнтізбе, бөлісу, ақылды іздеу, QR-код және жылдам әрекеттер қосылды.',
     auditRelease: 'Хабарламалар тілі, күндер, кесте, жазулар және жазбаларды сақтау түзетілді.',
-    auditChanges: ['Хабарламалар тілі қолданба тілімен бірге өзгереді', 'Үш тілдегі күндер мен жазулар түзетілді', 'Күнделікті ой хабарламадан ашылады', 'Жазбалар енгізілген сәтте сақталады']
+    auditChanges: ['Хабарламалар тілі қолданба тілімен бірге өзгереді', 'Үш тілдегі күндер мен жазулар түзетілді', 'Күнделікті ой хабарламадан ашылады', 'Жазбалар енгізілген сәтте сақталады'],
+    release30Summary: "Қазақстан АА 3.0: үш тіл, жыл бойына арналған күнделікті ойлар, жиналыстарды іздеу, күнтізбе және жеке құралдар.",
+    release30Changes: ["Қазақ, орыс және ағылшын тілдеріндегі интерфейс", "Жыл бойына арналған күнделікті ойлар үш тілде", "50 топ: іздеу, сүзгілер және Қазақстан уақыты бойынша кесте", "Ең жақын таңдаулы жиналыс, еске салғыштар және күнтізбе", "Үш тілдегі сипаттамалары бар 27 кітап", "Ішімдіксіз күндер есептегіші, жеке жазбалар және сақтық көшірме"]
 });
 Object.assign(window.AA_I18N.en, {
     closeTip: 'Close tip', clearSearch: 'Clear search', mainNavigation: 'Main navigation', logoAlt: 'AA Kazakhstan logo', qrAlt: 'AA Kazakhstan app QR code', literatureCall: 'Call Vyacheslav', confirmAddress: 'Confirm the address by phone',
@@ -80,7 +84,9 @@ Object.assign(window.AA_I18N.en, {
     releaseTitleFor: version => `AA Kazakhstan app version ${version} is available`,
     releaseFeatures: 'Added next meeting, calendar, sharing, smart search, QR code, and quick actions.',
     auditRelease: 'Fixed notification languages, dates, schedules, labels, and note saving.',
-    auditChanges: ['Notifications follow the selected language', 'Fixed dates and labels in all three languages', 'Reflections open directly from notifications', 'Notes are saved immediately as you type']
+    auditChanges: ['Notifications follow the selected language', 'Fixed dates and labels in all three languages', 'Reflections open directly from notifications', 'Notes are saved immediately as you type'],
+    release30Summary: "AA Kazakhstan 3.0: three languages, a full year of Daily Reflections, meeting search, calendar, and personal tools.",
+    release30Changes: ["Interface in Russian, Kazakh, and English", "A full year of Daily Reflections in all three languages", "50 groups: search, filters, and schedules in Kazakhstan time", "Next favorite meeting, reminders, and calendar export", "27 books with descriptions in all three languages", "Sobriety counter, personal notes, and backup"]
 });
 
 window.AA_PROFILE_EN = {

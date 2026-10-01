@@ -28,8 +28,8 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.10';
-    const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.10';
+    const APP_VERSION = '3.0';
+    const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_3.0';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
     let notificationTimer = null;
@@ -297,7 +297,7 @@
         const key = String(item.key || item.id || '');
         if (key.startsWith('release:')) return {
             title: d.releaseTitleFor(key.slice(8)),
-            text: key.slice(8) === APP_VERSION ? d.auditRelease : d.releaseFeatures
+            text: key.slice(8) === '3.0' ? d.release30Summary : key.slice(8) === '2.2.10' ? d.auditRelease : d.releaseFeatures
         };
         if (item.type === 'reflection') {
             const dateKey = item.dateKey || key.slice('reflection:'.length);
@@ -819,7 +819,7 @@
         document.querySelector('#whats-new-modal .feature-kicker').textContent = `${curLang === 'en' ? 'Version' : curLang === 'kz' ? 'Нұсқа' : 'Версия'} ${APP_VERSION}`;
         document.getElementById('whats-new-title').textContent = t.whatsNew;
         document.getElementById('whats-new-close').textContent = t.understood;
-        document.getElementById('whats-new-list').innerHTML = i18n[curLang].auditChanges.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+        document.getElementById('whats-new-list').innerHTML = i18n[curLang].release30Changes.map(item => `<li>${escapeHtml(item)}</li>`).join('');
     }
 
     function showWhatsNew() {
@@ -2268,7 +2268,7 @@ function closeFirstTimeInfo(fromHistory = false) {
         const releaseNotificationKey = `release:${APP_VERSION}`;
         if (!notificationSeen(releaseNotificationKey)) {
             const releaseTitle = i18n[curLang].releaseTitleFor(APP_VERSION);
-            const releaseText = i18n[curLang].auditRelease;
+            const releaseText = i18n[curLang].release30Summary;
             const releaseItems = getInternalNotifications();
             releaseItems.unshift({
                 key: releaseNotificationKey,
