@@ -70,9 +70,9 @@ console.log(`Group note localization: ${groups.filter(group => String(group.note
 const books = JSON.parse(fs.readFileSync('books.json', 'utf8'));
 const bookTranslationStats = {};
 for (const language of ['kz', 'en']) {
-    bookTranslationStats[language] = { d: 0 };
+    bookTranslationStats[language] = { n: 0, d: 0 };
     for (const [index, book] of books.entries()) {
-        for (const field of ['d']) {
+        for (const field of ['n', 'd']) {
             const translated = String(book[`${field}_${language}`] || book[language]?.[field] || '').trim();
             if (translated) bookTranslationStats[language][field] += 1;
             else errors.push(`book ${index + 1} (${book.n || 'untitled'}): missing ${field}_${language}`);
