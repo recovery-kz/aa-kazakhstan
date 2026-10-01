@@ -120,8 +120,8 @@ assert((await page.locator('.news-date').first().innerText()).includes('қырк
 assert(!/M\d{2}/.test((await page.locator('.news-date').allTextContents()).join(' ')));
 await page.locator('#btn-g').click();
 await page.locator('#group-search').fill('Боралдай');
-assert((await page.locator('.group-card').innerText()).includes('қазан'));
-assert((await page.locator('.group-card').innerText()).includes('сенбі'));
+assert((await page.locator('.group-card').innerText()).toLocaleLowerCase().includes('қазан'));
+assert((await page.locator('.group-card').innerText()).toLocaleLowerCase().includes('сенбі'));
 await page.locator('#group-search').fill('Турксиб');
 assert((await page.locator('.group-card').innerText()).includes('Мекенжайды телефон арқылы нақтылаңыз'));
 await page.locator('#l-en').click();

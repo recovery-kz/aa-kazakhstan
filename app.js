@@ -670,7 +670,7 @@
         if (!next) return '';
         const t = featureText();
         const day = next.offset === 0 ? t.today : next.offset === 1 ? t.tomorrow : (curLang === 'kz' ? formatKazakhDate(next.start, {weekday: true}) : new Intl.DateTimeFormat(getLocale(),{timeZone:schedule.timeZone,weekday:'long',day:'numeric',month:'long'}).format(next.start));
-        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{timeZone:schedule.timeZone,hour:'2-digit',minute:'2-digit'})}`;
+        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{timeZone:schedule.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'})}`;
     }
 
     function getGroupById(id) {
@@ -1542,7 +1542,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
         if (Number.isNaN(d.getTime())) return '—';
         const today = new Date();
         const sameDay = d.toDateString() === today.toDateString();
-        const time = d.toLocaleTimeString(getLocale(), {hour:'2-digit', minute:'2-digit'});
+        const time = d.toLocaleTimeString(getLocale(), {hour:'2-digit', minute:'2-digit', hourCycle:'h23'});
         const todayWord = curLang === 'kz' ? 'бүгін' : curLang === 'en' ? i18n.en.checkedToday : 'сегодня';
         return sameDay ? `${todayWord}, ${time}` : curLang === 'kz' ? `${formatKazakhDate(d)}, ${time}` : d.toLocaleString(getLocale(), {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'});
     }
@@ -1616,7 +1616,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
 
     function localizeSchedule(schedule) {
         if (!schedule) return schedule;
-        if(curLang==='kz') return String(schedule).replace(/По запросу/gi,'Келісім бойынша').replace(/Ежедневно/gi,'Күн сайын').replace(/Суббота/gi,'Сенбі').replace(/Пн/g,'Дс').replace(/Вт/g,'Сс').replace(/Ср/g,'Ср').replace(/Чт/g,'Бс').replace(/Пт/g,'Жм').replace(/Сб/g,'Сб').replace(/Вс/g,'Жс').replace(/все группы открытые/gi,'барлық жиналыстар ашық').replace(/откр/gi,'ашық').replace(/очно и онлайн/gi,'бетпе-бет және онлайн').replace(/очно/gi,'бетпе-бет').replace(/Интервью с алкоголиком/gi,'Алкоголикпен сұхбат');
+        if(curLang==='kz') return String(schedule).replace(/По запросу/gi,'Келісім бойынша').replace(/Ежедневно/gi,'Күн сайын').replace(/Суббота/gi,'Сенбі').replace(/Пн/g,'Дс').replace(/Вт/g,'Сс').replace(/Ср/g,'Сәр').replace(/Чт/g,'Бс').replace(/Пт/g,'Жм').replace(/Сб/g,'Сен').replace(/Вс/g,'Жс').replace(/все группы открытые/gi,'барлық жиналыстар ашық').replace(/откр/gi,'ашық').replace(/очно и онлайн/gi,'бетпе-бет және онлайн').replace(/очно/gi,'бетпе-бет').replace(/Интервью с алкоголиком/gi,'Алкоголикпен сұхбат');
         if (curLang !== 'en') return schedule;
         const replacements = [
             [/По запросу/gi, 'On request'],
