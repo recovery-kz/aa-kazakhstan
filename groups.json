@@ -44,7 +44,9 @@
         "s": 2100,
         "e": 2215
       }
-    ]
+    ],
+    "note_kz": "Кіру құпия кодын телефон арқылы білуге болады.",
+    "note_en": "The meeting access code is available by phone."
   },
   {
     "c": "Онлайн",
@@ -85,7 +87,9 @@
         "s": 2100,
         "e": 2230
       }
-    ]
+    ],
+    "note_kz": "Қазақстандағы АА онлайн тобы. Жиналысқа қосылу туралы ақпаратты WhatsApp арқылы алуға болады.",
+    "note_en": "An online AA group in Kazakhstan. Contact the group via WhatsApp for information on joining the meetings."
   },
   {
     "c": "Алматы",
@@ -264,7 +268,9 @@
         "s": 1500,
         "e": 1615
       }
-    ]
+    ],
+    "note_kz": "Кіру құпия кодын телефон арқылы білуге болады.",
+    "note_en": "The meeting access code is available by phone."
   },
   {
     "c": "Алматы",
@@ -1049,7 +1055,9 @@
         "e": 1715,
         "format": "onsite"
       }
-    ]
+    ],
+    "note_kz": "Кіру құпия кодын телефон арқылы білуге болады.",
+    "note_en": "The meeting access code is available by phone."
   },
   {
     "c": "Шымкент",
@@ -1150,7 +1158,9 @@
         "e": 1930,
         "format": "onsite"
       }
-    ]
+    ],
+    "note_kz": "Кіру құпия кодын телефон арқылы білуге болады.",
+    "note_en": "The meeting access code is available by phone."
   },
   {
     "c": "Экибастуз",
@@ -1179,6 +1189,8 @@
         "s": 1900,
         "e": 2015
       }
-    ]
+    ],
+    "note_kz": "Кіру құпия кодын телефон арқылы білуге болады.",
+    "note_en": "The meeting access code is available by phone."
   }
 ]

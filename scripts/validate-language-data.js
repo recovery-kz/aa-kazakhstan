@@ -42,9 +42,73 @@ for (const language of languages) {
     }
 }
 
+console.log('OK: required labels and 36 AA principles exist in ru, kz and en');
+
+
+const news = JSON.parse(fs.readFileSync('news.json', 'utf8'));
+for (const post of news) {
+    for (const language of ['kz', 'en']) {
+        for (const field of ['title', 'category', 'description']) {
+            const source = String(post[field] || '').trim();
+            const translated = String(post[`${field}_${language}`] || '').trim();
+            if (source && !translated) errors.push(`news ${post.id}: missing ${field}_${language}`);
+        }
+    }
+}
+
+const groups = JSON.parse(fs.readFileSync('groups.json', 'utf8'));
+for (const [index, group] of groups.entries()) {
+    if (!String(group.note || '').trim()) continue;
+    for (const language of ['kz', 'en']) {
+        if (!String(group[`note_${language}`] || '').trim()) {
+            errors.push(`group ${index + 1} (${group.n || 'unnamed'}): missing note_${language}`);
+        }
+    }
+}
+console.log(`Group note localization: ${groups.filter(group => String(group.note || '').trim()).length} annotated groups checked`);
+
+const books = JSON.parse(fs.readFileSync('books.json', 'utf8'));
+const bookTranslationStats = {};
+for (const language of ['kz', 'en']) {
+    bookTranslationStats[language] = { n: 0, d: 0 };
+    for (const [index, book] of books.entries()) {
+        for (const field of ['n', 'd']) {
+            const translated = String(book[`${field}_${language}`] || book[language]?.[field] || '').trim();
+            if (translated) bookTranslationStats[language][field] += 1;
+            else errors.push(`book ${index + 1} (${book.n || 'untitled'}): missing ${field}_${language}`);
+        }
+    }
+}
+console.log('Book translation coverage:', JSON.stringify(bookTranslationStats));
+
+const reflections = JSON.parse(fs.readFileSync('daily_reflections_full.json', 'utf8'));
+const reflectionKeys = Object.keys(reflections);
+if (reflectionKeys.length !== 366) errors.push(`daily reflections: expected 366 entries, got ${reflectionKeys.length}`);
+
+const reflectionTranslationStats = {};
+for (const language of ['kz', 'en']) {
+    const fields = ['title', 'quote', 'source', 'text'];
+    reflectionTranslationStats[language] = Object.fromEntries(fields.map(field => [
+        field,
+        reflectionKeys.filter(key => !String(reflections[key][field] || '').trim() || String(reflections[key][`${field}_${language}`] || '').trim()).length
+    ]));
+    for (const key of reflectionKeys) {
+        for (const field of fields) {
+            const source = String(reflections[key][field] || '').trim();
+            const translated = String(reflections[key][`${field}_${language}`] || '').trim();
+            if (source && !translated) {
+                errors.push(`daily reflection ${key}: missing ${field}_${language}`);
+            }
+        }
+    }
+}
+
+console.log('Daily reflection translation coverage:', JSON.stringify(reflectionTranslationStats));
+
 if (errors.length) {
     console.error(errors.map(error => `ERROR: ${error}`).join('\n'));
     process.exit(1);
 }
 
-console.log('OK: required labels and 36 AA principles exist in ru, kz and en');
+console.log('OK: news localization is complete where Russian source content exists');
+console.log('Daily reflection translation coverage:', JSON.stringify(reflectionTranslationStats));

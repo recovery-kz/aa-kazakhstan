@@ -36,7 +36,7 @@
     const names=[['вс','воскресенье','sun','sunday','жс','жексенбі'],['пн','понедельник','mon','monday','дс','дүйсенбі'],['вт','вторник','tue','tuesday','сс','сейсенбі'],['ср','среда','wed','wednesday','сәрсенбі'],['чт','четверг','thu','thursday','бс','бейсенбі'],['пт','пятница','fri','friday','жм','жұма'],['сб','суббота','sat','saturday','сенбі']];
     function matchesSearch(g,query,now=new Date()) {
         const words=String(query||'').toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
-        const haystack=[g.n,g.c,g.a,g.t,g.note,g.online?'online онлайн':'',hasZoom(g)?'zoom зум':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].join(' ').toLocaleLowerCase();
+        const haystack=[g.n,g.c,g.a,g.t,g.note,g.note_kz,g.note_en,g.online?'online онлайн':'',hasZoom(g)?'zoom зум':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].join(' ').toLocaleLowerCase();
         return words.every(word=>{
             const token=word.replace(/[.,;:]$/,'');
             const d=['сегодня','today','бүгін'].includes(token)?clock(now).weekday:names.findIndex(a=>a.includes(token));

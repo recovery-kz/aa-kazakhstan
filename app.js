@@ -369,7 +369,7 @@
         const previous = localStorage.getItem('aa_last_news_identity');
         localStorage.setItem('aa_last_news_identity', identity);
         if (!previous || previous === identity) return;
-        const title = latest.title || latest.n || latest.name || i18n[curLang].notifNewsNew;
+        const title = localizedNews(latest).title || latest.n || latest.name || i18n[curLang].notifNewsNew;
         addInternalNotification({ key: `news:${identity}`, type: 'news', icon: '📰', title: i18n[curLang].notifNewsNew, text: String(title), tab: 'news' });
     }
 
@@ -480,6 +480,30 @@
         return titleText ? `${dateText}. ${titleText}` : dateText;
     }
 
+    function localizedField(item, field) {
+        if (!item) return '';
+        if (curLang === 'ru') return item[field] ?? item[field + '_ru'] ?? '';
+        return item[field + '_' + curLang] ?? item[curLang]?.[field] ?? item[field] ?? item[field + '_ru'] ?? '';
+    }
+
+    function localizedNews(post) {
+        return {
+            ...post,
+            title: localizedField(post, 'title'),
+            category: localizedField(post, 'category'),
+            description: localizedField(post, 'description')
+        };
+    }
+
+    function localizedBook(book) {
+        if (!book) return book;
+        return {
+            ...book,
+            n: localizedField(book, 'n'),
+            d: localizedField(book, 'd')
+        };
+    }
+
     function renderMotivationFromData(reflections) {
         const titleEl = document.getElementById('mot-title');
         const quoteEl = document.getElementById('mot-quote');
@@ -504,10 +528,18 @@
             return false;
         }
 
-        titleEl.innerText = getReflectionLine(today, item);
-        quoteEl.innerText = item.quote || '';
-        sourceEl.innerText = item.source || '';
-        fullTextEl.innerText = item.text || '';
+        const localized = {
+            ...item,
+            date_ru: localizedField(item, 'date') || item.date_ru,
+            title: localizedField(item, 'title'),
+            quote: localizedField(item, 'quote'),
+            source: localizedField(item, 'source'),
+            text: localizedField(item, 'text')
+        };
+        titleEl.innerText = getReflectionLine(today, localized);
+        quoteEl.innerText = localized.quote || '';
+        sourceEl.innerText = localized.source || '';
+        fullTextEl.innerText = localized.text || '';
         return true;
     }
 
@@ -623,8 +655,14 @@
         return `<div class="today-schedule"><strong>${featureText().todaySchedule}</strong>${state.slots.map(slot=>`${hhmm(slot.s)}–${hhmm(slot.e)}${slotMinutes(slot.e)<=schedule.clock().minutes ? ` (${featureText().finished})` : ''}`).join(' · ')}</div>`;
     }
 
+    function localizedGroupNote(g) {
+        if (!g?.note) return '';
+        if (curLang === 'ru') return g.note;
+        return g[`note_${curLang}`] || g.note;
+    }
+
     function normalizedGroupSearch(g) {
-        return [g.n,g.c,g.a,g.t,g.note,(g.online||g.hybrid)?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
+        return [g.n,g.c,g.a,g.t,localizedGroupNote(g),(g.online||g.hybrid)?'online онлайн zoom чат':'',g.k?'қазақша казахский kazakh':'русский russian',g.f?'женская әйелдер women':''].filter(Boolean).join(' ').toLocaleLowerCase();
     }
 
     function matchesGroupSearch(g, query) {
@@ -635,7 +673,7 @@
         const phone = Array.isArray(g.p) ? g.p.join(' · ') : getPrimaryPhone(g);
         const map = g.online ? '' : build2GISLink(g);
         const online = g.online ? (g.a||g.z||'') : (g.z||'');
-        return [g.n,g.c,g.online?'Онлайн':g.a,g.t,g.note,phone,map,online,'АА Казахстана: https://recovery-kz.github.io/aa-kazakhstan/','Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
+        return [g.n,g.c,g.online?'Онлайн':g.a,localizeSchedule(g.t),localizedGroupNote(g),phone,map,online,(curLang==='kz'?'Қазақстан АА':curLang==='en'?'AA Kazakhstan':'АА Казахстана')+': https://recovery-kz.github.io/aa-kazakhstan/',curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
     }
 
     async function shareGroup(g) {
@@ -680,7 +718,7 @@
         if (!next) { showAppStatus(i18n[curLang].noSchedule); return; }
         activeCalendarGroupId = getGroupId(g);
         document.getElementById('calendar-title').textContent = featureText().calendarTitle;
-        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)} · Казахстан (UTC+5)`;
+        document.getElementById('calendar-note').textContent = `${g.n} · ${formatNextMeeting(next)} · ${curLang==='kz'?'Қазақстан (UTC+5)':curLang==='en'?'Kazakhstan (UTC+5)':'Казахстан (UTC+5)'}`;
         document.querySelector('[data-calendar-mode="once"]').textContent = featureText().calendarOnce;
         document.querySelector('[data-calendar-mode="weekly"]').textContent = featureText().calendarWeekly;
         openFeatureModal('calendar-modal');
@@ -711,7 +749,7 @@
         const occurrences=weekly ? (g.sc||[]).map(slot=>schedule.nextMeeting({...g,sc:[slot]},false)) : [next];
         const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//AA Kazakhstan//App//RU','CALSCALE:GREGORIAN','X-WR-TIMEZONE:Asia/Almaty'];
         occurrences.filter(Boolean).forEach((meeting,index)=>{
-            lines.push('BEGIN:VEVENT',`UID:${Date.now()}-${index}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(meeting.start)}`,`DTEND:${icsDate(meeting.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(g.a||g.z||'')}`,`DESCRIPTION:${icsEscape(groupShareText(g)+'\nВремя: Казахстан (UTC+5)')}`);
+            lines.push('BEGIN:VEVENT',`UID:${Date.now()}-${index}-${Math.random().toString(36).slice(2)}@aa-kazakhstan`,`DTSTAMP:${icsDate(new Date())}`,`DTSTART:${icsDate(meeting.start)}`,`DTEND:${icsDate(meeting.end)}`,`SUMMARY:${icsEscape(g.n)}`,`LOCATION:${icsEscape(g.a||g.z||'')}`,`DESCRIPTION:${icsEscape(groupShareText(g)+'\n'+(curLang==='kz'?'Уақыт: Қазақстан (UTC+5)':curLang==='en'?'Time: Kazakhstan (UTC+5)':'Время: Казахстан (UTC+5)'))}`);
             if(weekly) lines.push('RRULE:FREQ=WEEKLY');
             lines.push('END:VEVENT');
         });
@@ -1041,9 +1079,9 @@
             const labels=lang==='kz'?['Сенімді адамның аты','Сенімді адамның телефоны','Сенімді адамға қоңырау шалу']:lang==='en'?['Trusted contact name','Trusted contact phone','Call trusted contact']:['Имя доверенного лица','Телефон доверенного лица','Позвонить доверенному лицу'];
             ['tr-n-','tr-p-','call-'].forEach((prefix,j)=>document.getElementById(prefix+i).setAttribute('aria-label',`${labels[j]} ${i+1}`));
         }
-        document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
-        document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
-        document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
+        document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
+        document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
+        document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
         const minuteOptions = document.querySelectorAll('#notif-before option');
         minuteOptions.forEach((option, index) => {
             if (!option.dataset.defaultText) option.dataset.defaultText = option.textContent;
@@ -1054,7 +1092,7 @@
             button.setAttribute('aria-label', label);
         });
         const splash = document.getElementById('app-splash');
-        if (splash) splash.setAttribute('aria-label', lang === 'en' ? 'App loading' : 'Приложение загружается');
+        if (splash) splash.setAttribute('aria-label', lang === 'en' ? 'App loading' : lang === 'kz' ? 'Қолданба жүктелуде' : 'Приложение загружается');
         const splashTitle = document.querySelector('.app-splash-title');
         const splashTagline = document.querySelector('.app-splash-tagline');
         [splashTitle, splashTagline].forEach(element => {
@@ -1062,7 +1100,7 @@
         });
         if (splashTitle) splashTitle.textContent = lang === 'en' ? 'AA Kazakhstan' : splashTitle.dataset.defaultText;
         if (splashTagline) splashTagline.textContent = lang === 'en' ? 'There is a way out' : splashTagline.dataset.defaultText;
-        document.title = lang === 'en' ? 'AA Kazakhstan' : 'АА Казахстана';
+        document.title = lang === 'en' ? 'AA Kazakhstan' : lang === 'kz' ? 'Қазақстан АА' : 'АА Казахстана';
 
         document.getElementById('prayer-content').innerText = d.prayer;
         document.getElementById('user-notes').placeholder = d.placeholder;
@@ -1258,7 +1296,7 @@
     function renderLit() {
         const c = document.getElementById('book-list');
         const filteredBooks = books
-            .map((book, index) => ({ book, index }))
+            .map((book, index) => ({ book: localizedBook(book), index }))
             .filter(item => currentBookFilter === 'all' || item.book.l === currentBookFilter);
 
         c.innerHTML = filteredBooks.map(({ book, index }) => `
@@ -1282,8 +1320,9 @@
     }
 
     function openBook(index) {
-        const book = books[Number(index)];
-        if (!book) return;
+        const rawBook = books[Number(index)];
+        if (!rawBook) return;
+        const book = localizedBook(rawBook);
         activeBookIndex = Number(index);
         const d = i18n[curLang];
         const content = document.getElementById('book-modal-content');
@@ -1320,13 +1359,14 @@
     }
 
     async function shareBook() {
-        const book = books[activeBookIndex];
-        if (!book) return;
+        const rawBook = books[activeBookIndex];
+        if (!rawBook) return;
+        const book = localizedBook(rawBook);
         const shareText = `${book.n}
 
 ${book.d}
 
-${curLang === 'en' ? i18n.en.literatureShare : 'Литературный комитет АА Казахстана'}: +7 (777) 556-71-41`;
+${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақстан АА Әдебиет комитеті' : 'Литературный комитет АА Казахстана'}: +7 (777) 556-71-41`;
         try {
             if (navigator.share) {
                 await navigator.share({ title: book.n, text: shareText });
@@ -1566,7 +1606,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : 'Литературный ком�
                         ${renderAddress(g)}
                         <div class="info-row"><span class="info-row-icon">⏰</span><div><div class="muted">${i18n[curLang].scheduleLabel}</div><div>${escapeHtml(localizeSchedule(g.t || i18n[curLang].noSchedule))}</div></div></div>
                         ${g.p && g.p.length ? renderPhones(g.p, g.pl) : ''}
-                        ${g.note ? `<div class="info-row"><span class="info-row-icon">ℹ️</span><div>${escapeHtml(g.note)}</div></div>` : ''}
+                        ${g.note ? `<div class="info-row"><span class="info-row-icon">ℹ️</span><div>${escapeHtml(localizedGroupNote(g))}</div></div>` : ''}
                     </div>
                     <div class="group-actions">${buildGroupActions(g)}<a class="report-error" href="${buildReportLink(g)}" target="_blank" rel="noopener noreferrer" data-track="report_error" data-group="${escapeHtml(g.n)}">${i18n[curLang].reportError}</a></div>
                 </div>`;
@@ -1704,7 +1744,7 @@ function closeFirstTimeInfo(fromHistory = false) {
         const total = dots.length || 1;
         const safeIndex = Math.max(0, Math.min(index, total - 1));
 
-        if (counter) counter.textContent = curLang === 'en' ? i18n.en.newsCounter(safeIndex + 1, total) : `${safeIndex + 1} из ${total}`;
+        if (counter) counter.textContent = i18n[curLang].newsCounter(safeIndex + 1, total);
         dots.forEach((dot, dotIndex) => {
             dot.classList.toggle('active', dotIndex === safeIndex);
             dot.setAttribute('aria-current', dotIndex === safeIndex ? 'true' : 'false');
@@ -1771,7 +1811,8 @@ function closeFirstTimeInfo(fromHistory = false) {
 
         currentNewsData = posts;
 
-        container.innerHTML = posts.map((post, postIndex) => {
+        container.innerHTML = posts.map((rawPost, postIndex) => {
+            const post = localizedNews(rawPost);
             const images = Array.isArray(post.images) ? post.images.filter(Boolean) : [];
             const total = images.length;
 
@@ -1779,7 +1820,7 @@ function closeFirstTimeInfo(fromHistory = false) {
                 <div class="news-slide">
                     <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer" aria-label="${curLang==='kz'?'Суретті толық ашу':curLang==='en'?'Open full-size image':'Открыть изображение целиком'} ${imageIndex+1}"><img
                         src="${escapeHtml(image)}"
-                        alt="${escapeHtml(post.title || (curLang === 'en' ? i18n.en.newsImageAlt : 'Новость АА Казахстана'))} — ${imageIndex + 1}"
+                        alt="${escapeHtml(post.title || i18n[curLang].newsImageAlt)} — ${imageIndex + 1}"
                         loading="${postIndex === 0 && imageIndex === 0 ? 'eager' : 'lazy'}"
                         draggable="false"
                     ></a>
@@ -1787,12 +1828,12 @@ function closeFirstTimeInfo(fromHistory = false) {
             `).join('');
 
             const dots = total > 1
-                ? `<div class="news-dots" aria-label="${curLang === 'en' ? i18n.en.newsCarouselLabel : 'Навигация по карточкам'}">
+                ? `<div class="news-dots" aria-label="${i18n[curLang].newsCarouselLabel}">
                     ${images.map((_, imageIndex) => `
                         <button
                             type="button"
                             class="news-dot${imageIndex === 0 ? ' active' : ''}"
-                            aria-label="${curLang === 'en' ? i18n.en.newsOpenCard(imageIndex + 1) : `Открыть карточку ${imageIndex + 1}`}"
+                            aria-label="${i18n[curLang].newsOpenCard(imageIndex + 1)}"
                         ></button>
                     `).join('')}
                    </div>`
@@ -1803,7 +1844,7 @@ function closeFirstTimeInfo(fromHistory = false) {
                     ${total ? `
                         <div class="news-carousel-wrap">
                             <div class="news-carousel">${slides}</div>
-                            ${total > 1 ? `<div class="news-counter">${curLang === 'en' ? i18n.en.newsCounter(1, total) : `1 из ${total}`}</div>` : ''}
+                            ${total > 1 ? `<div class="news-counter">${i18n[curLang].newsCounter(1, total)}</div>` : ''}
                         </div>
                         ${dots}
                     ` : ''}
