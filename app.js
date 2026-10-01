@@ -1080,8 +1080,8 @@
             ['tr-n-','tr-p-','call-'].forEach((prefix,j)=>document.getElementById(prefix+i).setAttribute('aria-label',`${labels[j]} ${i+1}`));
         }
         document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
-        document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
-        document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : 'Закрыть');
+        document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
+        document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
         const minuteOptions = document.querySelectorAll('#notif-before option');
         minuteOptions.forEach((option, index) => {
             if (!option.dataset.defaultText) option.dataset.defaultText = option.textContent;
