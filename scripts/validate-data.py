@@ -147,8 +147,8 @@ if isinstance(manifest, dict):
 
 if isinstance(version, dict):
     declared = str(version.get('version', '')).strip()
-    if not re.fullmatch(r'\d+\.\d+\.\d+', declared):
-        errors.append(f'version.json: invalid semantic version: {declared!r}')
+    if not re.fullmatch(r'\d+\.\d+(?:\.\d+)?', declared):
+        errors.append(f'version.json: invalid release version: {declared!r}')
     if html_path.is_file():
         displayed = re.search(r'id="settings-version-value"[^>]*>([^<]+)', html_path.read_text(encoding='utf-8'))
         if displayed and displayed.group(1).strip() != declared:
