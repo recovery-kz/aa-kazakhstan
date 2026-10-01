@@ -28,8 +28,8 @@
     const NOTIFICATION_SETTINGS_KEY = 'aa_internal_notification_settings_v1';
     const NOTIFICATION_SEEN_KEY = 'aa_internal_notification_seen_v1';
     const USER_CITY_STORAGE_KEY = 'aa_user_city_v1';
-    const APP_VERSION = '2.2.9';
-    const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.0';
+    const APP_VERSION = '2.2.10';
+    const WHATS_NEW_STORAGE_KEY = 'aa_whats_new_2.2.10';
     const COACHMARK_STORAGE_KEY = 'aa_coachmarks_v2';
     let groupFilterMode = 'all';
     let notificationTimer = null;
@@ -122,6 +122,24 @@
         if (curLang === 'kz') return 'kk-KZ';
         if (curLang === 'en') return 'en-US';
         return 'ru-RU';
+    }
+
+    function formatKazakhDate(date, options = {}) {
+        const p = schedule.clock(date);
+        const months = ['қаңтар','ақпан','наурыз','сәуір','мамыр','маусым','шілде','тамыз','қыркүйек','қазан','қараша','желтоқсан'];
+        const weekdays = ['жексенбі','дүйсенбі','сейсенбі','сәрсенбі','бейсенбі','жұма','сенбі'];
+        const day = `${p.day} ${months[p.month - 1]}`;
+        return `${options.year ? `${p.year} жылғы ` : ''}${day}${options.weekday ? `, ${weekdays[p.weekday]}` : ''}`;
+    }
+
+    function localizedCity(city) {
+        return city === 'Онлайн' ? featureText().formatOnline : city;
+    }
+
+    function localizedGroupAddress(g) {
+        if (!g) return '';
+        if (curLang !== 'ru' && /^(инфо по тел\.?|уточнять по номеру)$/i.test(String(g.a || '').trim())) return i18n[curLang].confirmAddress;
+        return g[`a_${curLang}`] || g.a || '';
     }
 
     function setEnglishOnlyText(id, englishText) {
@@ -256,7 +274,7 @@
         markNotificationSeen(item.key);
         updateNotificationBadge();
         if (showBrowser && settings.browser && document.visibilityState === 'visible' && 'Notification' in window && Notification.permission === 'granted') {
-            try { new Notification(item.title, { body: item.text, icon: 'assets/icon-192.png', tag: item.key }); } catch (error) {}
+            try { new Notification(localizeNotification(item).title, { body: localizeNotification(item).text, icon: 'assets/icon-192.png', tag: item.key }); } catch (error) {}
         }
         return true;
     }
@@ -274,6 +292,40 @@
         return date.toLocaleString(getLocale(), { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
     }
 
+    function localizeNotification(item) {
+        const d = i18n[curLang];
+        const key = String(item.key || item.id || '');
+        if (key.startsWith('release:')) return {
+            title: d.releaseTitleFor(key.slice(8)),
+            text: key.slice(8) === APP_VERSION ? d.auditRelease : d.releaseFeatures
+        };
+        if (item.type === 'reflection') {
+            const dateKey = item.dateKey || key.slice('reflection:'.length);
+            const date = new Date(`${dateKey}T12:00:00`);
+            const reflection = currentReflectionsData?.[dateKey.slice(5)];
+            return { title: d.notifReflectionNew, text: reflection && !Number.isNaN(date.getTime()) ? getReflectionLine(date, {...reflection, title: localizedField(reflection, 'title')}) : d.motLab };
+        }
+        if (item.type === 'news') {
+            const identity = item.newsIdentity || key.slice('news:'.length);
+            const posts = Array.isArray(currentNewsData) ? currentNewsData : currentNewsData?.news || currentNewsData?.items || [];
+            const post = posts.find(post => getNewsIdentity(post) === identity);
+            return {title: d.notifNewsNew, text: post ? localizedNews(post).title : d.nav[1]};
+        }
+        if (item.type === 'today') {
+            // Migrate old snapshots without changing their meeting count or date.
+            const count = item.count ?? Number(String(item.text || '').match(/^\d+/)?.[0] || 0);
+            const cities = item.cities || String(item.text || '').split('·').slice(1).join('·').trim().split(', ').filter(Boolean);
+            const label = curLang === 'en' ? `${count} ${count === 1 ? 'meeting' : 'meetings'}` : curLang === 'kz' ? `${count} жиналыс` : `${count} ${plural(count, ['собрание','собрания','собраний'])}`;
+            return {title: d.notifTodayNew, text: [label, cities.map(localizedCity).join(', ')].filter(Boolean).join(' · ')};
+        }
+        if (item.type === 'favorite') {
+            const group = data.find(group => item.groupId === getGroupId(group) || key.startsWith(`favorite:${key.split(':')[1]}:${getGroupId(group)}:`));
+            const time = item.startTime || String(item.text || '').match(/\d{2}:\d{2}/)?.[0] || '';
+            return {title: d.notifFavoriteNew, text: group ? [group.n, time, group.online ? featureText().formatOnline : localizedGroupAddress(group)].filter(Boolean).join(' · ') : time};
+        }
+        return {title: item.title || d.notificationCenter, text: item.text || ''};
+    }
+
     function renderNotificationCenter() {
         const list = document.getElementById('notification-list');
         if (!list) return;
@@ -281,8 +333,9 @@
         if (!items.length) { list.innerHTML = `<div class="notification-empty">${i18n[curLang].notificationEmpty}</div>`; return; }
         const fallbackTitles = { reflection: i18n[curLang].notifReflectionNew, news: i18n[curLang].notifNewsNew, today: i18n[curLang].notifTodayNew, favorite: i18n[curLang].notifFavoriteNew };
         list.innerHTML = items.map(item => {
-            const safeTitle = !item.title || item.title === 'undefined' ? (fallbackTitles[item.type] || i18n[curLang].notificationCenter) : item.title;
-            const safeText = !item.text || item.text === 'undefined' ? '' : item.text;
+            const localized = localizeNotification(item);
+            const safeTitle = localized.title || fallbackTitles[item.type] || i18n[curLang].notificationCenter;
+            const safeText = localized.text || '';
             return `<button class="notification-item${item.read ? '' : ' unread'}" type="button" data-notification-id="${escapeHtml(item.id)}"><span class="notification-icon">${escapeHtml(item.icon || '🔔')}</span><span><span class="notification-item-title">${item.read ? '' : '<span class="notification-dot"></span>'}${escapeHtml(safeTitle)}</span><span class="notification-item-text">${escapeHtml(safeText)}</span><span class="notification-time">${formatNotificationTime(item.createdAt)}</span></span></button>`;
         }).join('');
     }
@@ -317,6 +370,7 @@
         closeNotificationCenter();
         if (!current) return;
         if (current.tab) goTo(current.tab);
+        if (current.type === 'reflection' && !document.getElementById('mot-content').classList.contains('open')) toggleMotivation();
         if (current.action === 'today' || current.action === 'favorites') {
             resetGroupsToRoot();
             setGroupFilterMode(current.action);
@@ -352,7 +406,7 @@
         const title = document.getElementById('mot-title')?.innerText?.trim();
         if (!title || title === 'Загрузка...' || title === 'Жүктелуде...' || title === i18n.en.reflectionLoading) return;
         const dateKey = new Date().toISOString().slice(0, 10);
-        addInternalNotification({ key: `reflection:${dateKey}`, type: 'reflection', icon: '📖', title: i18n[curLang].notifReflectionNew, text: title, tab: 'counter' });
+        addInternalNotification({ key: `reflection:${dateKey}`, type: 'reflection', icon: '📖', title: i18n[curLang].notifReflectionNew, text: title, dateKey, tab: 'counter' });
     }
 
     function getNewsIdentity(item) {
@@ -370,7 +424,7 @@
         localStorage.setItem('aa_last_news_identity', identity);
         if (!previous || previous === identity) return;
         const title = localizedNews(latest).title || latest.n || latest.name || i18n[curLang].notifNewsNew;
-        addInternalNotification({ key: `news:${identity}`, type: 'news', icon: '📰', title: i18n[curLang].notifNewsNew, text: String(title), tab: 'news' });
+        addInternalNotification({ key: `news:${identity}`, type: 'news', icon: '📰', title: i18n[curLang].notifNewsNew, text: String(title), newsIdentity: identity, tab: 'news' });
     }
 
     function checkTodayGroupsNotification() {
@@ -388,7 +442,7 @@
             : curLang === 'en'
                 ? `${i18n.en.meetingCount(groups.length)} · ${cities.slice(0, 3).join(', ')}`
                 : `${groups.length} собраний · ${cities.slice(0, 3).join(', ')}`;
-        addInternalNotification({ key: `today:${dateKey}`, type: 'today', icon: '📅', title: i18n[curLang].notifTodayNew, text, tab: 'groups', action: 'today' }, false);
+        addInternalNotification({ key: `today:${dateKey}`, type: 'today', icon: '📅', title: i18n[curLang].notifTodayNew, text, count: groups.length, cities: cities.slice(0, 3), tab: 'groups', action: 'today' }, false);
     }
 
     function minutesFromSlot(value) { return Math.floor(value / 100) * 60 + (value % 100); }
@@ -411,7 +465,7 @@
                 if (remaining < 0 || remaining > before) return;
                 const time = `${String(Math.floor(slot.s / 100)).padStart(2,'0')}:${String(slot.s % 100).padStart(2,'0')}`;
                 const text = `${group.n} · ${time}${group.online ? ` · ${i18n[curLang].onlineWord || 'онлайн'}` : group.a ? ` · ${group.a}` : ''}`;
-                addInternalNotification({ key: `favorite:${dateKey}:${getGroupId(group)}:${slot.s}:${before}`, type: 'favorite', icon: '⭐', title: i18n[curLang].notifFavoriteNew, text, tab: 'groups', action: 'favorites' });
+                addInternalNotification({ key: `favorite:${dateKey}:${getGroupId(group)}:${slot.s}:${before}`, type: 'favorite', icon: '⭐', title: i18n[curLang].notifFavoriteNew, text, groupId: getGroupId(group), startTime: time, tab: 'groups', action: 'favorites' });
             });
         });
     }
@@ -425,7 +479,7 @@
 
     function cleanPhone(phone) { return String(phone || '').replace(/[^\d+]/g, ''); }
     function escapeHtml(value) { return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;'); }
-    function plural(n, t) { return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
+    function plural(n, t) { if (curLang === 'en') return t[n === 1 ? 0 : 2]; return t[(n%10===1 && n%100!==11)?0:n%10>=2 && n%10<=4 && (n%100<10||n%100>=20)?1:2]; }
 
     function trackEvent(action, label, params = {}) {
         if (typeof window.gtag !== 'function') return;
@@ -458,7 +512,7 @@
         if (!raw) return '';
 
         const lower = raw.toLocaleLowerCase('ru-RU');
-        const sentenceCase = lower.replace(/[а-яёa-z]/i, letter => letter.toLocaleUpperCase('ru-RU'));
+        const sentenceCase = lower.replace(/\p{L}/u, letter => letter.toLocaleUpperCase(getLocale()));
 
         return sentenceCase
             .replace(/\bаа\b/gi, 'АА')
@@ -540,6 +594,7 @@
         quoteEl.innerText = localized.quote || '';
         sourceEl.innerText = localized.source || '';
         fullTextEl.innerText = localized.text || '';
+        renderNotificationCenter();
         return true;
     }
 
@@ -614,8 +669,8 @@
     function formatNextMeeting(next) {
         if (!next) return '';
         const t = featureText();
-        const day = next.offset === 0 ? t.today : next.offset === 1 ? t.tomorrow : new Intl.DateTimeFormat(getLocale(),{timeZone:schedule.timeZone,weekday:'long',day:'numeric',month:'long'}).format(next.start);
-        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{timeZone:schedule.timeZone,hour:'2-digit',minute:'2-digit'})}`;
+        const day = next.offset === 0 ? t.today : next.offset === 1 ? t.tomorrow : (curLang === 'kz' ? formatKazakhDate(next.start, {weekday: true}) : new Intl.DateTimeFormat(getLocale(),{timeZone:schedule.timeZone,weekday:'long',day:'numeric',month:'long'}).format(next.start));
+        return next.isLive ? t.inProgress : `${day}, ${next.start.toLocaleTimeString(getLocale(),{timeZone:schedule.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'})}`;
     }
 
     function getGroupById(id) {
@@ -673,7 +728,7 @@
         const phone = Array.isArray(g.p) ? g.p.join(' · ') : getPrimaryPhone(g);
         const map = g.online ? '' : build2GISLink(g);
         const online = g.online ? (g.a||g.z||'') : (g.z||'');
-        return [g.n,g.c,g.online?'Онлайн':g.a,localizeSchedule(g.t),localizedGroupNote(g),phone,map,online,(curLang==='kz'?'Қазақстан АА':curLang==='en'?'AA Kazakhstan':'АА Казахстана')+': https://recovery-kz.github.io/aa-kazakhstan/',curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
+        return [g.n,g.c,g.online?featureText().formatOnline:localizedGroupAddress(g),localizeSchedule(g.t),localizedGroupNote(g),phone,map,online,(curLang==='kz'?'Қазақстан АА':curLang==='en'?'AA Kazakhstan':'АА Казахстана')+': https://recovery-kz.github.io/aa-kazakhstan/',curLang==='kz'?'Жиналыстар уақыты: Қазақстан (UTC+5)':curLang==='en'?'Meeting times: Kazakhstan (UTC+5)':'Время собраний: Казахстан (UTC+5)'].filter(Boolean).join('\n');
     }
 
     async function shareGroup(g) {
@@ -759,14 +814,19 @@
         showAppStatus(featureText().calendarSaved); closeFeatureModal('calendar-modal'); trackEvent('group_calendar',g.n,{repeat:weekly?'weekly':'once'});
     }
 
+    function renderWhatsNewContent() {
+        const t = featureText();
+        document.querySelector('#whats-new-modal .feature-kicker').textContent = `${curLang === 'en' ? 'Version' : curLang === 'kz' ? 'Нұсқа' : 'Версия'} ${APP_VERSION}`;
+        document.getElementById('whats-new-title').textContent = t.whatsNew;
+        document.getElementById('whats-new-close').textContent = t.understood;
+        document.getElementById('whats-new-list').innerHTML = i18n[curLang].auditChanges.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+    }
+
     function showWhatsNew() {
-        if (localStorage.getItem(WHATS_NEW_STORAGE_KEY)==='1') return false;
-        const t=featureText();
-        document.getElementById('whats-new-title').textContent=t.whatsNew;
-        document.getElementById('whats-new-close').textContent=t.understood;
-        const items = curLang==='en' ? ['Next favorite meeting on the Today screen','Calendar and sharing for every group','Smart search and meeting format labels','QR code and quick actions'] : curLang==='kz' ? ['Бүгін экранындағы ең жақын таңдаулы жиналыс','Әр топ үшін күнтізбе және бөлісу','Ақылды іздеу және жиналыс форматтары','QR-код және жылдам әрекеттер'] : ['Ближайшее избранное собрание на экране «Сегодня»','Календарь и отправка каждой группы','Умный поиск и обозначения формата','QR-код и быстрые действия'];
-        document.getElementById('whats-new-list').innerHTML=items.map(item=>`<li>${escapeHtml(item)}</li>`).join('');
-        openFeatureModal('whats-new-modal'); return true;
+        if (localStorage.getItem(WHATS_NEW_STORAGE_KEY) === '1') return false;
+        renderWhatsNewContent();
+        openFeatureModal('whats-new-modal');
+        return true;
     }
 
     function showCoachmark(kind='swipe') {
@@ -870,18 +930,17 @@
 
     function saveNotes(val) {
         const status = document.getElementById('save-status');
-        if (status) {
-            status.innerText = i18n[curLang].savePending;
-            status.classList.add('show');
-        }
         if (saveTimeout) clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
+        try {
             localStorage.setItem('aa_user_notes', val);
             if (status) {
                 status.innerText = i18n[curLang].saveDone;
-                setTimeout(() => status.classList.remove('show'), 2000);
+                status.classList.add('show');
+                saveTimeout = setTimeout(() => status.classList.remove('show'), 2000);
             }
-        }, 800);
+        } catch (error) {
+            if (status) { status.innerText = i18n[curLang].notesSaveError; status.classList.add('show'); }
+        }
     }
 
     function updateMedalProgress(totalDays, startDateVal) {
@@ -1054,8 +1113,7 @@
 
         const newsLanguageNote = document.getElementById('news-language-note');
         if (newsLanguageNote) {
-            newsLanguageNote.hidden = lang !== 'en';
-            newsLanguageNote.innerText = i18n.en.newsOriginalNote;
+            newsLanguageNote.hidden = true;
         }
         setEnglishOnlyText('backup-title', i18n.en.backupTitle);
         setEnglishOnlyText('export-data', i18n.en.exportData);
@@ -1082,10 +1140,22 @@
         document.getElementById('install-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
         document.getElementById('book-modal-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
         document.getElementById('structure-image-close')?.setAttribute('aria-label', lang === 'en' ? i18n.en.closeAction : lang === 'kz' ? 'Жабу' : 'Закрыть');
+        ['app-qr-close','quick-action-close','calendar-close','first-time-close','notification-close'].forEach(id => document.getElementById(id)?.setAttribute('aria-label', d.closeAction));
+        document.getElementById('coachmark-close')?.setAttribute('aria-label', d.closeTip);
+        document.getElementById('coachmark-close').textContent = ft.understood;
+        const coachmark = document.getElementById('coachmark');
+        if (coachmark.classList.contains('show')) document.getElementById('coachmark-text').textContent = coachmark.dataset.kind === 'favorite' ? ft.favoriteTip : ft.swipeTip;
+        document.getElementById('group-search-clear').setAttribute('aria-label', d.clearSearch);
+        document.querySelector('.bottom-nav').setAttribute('aria-label', d.mainNavigation);
+        document.querySelector('.library-call').setAttribute('aria-label', d.literatureCall);
+        document.querySelector('.app-qr-image').alt = d.qrAlt;
+        document.querySelector('header img')?.setAttribute('alt', d.logoAlt);
+        document.getElementById('user-notes').setAttribute('aria-label', d.notesHead);
+        document.getElementById('date-input').setAttribute('aria-label', lang === 'en' ? 'Sobriety start date' : lang === 'kz' ? 'Байсалдылықтың басталу күні' : 'Дата начала трезвости');
         const minuteOptions = document.querySelectorAll('#notif-before option');
         minuteOptions.forEach((option, index) => {
             if (!option.dataset.defaultText) option.dataset.defaultText = option.textContent;
-            option.textContent = lang === 'en' ? i18n.en.minuteOptions[index] : option.dataset.defaultText;
+            option.textContent = d.minuteOptions[index];
         });
         document.querySelectorAll('.nav-item').forEach((button, index) => {
             const label = index < 4 ? d.nav[index] : d.nProf;
@@ -1125,7 +1195,10 @@
         if (currentNewsData) renderNews(currentNewsData);
         renderFirstRun();
         if (document.getElementById('tab-lit').classList.contains('active')) renderLit();
+        if (activeBookIndex !== null) openBook(activeBookIndex, true);
         if (document.getElementById('tab-groups').classList.contains('active')) renderGroups();
+        renderNotificationCenter();
+        if (document.getElementById('whats-new-modal').classList.contains('open')) renderWhatsNewContent();
     }
 
     function renderPrinciples(lang) {
@@ -1304,7 +1377,7 @@
                 ${getBookCover(index, book)}
                 <div class="book-meta">
                     <div class="book-title">${escapeHtml(book.n)}</div>
-                    <span class="lang-tag lang-${book.l === 'рус' ? 'ru' : 'kz'}">${escapeHtml(book.l)}</span>
+                    <span class="lang-tag lang-${book.l === 'рус' ? 'ru' : 'kz'}">${escapeHtml(book.l === 'рус' ? i18n[curLang].bookRu : i18n[curLang].bookKz)}</span>
                 </div>
             </button>
         `).join('');
@@ -1319,7 +1392,7 @@
         renderLit();
     }
 
-    function openBook(index) {
+    function openBook(index, refreshOnly = false) {
         const rawBook = books[Number(index)];
         if (!rawBook) return;
         const book = localizedBook(rawBook);
@@ -1331,7 +1404,7 @@
                 <div class="book-modal-cover">${getBookCover(activeBookIndex, book, true)}</div>
                 <div class="book-modal-main">
                     <div class="book-modal-title" id="book-modal-title">${escapeHtml(book.n)}</div>
-                    <span class="lang-tag lang-${book.l === 'рус' ? 'ru' : 'kz'}">${escapeHtml(book.l)}</span>
+                    <span class="lang-tag lang-${book.l === 'рус' ? 'ru' : 'kz'}">${escapeHtml(book.l === 'рус' ? i18n[curLang].bookRu : i18n[curLang].bookKz)}</span>
                 </div>
             </div>
             <div class="book-modal-desc">${escapeHtml(book.d)}</div>
@@ -1345,7 +1418,7 @@
         modal.classList.add('open');
         modal.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
-        pushAppHistory('book-modal');
+        if (!refreshOnly) pushAppHistory('book-modal');
         trackEvent('book_open', book.n);
     }
 
@@ -1404,7 +1477,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
                 <span class="info-row-icon">📞</span>
                 <div>
                     <div class="muted">${title}</div>
-                    <div class="group-phones">${arr.map((phone, index) => `<div>${labels[index] ? `<div class="phone-contact-label">${escapeHtml(labels[index])}</div>` : ''}<a href="tel:${cleanPhone(phone)}" class="phone-link" data-track="group_phone" data-phone="${escapeHtml(phone)}">${escapeHtml(phone)}</a></div>`).join('')}</div>
+                    <div class="group-phones">${arr.map((phone, index) => `<div>${labels[index] ? `<div class="phone-contact-label">${escapeHtml(curLang === 'en' ? labels[index].replace('Координатор:', 'Coordinator:').replace('КОРГ:', 'Group development:') : curLang === 'kz' ? labels[index].replace('Координатор:', 'Үйлестіруші:').replace('КОРГ:', 'Топтарды дамыту:') : labels[index])}</div>` : ''}<a href="tel:${cleanPhone(phone)}" class="phone-link" data-track="group_phone" data-phone="${escapeHtml(phone)}">${escapeHtml(phone)}</a></div>`).join('')}</div>
                 </div>
             </div>
         `;
@@ -1419,7 +1492,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
                 <span class="info-row-icon">📍</span>
                 <div>
                     <div class="muted">${i18n[curLang].addressLabel}</div>
-                    <div>${escapeHtml(g.a)}${linkHtml}</div>
+                    <div>${escapeHtml(localizedGroupAddress(g))}${linkHtml}</div>
                 </div>
             </div>
         `;
@@ -1469,9 +1542,9 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
         if (Number.isNaN(d.getTime())) return '—';
         const today = new Date();
         const sameDay = d.toDateString() === today.toDateString();
-        const time = d.toLocaleTimeString(getLocale(), {hour:'2-digit', minute:'2-digit'});
+        const time = d.toLocaleTimeString(getLocale(), {hour:'2-digit', minute:'2-digit', hourCycle:'h23'});
         const todayWord = curLang === 'kz' ? 'бүгін' : curLang === 'en' ? i18n.en.checkedToday : 'сегодня';
-        return sameDay ? `${todayWord}, ${time}` : d.toLocaleString(getLocale(), {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'});
+        return sameDay ? `${todayWord}, ${time}` : curLang === 'kz' ? `${formatKazakhDate(d)}, ${time}` : d.toLocaleString(getLocale(), {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'});
     }
 
     function updateFreshnessDisplay() {
@@ -1543,7 +1616,7 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
 
     function localizeSchedule(schedule) {
         if (!schedule) return schedule;
-        if(curLang==='kz') return String(schedule).replace(/По запросу/gi,'Келісім бойынша').replace(/Ежедневно/gi,'Күн сайын').replace(/Суббота/gi,'Сенбі').replace(/Пн/g,'Дс').replace(/Вт/g,'Сс').replace(/Ср/g,'Ср').replace(/Чт/g,'Бс').replace(/Пт/g,'Жм').replace(/Сб/g,'Сб').replace(/Вс/g,'Жс').replace(/все группы открытые/gi,'барлық жиналыстар ашық').replace(/откр/gi,'ашық').replace(/очно и онлайн/gi,'бетпе-бет және онлайн').replace(/очно/gi,'бетпе-бет').replace(/Интервью с алкоголиком/gi,'Алкоголикпен сұхбат');
+        if(curLang==='kz') return String(schedule).replace(/По запросу/gi,'Келісім бойынша').replace(/Ежедневно/gi,'Күн сайын').replace(/Суббота/gi,'Сенбі').replace(/Пн/g,'Дс').replace(/Вт/g,'Сс').replace(/Ср/g,'Сәр').replace(/Чт/g,'Бс').replace(/Пт/g,'Жм').replace(/Сб/g,'Сен').replace(/Вс/g,'Жс').replace(/все группы открытые/gi,'барлық жиналыстар ашық').replace(/откр/gi,'ашық').replace(/очно и онлайн/gi,'бетпе-бет және онлайн').replace(/очно/gi,'бетпе-бет').replace(/Интервью с алкоголиком/gi,'Алкоголикпен сұхбат');
         if (curLang !== 'en') return schedule;
         const replacements = [
             [/По запросу/gi, 'On request'],
@@ -1552,7 +1625,8 @@ ${curLang === 'en' ? i18n.en.literatureShare : curLang === 'kz' ? 'Қазақс�
             [/Пн/g, 'Mon'], [/Вт/g, 'Tue'], [/Ср/g, 'Wed'], [/Чт/g, 'Thu'], [/Пт/g, 'Fri'], [/Сб/g, 'Sat'], [/Вс/g, 'Sun'],
             [/все группы открытые/gi, 'all meetings open'],
             [/откр/gi, 'open'],
-            [/Интервью с алкоголиком/gi, 'Interview with an alcoholic']
+            [/Интервью с алкоголиком/gi, 'Interview with an alcoholic'],
+            [/очно и онлайн/gi, 'in person and online'], [/очно/gi, 'in person'], [/онлайн/gi, 'online']
         ];
         return replacements.reduce((value, [pattern, replacement]) => value.replace(pattern, replacement), String(schedule));
     }
@@ -1710,6 +1784,7 @@ function closeFirstTimeInfo(fromHistory = false) {
         const parsed = new Date(`${dateString}T12:00:00`);
         if (Number.isNaN(parsed.getTime())) return dateString || '';
 
+        if (curLang === 'kz') return formatKazakhDate(new Date(`${dateString}T12:00:00Z`), {year: true});
         return new Intl.DateTimeFormat(getLocale(), {
             day: 'numeric',
             month: 'long',
@@ -2190,14 +2265,10 @@ function closeFirstTimeInfo(fromHistory = false) {
         if(dataLoadFailed) renderDataLoadError(); else { renderGroups(); renderNearestFavorite(); }
         renderLit();
         updateFreshnessDisplay();
-        const releaseNotificationKey = 'release:2.2';
+        const releaseNotificationKey = `release:${APP_VERSION}`;
         if (!notificationSeen(releaseNotificationKey)) {
-            const releaseTitle = curLang === 'kz'
-                ? 'Қазақстан АА қолданбасының 2.2 нұсқасы шықты'
-                : curLang === 'en' ? 'AA Kazakhstan app version 2.2 is available' : 'Вышла версия приложения АА Казахстана 2.2';
-            const releaseText = curLang === 'kz'
-                ? 'Ең жақын жиналыс, күнтізбе, бөлісу, ақылды іздеу, QR-код және жылдам әрекеттер қосылды.'
-                : curLang === 'en' ? 'Added next meeting, calendar, sharing, smart search, QR code, and quick actions.' : 'Добавлены ближайшее собрание, календарь, отправка, умный поиск, QR-код и быстрые действия.';
+            const releaseTitle = i18n[curLang].releaseTitleFor(APP_VERSION);
+            const releaseText = i18n[curLang].auditRelease;
             const releaseItems = getInternalNotifications();
             releaseItems.unshift({
                 key: releaseNotificationKey,
