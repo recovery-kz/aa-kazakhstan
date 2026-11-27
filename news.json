@@ -3,34 +3,14 @@
     "id": "2026-11-27-new-year-2027-almaty",
     "date": "2026-11-27",
     "title": "Новый год 2027 — встреча групп АА в Алматы",
-    "category": "События сообщества",
-    "description": "31 декабря в 21:00. Алматы, ул. Зенкова, 24 (Дом офицеров), по адресу группы АА «8 Марта».\n\nРегистрационный взнос — 10 000 ₸ до 20 декабря. В Kaspi выберите «Переводы» → «Клиенту Kaspi» → «По номеру телефона». Номер казначея Айгуль Д. — +7 707 555 0905. В комментарии укажите «Новый год!».",
     "language": "ru",
     "images": [
       "news/2026-11-27-new-year-2027-almaty/poster.webp",
       "news/2026-11-27-new-year-2027-almaty/details.webp"
     ],
     "title_kz": "Жаңа жыл 2027 — Алматыдағы АА топтарының кездесуі",
-    "category_kz": "Қауымдастық оқиғалары",
-    "description_kz": "31 желтоқсан, сағат 21:00. Алматы, Зенков көшесі, 24 (Офицерлер үйі), АА-ның «8 Марта» тобының мекенжайында.\n\nТіркеу жарнасы — 10 000 ₸, төлеу мерзімі — 20 желтоқсанға дейін. Kaspi қолданбасында «Аударым» → «Kaspi клиентіне» → «Телефон нөмірі бойынша» тармақтарын таңдаңыз. Қазынашы Айгүл Д.-ның нөмірі — +7 707 555 0905. Түсініктемеде «Новый год!» деп жазыңыз.",
     "title_en": "New Year 2027 — AA groups’ gathering in Almaty",
-    "category_en": "Community events",
-    "description_en": "December 31 at 9:00 p.m. House of Officers, 24 Zenkova Street, Almaty, at the meeting location of the 8 Marta AA group.\n\nThe registration fee is ₸10,000, due by December 20. In Kaspi, select Transfers → To a Kaspi customer → By phone number. The treasurer, Aigul D., can be found at +7 707 555 0905. Enter “Новый год!” in the transfer note.",
-    "links": [
-      {
-        "label": "Открыть в 2ГИС",
-        "label_kz": "2ГИС-те ашу",
-        "label_en": "Open in 2GIS",
-        "url": "https://2gis.kz/almaty/geo/70030076189990562/76.957296,43.259748"
-      },
-      {
-        "label": "В Kaspi",
-        "label_kz": "Kaspi-ге өту",
-        "label_en": "Go to Kaspi",
-        "url": "https://kaspi.kz/transfers"
-      }
-    ],
-    "transferPhone": "+77075550905"
+    "imagesOnly": true
   },
   {
     "id": "2026-09-14-6-konferentsiya-aa-kazakhstana",

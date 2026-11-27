@@ -1940,19 +1940,20 @@ function closeFirstTimeInfo(fromHistory = false) {
                     ${total ? `
                         <div class="news-carousel-wrap">
                             <div class="news-carousel">${slides}</div>
-                            ${total > 1 ? `<div class="news-counter">${i18n[curLang].newsCounter(1, total)}</div>` : ''}
+                            ${total > 1 && !post.imagesOnly ? `<div class="news-counter">${i18n[curLang].newsCounter(1, total)}</div>` : ''}
                         </div>
                         ${dots}
                     ` : ''}
-                    <div class="news-meta">
-                        <div class="news-category">${escapeHtml(post.category || '')}</div>
-                        <div class="news-date">${escapeHtml(formatNewsDate(post.date))}</div>
-                        <div class="news-title">${escapeHtml(post.title || (curLang==='kz'?'АА хабарландыруы':curLang==='en'?'AA announcement':'Объявление АА'))}</div>
-                        ${post.description
-                            ? `<div class="news-description">${newsDescription(post.description)}</div>`
-                            : ''}
-                        ${renderNewsActions(post)}
-                    </div>
+                    ${post.imagesOnly ? '' : `
+                        <div class="news-meta">
+                            <div class="news-category">${escapeHtml(post.category || '')}</div>
+                            <div class="news-date">${escapeHtml(formatNewsDate(post.date))}</div>
+                            <div class="news-title">${escapeHtml(post.title || (curLang==='kz'?'АА хабарландыруы':curLang==='en'?'AA announcement':'Объявление АА'))}</div>
+                            ${post.description
+                                ? `<div class="news-description">${newsDescription(post.description)}</div>`
+                                : ''}
+                            ${renderNewsActions(post)}
+                        </div>`}
                 </article>
                 ${postIndex < posts.length - 1 ? '<div class="ornament-divider"></div>' : ''}
             `;
