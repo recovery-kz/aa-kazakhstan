@@ -442,6 +442,33 @@
             font-size: 14px;
             line-height: 1.5;
             white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
+
+        .news-description a {
+            color: var(--link);
+        }
+
+        .news-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            margin-top: 8px;
+        }
+
+        .news-actions a,
+        .news-actions button {
+            display: inline-flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--link);
+            font: inherit;
+            text-decoration: underline;
+            cursor: pointer;
         }
 
         .news-carousel-wrap {
