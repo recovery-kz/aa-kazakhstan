@@ -1878,6 +1878,20 @@ function closeFirstTimeInfo(fromHistory = false) {
         return html + escapeHtml(source.slice(last));
     }
 
+    function renderNewsActions(post) {
+        const links = (Array.isArray(post.links) ? post.links : []).map(link => {
+            const label = localizedField(link, 'label');
+            if (!label || !/^https:\/\/[^\s<>]+$/i.test(link?.url ?? '')) return '';
+            return `<a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+        }).join('');
+        const phone = cleanPhone(post.transferPhone);
+        const copy = /^\+7\d{10}$/.test(phone)
+            ? `<button type="button" data-news-copy-phone="${phone}">${escapeHtml(i18n[curLang].newsCopyPhone)}</button>`
+            : '';
+
+        return links || copy ? `<div class="news-actions">${links}${copy}</div>` : '';
+    }
+
     function renderNews(posts) {
         const container = document.getElementById('news-list');
         if (!container) return false;
@@ -1937,6 +1951,7 @@ function closeFirstTimeInfo(fromHistory = false) {
                         ${post.description
                             ? `<div class="news-description">${newsDescription(post.description)}</div>`
                             : ''}
+                        ${renderNewsActions(post)}
                     </div>
                 </article>
                 ${postIndex < posts.length - 1 ? '<div class="ornament-divider"></div>' : ''}
@@ -2044,6 +2059,17 @@ function closeFirstTimeInfo(fromHistory = false) {
         document.getElementById('l-ru').addEventListener('click', () => setLang('ru'));
         document.getElementById('l-kz').addEventListener('click', () => setLang('kz'));
         document.getElementById('l-en').addEventListener('click', () => setLang('en'));
+        document.getElementById('news-list').addEventListener('click', async event => {
+            const copy = event.target.closest('[data-news-copy-phone]');
+            if (!copy) return;
+
+            try {
+                await navigator.clipboard.writeText(copy.dataset.newsCopyPhone);
+                showAppStatus(i18n[curLang].newsPhoneCopied);
+            } catch {
+                showAppStatus(i18n[curLang].newsCopyPhoneFailed);
+            }
+        });
         document.getElementById('btn-sos-main').addEventListener('click', toggleSos);
         document.getElementById('mot-toggle').addEventListener('click', toggleMotivation);
         document.getElementById('structure-image-trigger')?.addEventListener('click', openStructureImage);
