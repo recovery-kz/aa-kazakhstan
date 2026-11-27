@@ -19,7 +19,7 @@ if(await page.locator('#install-close').isVisible())await page.locator('#install
 // for the general smoke flow; the onboarding itself is exercised later via Settings.
 if(await page.locator('#city-onboarding').isVisible())await page.locator('#city-onboarding-all').click();
 await page.locator('#btn-g').click();
-assert.equal(await page.locator('.group-card').count(),51);
+assert.equal(await page.locator('.group-card').count(),50);
 await page.locator('#group-filter-online').click();
 const onlineNames=await page.locator('.group-name').allTextContents();
 assert.equal(await page.locator('.group-card').count(),5);
