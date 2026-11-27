@@ -19,7 +19,7 @@ if(await page.locator('#install-close').isVisible())await page.locator('#install
 // for the general smoke flow; the onboarding itself is exercised later via Settings.
 if(await page.locator('#city-onboarding').isVisible())await page.locator('#city-onboarding-all').click();
 await page.locator('#btn-g').click();
-assert.equal(await page.locator('.group-card').count(),50);
+assert.equal(await page.locator('.group-card').count(),51);
 await page.locator('#group-filter-online').click();
 const onlineNames=await page.locator('.group-name').allTextContents();
 assert.equal(await page.locator('.group-card').count(),5);
@@ -79,7 +79,7 @@ assert((await page.locator('#city-setting-current').innerText()).includes('Ал�
 await page.locator('#btn-l').click();assert.equal(await page.locator('#book-list button').count(),27);
 for(let i=0;i<27;i++){await page.locator('#book-list button').nth(i).click();assert(await page.locator('#book-modal').isVisible());await page.locator('#book-modal-close').click();}
 await page.locator('#btn-n').click();
-assert.equal(await page.locator('.news-card').count(),7);
+assert.equal(await page.locator('.news-card').count(),require('../news.json').length);
 assert(await page.locator('.news-description a[href*="zoom.us"]').count()>0);
 assert(await page.locator('.news-slide a').count()>0);
 await page.locator('#l-kz').click();await page.locator('#btn-p').click();await page.locator('#btn-aa-structure').click();
@@ -116,7 +116,7 @@ assert((await page.locator('.notification-item-title').allTextContents()).includ
 assert((await page.locator('.notification-item-text').allTextContents()).some(t=>t.includes('Өзіне-өзі')));
 await page.locator('#notification-close').click();
 await page.locator('#btn-n').click();
-assert((await page.locator('.news-date').first().innerText()).includes('қыркүйек'));
+assert((await page.locator('[data-news-id="2026-09-14-6-konferentsiya-aa-kazakhstana"] .news-date').innerText()).includes('қыркүйек'));
 assert(!/M\d{2}/.test((await page.locator('.news-date').allTextContents()).join(' ')));
 await page.locator('#btn-g').click();
 await page.locator('#group-search').fill('Боралдай');

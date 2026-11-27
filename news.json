@@ -1,5 +1,23 @@
 [
   {
+    "id": "2026-11-27-new-year-2027-almaty",
+    "date": "2026-11-27",
+    "title": "Новый год 2027 — встреча групп АА в Алматы",
+    "category": "События сообщества",
+    "description": "31 декабря в 21:00. Алматы, ул. Зенкова, 24 (Дом офицеров), по адресу группы АА «8 Марта».\n\nМесто встречи в 2ГИС:\nhttps://2gis.kz/almaty/geo/70030076189990562/76.957296,43.259748",
+    "language": "ru",
+    "images": [
+      "news/2026-11-27-new-year-2027-almaty/poster.webp",
+      "news/2026-11-27-new-year-2027-almaty/details.webp"
+    ],
+    "title_kz": "Жаңа жыл 2027 — Алматыдағы АА топтарының кездесуі",
+    "category_kz": "Қауымдастық оқиғалары",
+    "description_kz": "31 желтоқсан, сағат 21:00. Алматы, Зенков көшесі, 24 (Офицерлер үйі), АА-ның «8 Марта» тобының мекенжайында.\n\nКездесу орны 2ГИС картасында:\nhttps://2gis.kz/almaty/geo/70030076189990562/76.957296,43.259748",
+    "title_en": "New Year 2027 — AA groups’ gathering in Almaty",
+    "category_en": "Community events",
+    "description_en": "December 31 at 9:00 p.m. House of Officers, 24 Zenkova Street, Almaty, at the meeting location of the 8 Marta AA group.\n\nSee the location on 2GIS:\nhttps://2gis.kz/almaty/geo/70030076189990562/76.957296,43.259748"
+  },
+  {
     "id": "2026-09-14-6-konferentsiya-aa-kazakhstana",
     "date": "2026-09-14",
     "title": "6-я Конференция АА Казахстана состоится 3–4 октября в Алматы",
