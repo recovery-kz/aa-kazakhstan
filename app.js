@@ -1859,16 +1859,23 @@ function closeFirstTimeInfo(fromHistory = false) {
     }
 
     function newsDescription(value) {
-        const pattern=/(https?:\/\/[^\s<>]+|\+7[\d ()-]{9,20}\d)/g;
-        let html='',last=0;
-        for(const match of String(value).matchAll(pattern)) {
-            html+=escapeHtml(value.slice(last,match.index));
-            const label=match[0].replace(/[.,;!]$/,'');
-            const href=label.startsWith('+')?'tel:'+cleanPhone(label):label;
-            html+=`<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`+escapeHtml(match[0].slice(label.length));
-            last=match.index+match[0].length;
+        const pattern = /\[([^\]\r\n]+)\]\((https:\/\/[^\s<>()]+)\)|(https?:\/\/[^\s<>]+|\+7[\d ()-]{9,20}\d)/g;
+        const source = String(value);
+        let html = '';
+        let last = 0;
+
+        for (const match of source.matchAll(pattern)) {
+            const [, linkText, linkUrl, plainLink] = match;
+            const label = linkText ?? plainLink.replace(/[.,;!]$/, '');
+            const href = linkUrl ?? (label.startsWith('+') ? 'tel:' + cleanPhone(label) : label);
+            const trailing = plainLink?.slice(label.length) ?? '';
+            html += escapeHtml(source.slice(last, match.index));
+            html += '<a href="' + escapeHtml(href) + '" target="_blank" rel="noopener noreferrer">' +
+                escapeHtml(label) + '</a>' + escapeHtml(trailing);
+            last = match.index + match[0].length;
         }
-        return html+escapeHtml(value.slice(last));
+
+        return html + escapeHtml(source.slice(last));
     }
 
     function renderNews(posts) {
